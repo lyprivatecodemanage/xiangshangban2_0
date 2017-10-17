@@ -26,7 +26,7 @@ public class LeaveController {
 	@RequestMapping(value = "/getType", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
 	public Map<String, Object> getType(@RequestBody String jsonString) {
 		Map<String, Object> result = new HashMap<String, Object>();
-
+//sagjhaghiohgoqiho
 		try {
 			String url = "http://localhost:8092/activiti/approvalController/applicationForLeave";
 			String str = HttpClientUtil.sendRequet(url, null);
