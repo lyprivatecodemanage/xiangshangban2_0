@@ -1,0 +1,28 @@
+#端口配置
+server:
+  port: 8081
+  context-path: /register
+  #编码格式配置
+  tomcat:
+    uri-encoding: UTF-8
+
+#数据库配置
+spring:
+  datasource:
+    url: jdbc:postgresql://192.168.0.242:5432/jurisdiction?characterEncoding=UTF-8
+    username: postgres
+    password: jinnian-123abc
+    driver-class-name: org.postgresql.Driver
+
+#编码格式配置
+  http:
+    encoding:
+      force: true
+      charset: utf-8
+      enabled: true
+
+#配置文件
+mybatis:
+  config-location: classpath:config/mybatis-config.xml
+  mapper-locations: ../java/com/xiangshangban/register/mapper/*.xml
+

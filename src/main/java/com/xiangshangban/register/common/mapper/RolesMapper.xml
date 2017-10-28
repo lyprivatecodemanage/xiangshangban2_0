@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiangshangban.register.common.dao.RolesMapper" >
+  <resultMap id="BaseResultMap" type="com.xiangshangban.register.common.bean.Roles" >
+    <constructor >
+      <idArg column="roleid" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="rolename" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    roleid, rolename
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from u_roles
+    where roleid = #{roleid,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from u_roles
+    where roleid = #{roleid,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.xiangshangban.register.common.bean.Roles" >
+    insert into u_roles (roleid, rolename)
+    values (#{roleid,jdbcType=VARCHAR}, #{rolename,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.xiangshangban.register.common.bean.Roles" >
+    insert into u_roles
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="roleid != null" >
+        roleid,
+      </if>
+      <if test="rolename != null" >
+        rolename,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="roleid != null" >
+        #{roleid,jdbcType=VARCHAR},
+      </if>
+      <if test="rolename != null" >
+        #{rolename,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.xiangshangban.register.common.bean.Roles" >
+    update u_roles
+    <set >
+      <if test="rolename != null" >
+        rolename = #{rolename,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where roleid = #{roleid,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.xiangshangban.register.common.bean.Roles" >
+    update u_roles
+    set rolename = #{rolename,jdbcType=VARCHAR}
+    where roleid = #{roleid,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 查询用户全部的role & permission -->
+  <resultMap id="findNowAllPermission_resultMap" extends="BaseResultMap" type="com.xiangshangban.register.common.bean.Roles" >
+    <collection property="permissions" javaType="com.xiangshangban.register.common.bean.Permission">
+      <id column="permissionid" property="permissionid" jdbcType="VARCHAR" />
+      <result column="permissiondescribe" property="permissiondescribe" jdbcType="VARCHAR" />
+      <result column="permissionurl" property="permissionurl" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+
+  <!-- 根据用户ID，查询所有权限 -->
+  <select id="findNowAllPermission" resultMap="findNowAllPermission_resultMap">
+    select ur.roleid,ur.rolename,up.permissionid pid,up.permissionurl,up.permissiondescribe pname
+    from (select roleid from u_usersroles where userid = #{userId,jdbcType=BIGINT}) uur
+    left join u_roles ur on uur.roleid = ur.roleid
+    left join u_rolespermission urp on urp.roleid = ur.roleid
+    left join u_permission up on up.permissionid = urp.permissionid
+  </select>
+</mapper>

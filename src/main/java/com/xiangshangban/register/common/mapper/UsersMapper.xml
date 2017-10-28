@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiangshangban.register.common.dao.UsersMapper" >
+  <resultMap id="BaseResultMap" type="com.xiangshangban.register.common.bean.Users" >
+    <constructor >
+      <idArg column="userid" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="account" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="userpwd" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="temporarypwd" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="token" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="username" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="sex" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="birthday" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="last_login_time" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="status" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    userid, account, userpwd, temporarypwd, token, username, sex, birthday, phone, email, 
+    last_login_time, status
+  </sql>
+
+  <select id="login" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from u_users
+    where phone = #{phone,jdbcType=VARCHAR} and  temporarypwd = #{temporarypwd,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from u_users
+    where userid = #{userid,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from u_users
+    where userid = #{userid,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.xiangshangban.register.common.bean.Users" >
+    insert into u_users (userid, account, userpwd,
+      temporarypwd, token, username, 
+      sex, birthday, phone, 
+      email, last_login_time, status
+      )
+    values (#{userid,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{userpwd,jdbcType=VARCHAR}, 
+      #{temporarypwd,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{phone,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{last_login_time,jdbcType=DATE}, #{status,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.xiangshangban.register.common.bean.Users" >
+    insert into u_users
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="userpwd != null" >
+        userpwd,
+      </if>
+      <if test="temporarypwd != null" >
+        temporarypwd,
+      </if>
+      <if test="token != null" >
+        token,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="last_login_time != null" >
+        last_login_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="userpwd != null" >
+        #{userpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="temporarypwd != null" >
+        #{temporarypwd,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null" >
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="last_login_time != null" >
+        #{last_login_time,jdbcType=DATE},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.xiangshangban.register.common.bean.Users" >
+    update u_users
+    <set >
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="userpwd != null" >
+        userpwd = #{userpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="temporarypwd != null" >
+        temporarypwd = #{temporarypwd,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null" >
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="last_login_time != null" >
+        last_login_time = #{last_login_time,jdbcType=DATE},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where userid = #{userid,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.xiangshangban.register.common.bean.Users" >
+    update u_users
+    set account = #{account,jdbcType=VARCHAR},
+      userpwd = #{userpwd,jdbcType=VARCHAR},
+      temporarypwd = #{temporarypwd,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=DATE},
+      phone = #{phone,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      last_login_time = #{last_login_time,jdbcType=DATE},
+      status = #{status,jdbcType=VARCHAR}
+    where userid = #{userid,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPhone">
+      update u_users
+      set phone = #{phonr,jdbcType=VARCHAR}
+      where userid = #{userid,jdbcType=VARCHAR}
+  </update>
+</mapper>
