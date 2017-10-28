@@ -1,5 +1,6 @@
 package com.xiangshangban.transit_service.util;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.http.HttpEntity;
@@ -8,12 +9,13 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import com.alibaba.fastjson.JSON;
-
 public class HttpClientUtil {
 	/* public String doPost(String url,Map<String,String> map,String charset){  
 	        HttpClient httpClient = null;  
@@ -46,7 +48,7 @@ public class HttpClientUtil {
 	        return result;  
 	    }  */
 	/**
-	 * 请求
+	 * httpclient 模拟post 发送json请求
 	 * @param sendurl
 	 * @param data
 	 * @return
@@ -54,8 +56,11 @@ public class HttpClientUtil {
 	public static String sendRequet(String sendurl, Object data) {
 		CloseableHttpClient client = HttpClients.createDefault();
         HttpPost post = new HttpPost(sendurl);
-        StringEntity myEntity = new StringEntity( JSON.toJSONString(data,false),
+        StringEntity myEntity = new StringEntity( data.toString(),
                 ContentType.APPLICATION_JSON);// 构造请求数据
+        
+        myEntity.setContentEncoding("utf-8");
+        
         post.setEntity(myEntity);// 设置请求体
         String responseContent = null; // 响应内容
         CloseableHttpResponse response = null;
