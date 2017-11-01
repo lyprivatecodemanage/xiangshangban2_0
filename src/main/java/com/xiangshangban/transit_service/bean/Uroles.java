@@ -1,11 +1,25 @@
 package com.xiangshangban.transit_service.bean;
 
+import java.util.List;
+
 public class Uroles {
     private String roleid;
 
     private String rolename;
 
-    public String getRoleid() {
+    private List<Upermission>	permissionList;
+    
+    
+    
+    public List<Upermission> getPermissionList() {
+		return permissionList;
+	}
+
+	public void setPermissionList(List<Upermission> permissionList) {
+		this.permissionList = permissionList;
+	}
+
+	public String getRoleid() {
         return roleid;
     }
 

@@ -46,8 +46,9 @@ public class TransitServiceApplication
         ShiroFilterFactoryBean bean=new ShiroFilterFactoryBean();
         bean.setSecurityManager(manager);
         //配置登录的url和登录成功的url
-        bean.setLoginUrl("/login");
-        bean.setSuccessUrl("/home");
+        bean.setLoginUrl("/loginController/loginUser");
+        bean.setSuccessUrl("/loginController/login");
+        bean.setUnauthorizedUrl("/loginController/unAuthorizedUrl");
         //配置访问权限
         LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<String,String>();
        /* filterChainDefinitionMap.put("/jsp/login.jsp*", "anon"); //表示可以匿名访问
@@ -58,7 +59,10 @@ public class TransitServiceApplication
         filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
         filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
         filterChainDefinitionMap.put("/*.*", "authc");*/
-        filterChainDefinitionMap.put("/*.*", "anon");
+        filterChainDefinitionMap.put("/loginUser", "anon");
+       /* filterChainDefinitionMap.put("/*", "authc");*///表示需要认证才可以访问
+       /* filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
+        filterChainDefinitionMap.put("/*.*", "authc");*/
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return bean;
     }

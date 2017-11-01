@@ -17,7 +17,7 @@ public class PropertiesUtils {
 	}
 
 	public static String  redisProperty( String property ) throws IOException{
-		setPropertyName( "/properties/redis.properties" );
+		setPropertyName( "/redis.properties" );
 		return props.getProperty( property );
 	}
 	
@@ -26,7 +26,7 @@ public class PropertiesUtils {
 		return props.getProperty( property );
 	}
 	public static String  ossProperty( String property ) throws IOException{
-		setPropertyName( "/properties/oss.properties" );
+		setPropertyName( "/oss.properties" );
 		return props.getProperty( property );
 	}
 	

@@ -1,6 +1,7 @@
 package com.xiangshangban.transit_service.bean;
 
 import java.util.Date;
+import java.util.List;
 
 public class Uusers {
     private String userid;
@@ -18,8 +19,20 @@ public class Uusers {
     private Date lastLoginTime;
 
     private String status;
+    
+    private List<Uroles> UrolesList;
+    
+    
 
-    public String getUserid() {
+    public List<Uroles> getUrolesList() {
+		return UrolesList;
+	}
+
+	public void setUrolesList(List<Uroles> urolesList) {
+		UrolesList = urolesList;
+	}
+
+	public String getUserid() {
         return userid;
     }
 
