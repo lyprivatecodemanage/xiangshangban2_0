@@ -30,9 +30,11 @@
       <file leaf-file-name="RegisterController.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/xiangshangban/transit_service/controller/RegisterController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="158" column="0" lean-forward="false" selection-start-line="158" selection-start-column="0" selection-end-line="158" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="335">
+              <caret line="149" column="39" lean-forward="true" selection-start-line="149" selection-start-column="39" selection-end-line="149" selection-end-column="39" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -136,8 +138,8 @@
         <option value="$PROJECT_DIR$/src/main/java/com/xiangshangban/transit_service/bean/UUsersRoles.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/xiangshangban/transit_service/dao/UUsersRolesMapper.java" />
         <option value="$PROJECT_DIR$/src/main/resources/com/xiangshangban/transit_service/dao/UUsersRolesMapper.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/xiangshangban/transit_service/controller/RegisterController.java" />
         <option value="$PROJECT_DIR$/.idea/workspace.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/xiangshangban/transit_service/controller/RegisterController.java" />
       </list>
     </option>
   </component>
@@ -944,12 +946,12 @@
       <workItem from="1509516502329" duration="9937000" />
       <workItem from="1509526735323" duration="10159000" />
       <workItem from="1509587956723" duration="19816000" />
-      <workItem from="1509614272127" duration="6418000" />
+      <workItem from="1509614272127" duration="6673000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="114025000" />
+    <option name="totallyTimeSpent" value="114280000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1382,9 +1384,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/xiangshangban/transit_service/controller/RegisterController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="158" column="0" lean-forward="false" selection-start-line="158" selection-start-column="0" selection-end-line="158" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="335">
+          <caret line="149" column="39" lean-forward="true" selection-start-line="149" selection-start-column="39" selection-end-line="149" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
