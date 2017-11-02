@@ -30,10 +30,12 @@ public class MyRealm extends AuthorizingRealm {
 		    SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 		    //Uusers user = usersService.selectByPhone(token.getPrimaryPrincipal().toString());
 		    //获取角色
+		    //按角色分配权限
 		    List<String> list = usersService.selectRoles(token.getPrimaryPrincipal().toString());
 		   for(int i =0;i<list.size();i++){
 			   authorizationInfo.addRole(list.get(i).toString());
 		   }
+		   //按url分配权限
 		   /* for(Uroles role:userInfo.getUrolesList()){
 		        authorizationInfo.addRole(role.getRoleid());
 		        for(Upermission p:role.getPermissionList()){

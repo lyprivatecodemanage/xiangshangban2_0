@@ -20,6 +20,8 @@ public class Uusers {
 
     private String status;
     
+    
+    
     private List<Uroles> UrolesList;
     
     

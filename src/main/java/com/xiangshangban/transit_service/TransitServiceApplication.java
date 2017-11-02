@@ -1,9 +1,13 @@
 package com.xiangshangban.transit_service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -14,10 +18,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.apache.shiro.mgt.SecurityManager;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+
 import com.xiangshangban.transit_service.filter.ServletFilter;
 import com.xiangshangban.transit_service.realm.MyRealm;
 import com.xiangshangban.transit_service.shiro.CredentialsMatcher;
+import org.apache.shiro.authz.UnauthenticatedException;
 
 /**
  * Hello world!
@@ -47,23 +53,15 @@ public class TransitServiceApplication
         bean.setSecurityManager(manager);
         //配置登录的url和登录成功的url
         bean.setLoginUrl("/loginController/loginUser");
-        bean.setSuccessUrl("/loginController/login");
+        bean.setSuccessUrl("/loginController/logOut");
         bean.setUnauthorizedUrl("/loginController/unAuthorizedUrl");
         //配置访问权限
-        LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<String,String>();
-       /* filterChainDefinitionMap.put("/jsp/login.jsp*", "anon"); //表示可以匿名访问
-        filterChainDefinitionMap.put("/loginUser", "anon"); 
-        filterChainDefinitionMap.put("/logout*","anon");
-        filterChainDefinitionMap.put("/jsp/error.jsp*","anon");
-        filterChainDefinitionMap.put("/jsp/index.jsp*","authc");
-        filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
-        filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
-        filterChainDefinitionMap.put("/*.*", "authc");*/
+       /* LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<String,String>();
         filterChainDefinitionMap.put("/loginUser", "anon");
-       /* filterChainDefinitionMap.put("/*", "authc");*///表示需要认证才可以访问
-       /* filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
-        filterChainDefinitionMap.put("/*.*", "authc");*/
-        bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+        filterChainDefinitionMap.put("/*", "roles");//表示需要认证才可以访问
+        filterChainDefinitionMap.put("/**", "roles");//表示需要认证才可以访问
+        filterChainDefinitionMap.put("/*.*", "roles");
+        bean.setFilterChainDefinitionMap(filterChainDefinitionMap);*/
         return bean;
     }
     //配置核心安全事务管理器
@@ -102,4 +100,15 @@ public class TransitServiceApplication
         advisor.setSecurityManager(manager);
         return advisor;
     }
+    //设置认证授权异常捕获
+    @Bean
+    public SimpleMappingExceptionResolver simpleMappingExceptionResolver(){
+    	SimpleMappingExceptionResolver simpleMappingExceptionResolver = new SimpleMappingExceptionResolver();
+    	Properties property = new Properties();
+    	property.setProperty("org.apache.shiro.authz.UnauthenticatedException", "redirect:/loginController/unAuthorizedUrl");
+    	property.setProperty("org.apache.shiro.authz.UnauthorizedException", "redirect:/loginController/unAuthorizedUrl");
+    	simpleMappingExceptionResolver.setExceptionMappings(property);
+    	return simpleMappingExceptionResolver;
+    }
+    
 }

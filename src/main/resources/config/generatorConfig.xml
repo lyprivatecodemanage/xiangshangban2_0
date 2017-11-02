@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <classPathEntry
+        location="C:/Users/cachee/Desktop/postgresql-9.1-901.jdbc4.jar" />
+    <context id="context1">
+     <commentGenerator >  
+           <property name="suppressDate" value="true"/>  
+            <property name="suppressAllComments" value="true"/>  
+        </commentGenerator>  
+        <jdbcConnection driverClass="org.postgresql.Driver"
+            connectionURL="jdbc:postgresql://192.168.0.242:5432/organization" userId="postgres"
+            password="jinnian-123abc" />
+            
+        <!-- 生成模型的包名和位置 
+        <javaModelGenerator targetPackage="com.xiangshangban.attendance.bean"
+            targetProject="attendance" />
+        生成映射文件的包名和位置 
+        <sqlMapGenerator targetPackage="com.xiangshangban.attendance.mapper"
+            targetProject="attendance" />
+        生成DAO的包名和位置
+        <javaClientGenerator
+            targetPackage="com.xiangshangban.attendance.dao"
+            targetProject="attendance"
+            type="XMLMAPPER" /> -->
+            
+        <!-- 生成模型的包名和位置--> 
+        <javaModelGenerator targetPackage="com.xiangshangban.transit_service.bean"
+            targetProject="api_service" />
+        <!-- 生成映射文件的包名和位置--> 
+        <sqlMapGenerator targetPackage="com.xiangshangban.transit_service.mapper"
+            targetProject="api_service" />
+        <!-- 生成DAO的包名和位置-->
+        <javaClientGenerator
+            targetPackage="com.xiangshangban.transit_service.dao"
+            targetProject="api_service"
+            type="XMLMAPPER" />
+        <!-- 要生成哪些表-->  
+        <table tableName="client_" domainObjectName="Client" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>  
+        <table tableName="client_detail" domainObjectName="ClientDetail" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>  
+       <!--  <table tableName="u_roles" domainObjectName="Uroles" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>  
+        <table tableName="u_permission" domainObjectName="Upermission" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>  
+        <table tableName="u_users_employee" domainObjectName="UusersEmployee" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>  
+        <table tableName="u_users_roles" domainObjectName="UusersRoles" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>  
+        <table tableName="u_roles_permission" domainObjectName="UrolesPermission" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table> -->  
+        
+    </context>
+</generatorConfiguration>

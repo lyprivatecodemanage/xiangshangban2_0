@@ -1,10 +1,10 @@
 package com.xiangshangban.transit_service.controller;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,13 +13,12 @@ import javax.servlet.http.HttpSession;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.aliyuncs.exceptions.ClientException;
@@ -29,26 +28,188 @@ import com.xiangshangban.transit_service.service.LoginService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.FileMD5Util;
 import com.xiangshangban.transit_service.util.FormatUtil;
+import com.xiangshangban.transit_service.util.RedisUtil;
 import com.xiangshangban.transit_service.util.YtxSmsUtil;
+
+import redis.clients.jedis.Jedis;
 
 @RestController
 @RequestMapping("/loginController")
 public class LoginController {
-
-	private String smsCode;
-
+	Logger logger = Logger.getLogger(LoginController.class);
 	@Autowired
 	private LoginService loginService;
-
 	@Autowired
 	private UusersService uusersService;
-
-	@RequestMapping(value = "/login")
-	public String login() {
-		return "login";
+	
+	/**
+	 * @author 李业/获得clientId
+	 * @param type
+	 * @param imei
+	 * @param model
+	 * @return
+	 *//*
+	@RequiresRoles(value={"admin","superAdmin"},logical=Logical.OR)
+	@RequestMapping("/getClientId")
+	public Map<String, Object> getClientId(String type,String imei,String model){
+		Map<String, Object> result = new HashMap<String,Object>();
+		try{
+		String clientId = FileMD5Util.getMD5String(type+imei+model);
+		result.put("clientId", clientId);
+		result.put("message", "成功");
+		result.put("returnCode", "3000");
+		return result;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			result.put("returnCode", "3007");
+			result.put("message", "参数格式不正确");
+			return result;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			result.put("returnCode", "3001");
+			result.put("message", "参数为null");
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("returnCode", "3006");
+			result.put("message", "失败");
+			return result;
+		}
+	}*/
+	
+	/**
+	 * @author 李业/web请求获取二维码
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/getQrcode")
+	public Map<String,Object> getQrcode(HttpSession session){
+		Map<String,Object> result = new HashMap<String,Object>();
+		try{
+			String sessionId = session.getId();
+			//产生二维码(UUID)
+			String qrcode = FormatUtil.createUuid();
+			RedisUtil redis = RedisUtil.getInstance();
+			//将二位码存入redis,设置有效时间300秒
+			redis.new Hash().hset("qrcode_"+qrcode, "qrcode", qrcode);
+			redis.expire("qrcode_"+session, 300);
+			Login login = new Login();
+			login.setSessionId(sessionId);
+			login.setQrcode(qrcode);
+			login.setQrcodeStatus("0");
+			
+			result.put("qrcode", qrcode);
+			result.put("message", "成功");
+			result.put("returnCode", "3000");
+			return result;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3007");
+			result.put("message", "参数格式不正确");
+			return result;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3001");
+			result.put("message", "参数为null");
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3006");
+			result.put("message", "失败");
+			return result;
+		}
 	}
 	/**
-	 * 登录
+	 * @author 李业/web二维码轮询接口
+	 * @return
+	 */
+	public Map<String,Object> training(){
+		Map<String,Object> result = new HashMap<String,Object>();
+		try{
+			//获取app扫码状态
+			
+			
+			return result;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3007");
+			result.put("message", "参数格式不正确");
+			return result;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3001");
+			result.put("message", "参数为null");
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3006");
+			result.put("message", "失败");
+			return result;
+		}
+	}
+	
+	
+	/**
+	 * app扫描二维码
+	 * @param qrcode
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/scanCode")
+	public Map<String,Object> scanCode(String qrcode,HttpServletRequest request){
+		Map<String, Object> result = new HashMap<String,Object>();
+		try{
+			RedisUtil redis = RedisUtil.getInstance();
+			String token = request.getHeader("token");
+			String redisQrcode = redis.new Hash().hget("qrcode_"+qrcode, "qrcode");
+			if(redisQrcode.equals(qrcode)){
+				Login login = loginService.selectByToken(token);
+				Uusers user = uusersService.selectByPhone(login.getPhone());
+				List<String> listRole = uusersService.selectRoles(login.getPhone());
+				//判断是否是企业管理员
+				int i = 0;
+				for(String role:listRole){
+					if("admin".equals(role)){
+						i=i+1;
+					}
+				}
+				if(i==1){
+					
+				}
+			}
+			
+			result.put("message", "成功");
+			result.put("returnCode", "3000");
+			return result;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3007");
+			result.put("message", "参数格式不正确");
+			return result;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3001");
+			result.put("message", "参数为null");
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3006");
+			result.put("message", "失败");
+			return result;
+		}
+	}
+	
+	/**
+	 * @author 李业/短信验证码登录
 	 * @param phone
 	 * @param smsCode
 	 * @param type
@@ -65,6 +226,20 @@ public class LoginController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar calendar = Calendar.getInstance();
 		String token = request.getHeader("token");
+		RedisUtil redis = RedisUtil.getInstance();
+		String redisSmsCode ="";
+		if(phone != null && !"".equals(phone)){
+		 redisSmsCode= redis.new Hash().hget("smsCode_"+phone, "smsCode");
+		 if(redisSmsCode==null){
+			 result.put("message", "验证码过期");
+			 result.put("returnCode", "4001");
+			 return result;
+		 }else if(!redisSmsCode.equals(smsCode)){
+			 result.put("message", "验证码不正确");
+			 result.put("returnCode", "4002");
+			 return result;
+		 }
+		}
 		try {
 		
 				String salt = FileMD5Util.GetSalt();
@@ -160,12 +335,7 @@ public class LoginController {
 				System.out.println(usernamePasswordToken.toString());
 				Subject subject = SecurityUtils.getSubject();
 				usernamePasswordToken.setRememberMe(true);
-				Serializable sessionId1 = subject.getSession().getId();
 				subject.login(usernamePasswordToken); // 完成登录
-				// Uusers user=(Uusers) subject.getPrincipal();
-				String str = subject.getPrincipal().toString();
-				System.out.println(str);
-				// session.setAttribute("user", user);
 				if(Integer.valueOf(type)==1){
 				result.put("token", token);
 				}
@@ -177,64 +347,118 @@ public class LoginController {
 			e.printStackTrace();
 			result.put("returnCode", "3007");
 			result.put("message", "参数格式不正确");
+			logger.info(e);
 			return result;
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			result.put("returnCode", "3001");
 			result.put("message", "参数为null");
+			logger.info(e);
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("returnCode", "3006");
 			result.put("message", "失败");
+			logger.info(e);
 			return result;
 		}
 
 	}
 	/**
-	 * shiro退出
+	 * @author 李业/shiro退出
 	 * @param session
 	 * @return
 	 */
-	@RequiresRoles(value={"管理员","超级管理员"},logical=Logical.OR)
+	@RequiresRoles(value={"admin","superAdmin"},logical=Logical.OR)
 	@RequestMapping(value = "/logOut")
 	// @RequestMapping(value="/logOut",method=RequestMethod.GET,produces="application/json;charset=utf-8")
-	public String logOut(HttpSession session) {
+	public Map<String,Object> logOut(HttpSession session) {
+		Map<String,Object> result = new HashMap<String,Object>();
+		try{
 		Subject subject = SecurityUtils.getSubject();
-
 		subject.logout();
-		// session.removeAttribute("user");
-		return "login";
+		result.put("message", "退出成功");
+		result.put("returnCode", "3000");
+		return result;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			result.put("returnCode", "3007");
+			result.put("message", "参数格式不正确");
+			logger.info(e);
+			return result;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			result.put("returnCode", "3001");
+			result.put("message", "参数为null");
+			logger.info(e);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("returnCode", "3006");
+			result.put("message", "失败");
+			logger.info(e);
+			return result;
+		}
 	}
 	/**
-	 * 获取短信验证码
+	 * @author 李业/获取短信验证码
 	 * @param phone
 	 * @param session
 	 * @return
 	 */
 	@RequestMapping(value = "/sendSms")
-	public String sendSms(String phone,HttpSession session) {
+	public Map<String,Object> sendSms(String phone,HttpSession session) {
+		Map<String,Object> result = new HashMap<String,Object>();
 		YtxSmsUtil sms = new YtxSmsUtil("LTAIcRopzlp5cbUd", "VnLMEEXQRukZQSP6bXM6hcNWPlphiP");
 		try {
 			Uusers user = uusersService.selectByPhone(phone);
-			smsCode = sms.sendIdSms(phone);
+			String smsCode = sms.sendIdSms(phone);
+			//user不为null,说明是登录获取验证码
 			if(user!=null){
+				//更新数据库验证码记录,当做登录凭证
 				uusersService.updateSmsCode(phone, smsCode);
 			}
-			System.out.println(session.getId());
-			return smsCode;
-		} catch (ClientException e) {
-			// TODO Auto-generated catch block
+			RedisUtil redis = RedisUtil.getInstance();
+			//设值
+			redis.new Hash().hset("smsCode_"+phone, "smsCode", smsCode);
+			//设置redis保存时间
+			redis.expire("smsCode_"+phone, 120);
+			//设置返回结果
+			result.put("smsCode", smsCode);
+			result.put("message", "成功");
+			result.put("returnCode", "3000");
+			return result;
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
-
+			result.put("returnCode", "3007");
+			result.put("message", "参数格式不正确");
+			logger.info(e);
+			return result;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			result.put("returnCode", "3001");
+			result.put("message", "参数为null");
+			logger.info(e);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("returnCode", "3006");
+			result.put("message", "失败");
+			logger.info(e);
+			return result;
 		}
-		return null;
 	}
+	/**
+	 * @author 李业/无权限请求统一返回接口
+	 * @return
+	 */
 	@RequestMapping(value = "/unAuthorizedUrl")
-	public Map<String, Object> unAuthorizedUrl() {
+	public Map<String, Object> unAuthorizedUrl(HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String,Object>();
 		result.put("message", "没有权限");
 		result.put("returnCode", "4000");
+		String url = request.getRequestURI();
+		logger.info("url :"+url+"message : 没有权限");
 		return result;
 	}
 }
