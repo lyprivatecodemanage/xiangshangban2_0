@@ -1,4 +1,4 @@
-package com.jinnian.transit_service;
+package com.xiangshangban.transit_service;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.SecurityManager;

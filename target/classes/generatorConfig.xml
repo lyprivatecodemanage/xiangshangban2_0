@@ -44,7 +44,6 @@
         </javaClientGenerator>
         <!-- 指定数据库表 -->
 
-
         <table schema="" tableName="u_users_roles"  domainObjectName="UUsersRoles"
                enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true">

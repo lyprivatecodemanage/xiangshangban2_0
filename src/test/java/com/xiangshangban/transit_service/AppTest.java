@@ -1,4 +1,4 @@
-package com.jinnian.transit_service;
+package com.xiangshangban.transit_service;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
