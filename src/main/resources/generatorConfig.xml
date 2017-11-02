@@ -14,7 +14,7 @@
         <!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
         <!--<jdbcConnection driverClass="${jdbc.driver}"--> <!--connectionURL="${jdbc.url}"--> <!--userId="${jdbc.username}"--> <!--password="${jdbc.password}">--> <!--</jdbcConnection>-->
         <jdbcConnection driverClass="org.postgresql.Driver"
-                        connectionURL="jdbc:postgresql://192.168.0.242:5432/jurisdiction" userId="postgres"
+                        connectionURL="jdbc:postgresql://192.168.0.242:5432/xiangshangban2_0" userId="attendance"
                         password="jinnian-123abc">
         </jdbcConnection>
         <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal -->
@@ -22,8 +22,8 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
         <!-- targetProject:生成PO类的位置 -->
-        <javaModelGenerator targetPackage="com.xiangshangban.register.common.bean"
-                            targetProject="C:\Users\mian\Desktop\api_service\src\main\java">
+        <javaModelGenerator targetPackage="com.xiangshangban.transit_service.bean"
+                            targetProject="src\main\java">
             <property name="constructorBased" value="true"/>
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
@@ -31,44 +31,48 @@
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
         <!-- targetProject:mapper映射文件生成的位置 -->
-        <sqlMapGenerator targetPackage="com.xiangshangban.register.common.mapper"
-                         targetProject="C:\Users\mian\Desktop\api_service\src\main\java">
+        <sqlMapGenerator targetPackage="com.xiangshangban.transit_service.dao"
+                         targetProject="src\main\resources">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- targetPackage：mapper接口生成的位置 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.xiangshangban.register.common.dao"
-                             targetProject="C:\Users\mian\Desktop\api_service\src\main\java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.xiangshangban.transit_service.dao"
+                             targetProject="src\main\java">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
         <!-- 指定数据库表 -->
 
-        <table schema="" tableName="U_Users"  domainObjectName="Users"
+        <table schema="" tableName="u_users_roles"  domainObjectName="UUsersRoles"
                enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true">
             <property name="useActualColumnNames" value="true"/>
         </table>
-        <table schema="" tableName="U_Roles"  domainObjectName="Roles"
-               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true">
-            <property name="useActualColumnNames" value="true"/>
-        </table>
-        <table schema="" tableName="U_Permission"  domainObjectName="Permission"
-               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true">
-            <property name="useActualColumnNames" value="true"/>
-        </table>
-        <table schema="" tableName="U_UsersRoles"  domainObjectName="UsersRoles"
-               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true">
-            <property name="useActualColumnNames" value="true"/>
-        </table>
-        <table schema="" tableName="U_RolesPermission"  domainObjectName="RolesPermission"
-               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true">
-            <property name="useActualColumnNames" value="true"/>
-        </table>
+        <!--<table schema="" tableName="u_users_roles"  domainObjectName="UUsersRoles"-->
+               <!--enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"-->
+               <!--enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true">-->
+            <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="" tableName="u_usersemployee"  domainObjectName="UUsersEmployee"-->
+               <!--enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"-->
+               <!--enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true">-->
+            <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--</table> <table schema="" tableName="u_permission"  domainObjectName="UPermission"-->
+                        <!--enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"-->
+                        <!--enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+    <!--</table>-->
+        <!--<table schema="" tableName="u_roles"  domainObjectName="URoles"-->
+               <!--enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"-->
+               <!--enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true">-->
+            <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--</table>-->
+        <!--<table schema="" tableName="u_roles_permission"  domainObjectName="URolesPermission"-->
+               <!--enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"-->
+               <!--enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true">-->
+            <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--</table>-->
         <!-- 有些表的字段需要指定java类型
         <table schema="" tableName="">
             <columnOverride column="" javaType="" />

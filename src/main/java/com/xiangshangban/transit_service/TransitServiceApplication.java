@@ -1,66 +1,38 @@
 package com.xiangshangban.transit_service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Scanner;
 
-import com.xiangshangban.register.common.util.MathUtil;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.config.IniSecurityManagerFactory;
-import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.Factory;
-import org.junit.Assert;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
+import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.apache.shiro.mgt.SecurityManager;
 import com.xiangshangban.transit_service.filter.ServletFilter;
+import com.xiangshangban.transit_service.realm.MyRealm;
+import com.xiangshangban.transit_service.shiro.CredentialsMatcher;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * Hello world!
  *
  */
 @SpringBootApplication
-public class TransitServiceApplication 
+public class TransitServiceApplication
 {
     public static void main( String[] args )
     {
         SpringApplication.run(TransitServiceApplication.class, args);
 
-		test1("classpath:config/Shiro-realm.ini","wang","123");
-		Subject subject = SecurityUtils.getSubject();
-		Assert.assertTrue(subject.isPermitted("$user1$2"));//OK
-		Assert.assertTrue(subject.isPermitted("$user2$2"));//OK
-		Assert.assertTrue(subject.isPermitted("$user1$2"));//OK
-		Assert.assertTrue(subject.isPermitted("$user1$8"));//OK
-		Assert.assertTrue(subject.isPermitted("$user2$10"));//OK
-		Assert.assertTrue(subject.isPermitted("$user1$4"));//OK
-		Assert.assertTrue(subject.isPermitted("menu:view"));//OK
     }
 
-	public static void test1(String iniFile,String phone,String newpwd) {
-		Factory<SecurityManager> factory = new IniSecurityManagerFactory(iniFile);
-		SecurityManager securityManager = factory.getInstance();
-		SecurityUtils.setSecurityManager(securityManager);
-		Subject subject = SecurityUtils.getSubject();
-		UsernamePasswordToken token = new UsernamePasswordToken(phone, newpwd);
-		token.setRememberMe(true);
-		try {
-			subject.login(token);
-			System.out.println(token.getUsername()+"      "+token.getPassword());
-			System.out.println("登录成功");
-
-		} catch (AuthenticationException e) {
-			//登录失败
-			System.out.println("登录失败");
-			e.printStackTrace();
-		}
-		Assert.assertEquals(true, subject.isAuthenticated());
-	}
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {
   	   FilterRegistrationBean registrationBean = new FilterRegistrationBean();
@@ -72,4 +44,61 @@ public class TransitServiceApplication
   	   return registrationBean;
   	}
 
+    @Bean(name="shiroFilter")
+    public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager) {
+        ShiroFilterFactoryBean bean=new ShiroFilterFactoryBean();
+        bean.setSecurityManager(manager);
+        //配置登录的url和登录成功的url
+        bean.setLoginUrl("/login");
+        bean.setSuccessUrl("/home");
+        //配置访问权限
+        LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<String,String>();
+       /* filterChainDefinitionMap.put("/jsp/login.jsp*", "anon"); //表示可以匿名访问
+        filterChainDefinitionMap.put("/loginUser", "anon"); 
+        filterChainDefinitionMap.put("/logout*","anon");
+        filterChainDefinitionMap.put("/jsp/error.jsp*","anon");
+        filterChainDefinitionMap.put("/jsp/index.jsp*","authc");
+        filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
+        filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
+        filterChainDefinitionMap.put("/*.*", "authc");*/
+        filterChainDefinitionMap.put("/*.*", "anon");
+        bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+        return bean;
+    }
+    //配置核心安全事务管理器
+    @Bean(name="securityManager")
+    public SecurityManager securityManager(@Qualifier("authRealm") MyRealm myRealm) {
+        System.err.println("--------------shiro已经加载----------------");
+        DefaultWebSecurityManager manager=new DefaultWebSecurityManager();
+        manager.setRealm(myRealm);
+        return manager;
+    }
+    //配置自定义的权限登录器
+    @Bean(name="authRealm")
+    public MyRealm authRealm(@Qualifier("credentialsMatcher") CredentialsMatcher matcher) {
+    	MyRealm myRealm=new MyRealm();
+    	myRealm.setCredentialsMatcher(matcher);
+        return myRealm;
+    }
+    //配置自定义的密码比较器
+    @Bean(name="credentialsMatcher")
+    public CredentialsMatcher credentialsMatcher() {
+        return new CredentialsMatcher();
+    }
+    @Bean
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor(){
+        return new LifecycleBeanPostProcessor();
+    }
+    @Bean
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator(){
+        DefaultAdvisorAutoProxyCreator creator=new DefaultAdvisorAutoProxyCreator();
+        creator.setProxyTargetClass(true);
+        return creator;
+    }
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(@Qualifier("securityManager") SecurityManager manager) {
+        AuthorizationAttributeSourceAdvisor advisor=new AuthorizationAttributeSourceAdvisor();
+        advisor.setSecurityManager(manager);
+        return advisor;
+    }
 }
