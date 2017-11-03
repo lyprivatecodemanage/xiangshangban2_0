@@ -126,7 +126,7 @@ public class LoginController {
 	
 	
 	/**
-	 * app扫描二维码
+	 * @author 李业/app扫描二维码
 	 * @param qrcode
 	 * @param request
 	 * @return
@@ -200,7 +200,7 @@ public class LoginController {
 		}
 	}
 	/**
-	 * app确认二维码登录
+	 * @author 李业/app确认二维码登录
 	 * @param request
 	 * @return
 	 */
@@ -244,6 +244,7 @@ public class LoginController {
 	 * @author 李业/web二维码轮询接口
 	 * @return
 	 */
+	@RequestMapping("/training")
 	public Map<String,Object> training(HttpServletRequest request,HttpSession session){
 		Map<String,Object> result = new HashMap<String,Object>();
 		try{
