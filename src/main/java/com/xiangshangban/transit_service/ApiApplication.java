@@ -35,11 +35,11 @@ import org.springframework.context.annotation.ComponentScan;
  *
  */
 @SpringBootApplication
-public class TransitServiceApplication
+public class ApiApplication
 {
     public static void main( String[] args )
     {
-        SpringApplication.run(TransitServiceApplication.class, args);
+        SpringApplication.run(ApiApplication.class, args);
 
     }
 

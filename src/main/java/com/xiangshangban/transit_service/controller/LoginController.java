@@ -31,7 +31,6 @@ import com.xiangshangban.transit_service.util.FormatUtil;
 import com.xiangshangban.transit_service.util.RedisUtil;
 import com.xiangshangban.transit_service.util.YtxSmsUtil;
 
-import redis.clients.jedis.Jedis;
 
 @RestController
 @RequestMapping("/loginController")
@@ -200,12 +199,23 @@ public class LoginController {
 			return result;
 		}
 	}
-	
+	/**
+	 * app确认二维码登录
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/confirmLogin")
 	public Map<String,Object> confirmLogin(HttpServletRequest request){
 		Map<String,Object> result = new HashMap<String,Object>();
 		try{
 			String token = request.getHeader("ACCESS_TOKEN");
-			
+			Login login = loginService.selectByToken(token);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			//设置登录时间
+			login.setCreateTime(sdf.format(new Date()));
+			//更改二维码扫描状态
+			login.setQrcodeStatus("2");
+			loginService.updateByPrimaryKeySelective(login);
 			result.put("message", "登录成功");
 			result.put("returnCode", "3000");
 			return result;
@@ -234,12 +244,21 @@ public class LoginController {
 	 * @author 李业/web二维码轮询接口
 	 * @return
 	 */
-	public Map<String,Object> training(){
+	public Map<String,Object> training(HttpServletRequest request,HttpSession session){
 		Map<String,Object> result = new HashMap<String,Object>();
 		try{
+			String sessionId = session.getId();
 			//获取app扫码状态
-			
-			
+			Login login = loginService.selectBySessionId(sessionId);
+			if(Integer.valueOf(login.getQrcodeStatus())!=2){
+				result.put("message", "二维码未确认登录,请稍后...");
+				result.put("returnCode", "4003");
+				return result;
+			}
+			login.setQrcodeStatus("3");
+			loginService.updateByPrimaryKeySelective(login);
+			result.put("message", "登录成功");
+			result.put("returnCode", "3000");
 			return result;
 		} catch (NumberFormatException e) {
 			e.printStackTrace();

@@ -19,44 +19,44 @@
     select 
     <include refid="Base_Column_List" />
     from login_
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id}
   </select>
   
   <select id="selectByToken" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from login_
-    where token = #{token,jdbcType=VARCHAR} 
+    where token = #{token} 
   </select>
   <select id="selectByQrcode" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from login_
-    where qrcode = #{qrcode,jdbcType=VARCHAR} 
+    where qrcode = #{qrcode} 
   </select>
   <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from login_
-    where phone = #{phone,jdbcType=VARCHAR} 
+    where phone = #{phone} 
   </select>
   <select id="selectBySessionId" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from login_
-    where session_id = #{sessionId,jdbcType=VARCHAR} 
+    where session_id = #{sessionId} 
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from login_
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id}
   </delete>
   <insert id="insert" parameterType="com.xiangshangban.transit_service.bean.Login">
     insert into login_ (id, phone, token, 
       salt, create_time, effective_time,session_id,qrcode,qrcode_status)
-    values (#{id,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, 
-      #{salt,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{effectiveTime,jdbcType=VARCHAR}, 
-      #{sessionId,jdbcType=VARCHAR},#{qrcode},#{qrcodeStatus})
+    values (#{id}, #{phone}, #{token}, 
+      #{salt}, #{createTime}, #{effectiveTime}, 
+      #{sessionId},#{qrcode},#{qrcodeStatus})
   </insert>
   <insert id="insertSelective" parameterType="com.xiangshangban.transit_service.bean.Login">
     insert into login_
@@ -91,31 +91,31 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=VARCHAR},
+        #{id},
       </if>
       <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
+        #{phone},
       </if>
       <if test="token != null">
-        #{token,jdbcType=VARCHAR},
+        #{token},
       </if>
       <if test="salt != null">
-        #{salt,jdbcType=VARCHAR},
+        #{salt},
       </if>
       <if test="createTime != null">
-        #{createTime,jdbcType=VARCHAR},
+        #{createTime},
       </if>
       <if test="effectiveTime != null">
-        #{effectiveTime,jdbcType=VARCHAR},
+        #{effectiveTime},
       </if>
       <if test="sessionId != null">
-        #{sessionId,jdbcType=VARCHAR},
+        #{sessionId},
       </if>
       <if test="qrcode != null">
-        #{qrcode,jdbcType=VARCHAR},
+        #{qrcode},
       </if>
       <if test="qrcodeStatus != null">
-        #{qrcodeStatus,jdbcType=VARCHAR},
+        #{qrcodeStatus},
       </if>
     </trim>
   </insert>
@@ -123,43 +123,43 @@
     update login_
     <set>
       <if test="phone != null">
-        phone = #{phone,jdbcType=VARCHAR},
+        phone = #{phone},
       </if>
       <if test="token != null">
-        token = #{token,jdbcType=VARCHAR},
+        token = #{token},
       </if>
       <if test="salt != null">
-        salt = #{salt,jdbcType=VARCHAR},
+        salt = #{salt},
       </if>
       <if test="createTime != null">
-        create_time = #{createTime,jdbcType=VARCHAR},
+        create_time = #{createTime},
       </if>
       <if test="effectiveTime != null">
-        effective_time = #{effectiveTime,jdbcType=VARCHAR},
+        effective_time = #{effectiveTime},
       </if>
       <if test="sessionId != null">
-        session_id = #{sessionId,jdbcType=VARCHAR},
+        session_id = #{sessionId},
       </if>
       <if test="qrcode != null">
-        qrcode = #{qrcode,jdbcType=VARCHAR},
+        qrcode = #{qrcode},
       </if>
       <if test="qrcodeStatus != null">
-        qrcode_Status = #{qrcodeStatus,jdbcType=VARCHAR},
+        qrcode_Status = #{qrcodeStatus},
       </if>
     </set>
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.xiangshangban.transit_service.bean.Login">
     update login_
-    set phone = #{phone,jdbcType=VARCHAR},
-      token = #{token,jdbcType=VARCHAR},
-      salt = #{salt,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=VARCHAR},
-      effective_time = #{effectiveTime,jdbcType=VARCHAR},
-      session_id = #{sessionId,jdbcType=VARCHAR},
+    set phone = #{phone},
+      token = #{token},
+      salt = #{salt},
+      create_time = #{createTime},
+      effective_time = #{effectiveTime},
+      session_id = #{sessionId},
       qrcode = #{qrcode},
       qrcode_status = #{qrcodeStatus}
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id}
   </update>
   
 </mapper>
