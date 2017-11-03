@@ -24,6 +24,12 @@ public interface LoginMapper {
      */
     Login selectByToken(String token);
     /**
+     * 根据qrcode查询登录信息
+     * @param token
+     * @return
+     */
+    Login selectByQrcode(String qrcode);
+    /**
 	 * 根据sessionId查询
 	 * @param sessionId
 	 * @return

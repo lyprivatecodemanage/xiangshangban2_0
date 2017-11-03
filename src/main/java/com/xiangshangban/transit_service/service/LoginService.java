@@ -28,6 +28,9 @@ public interface LoginService {
 	 */
 	Login selectByPhone(String phone);
 	
+	Login selectByQrcode(String qrcode);
 	
 	int updateByPrimaryKeySelective(Login record);
+	
+	int deleteByPrimatyKey(String id);
 }

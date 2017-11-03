@@ -31,7 +31,6 @@ public class LoginServiceImpl implements LoginService {
 	 */
 	@Override
 	public int insertSelective(Login record) {
-
 		return loginMapper.insertSelective(record);
 	}
 
@@ -43,13 +42,11 @@ public class LoginServiceImpl implements LoginService {
 	 */
 	@Override
 	public Login selectBySessionId(String sessionId) {
-
 		return loginMapper.selectBySessionId(sessionId);
 	}
 
 	@Override
 	public int updateByPrimaryKeySelective(Login record) {
-		
 		return loginMapper.updateByPrimaryKeySelective(record);
 	}
 
@@ -61,8 +58,18 @@ public class LoginServiceImpl implements LoginService {
 	 */
 	@Override
 	public Login selectByPhone(String phone) {
-		
 		return loginMapper.selectByPhone(phone);
+	}
+
+	@Override
+	public Login selectByQrcode(String qrcode) {
+		return loginMapper.selectByQrcode(qrcode);
+	}
+
+	@Override
+	public int deleteByPrimatyKey(String id) {
+		// TODO Auto-generated method stub
+		return loginMapper.deleteByPrimaryKey(id);
 	}
 
 }

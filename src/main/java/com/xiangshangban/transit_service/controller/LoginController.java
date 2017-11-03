@@ -124,6 +124,112 @@ public class LoginController {
 			return result;
 		}
 	}
+	
+	
+	/**
+	 * app扫描二维码
+	 * @param qrcode
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/scanCode")
+	public Map<String,Object> scanCode(String qrcode,HttpServletRequest request){
+		Map<String, Object> result = new HashMap<String,Object>();
+		try{
+			RedisUtil redis = RedisUtil.getInstance();
+			String token = request.getHeader("ACCESS_TOKEN");
+			//二维码是否过期(过期时间300秒)
+			String redisQrcode = redis.new Hash().hget("qrcode_"+qrcode, "qrcode");
+			if(redisQrcode==null){
+				result.put("message", "二维码已过期");
+				result.put("returnCode", "4001");
+				return result;
+			}
+			if(redisQrcode.equals(qrcode)){
+				Login webLogin = loginService.selectByQrcode(qrcode);
+				Login appLogin = loginService.selectByToken(token);
+				Uusers user = uusersService.selectByPhone(appLogin.getPhone());
+				List<String> listRole = uusersService.selectRoles(appLogin.getPhone());
+				//判断是否是企业管理员,'0':不是,'1':是
+				int i = 0;
+				for(String role:listRole){
+					if("admin".equals(role)){
+						i=i+1;
+					}
+				}
+				if(i==1){
+					//建立qrcode,token,sessionId的关联
+					webLogin.setToken(token);
+					webLogin.setSalt(appLogin.getSalt());
+					webLogin.setEffectiveTime(appLogin.getEffectiveTime());
+					webLogin.setPhone(appLogin.getPhone());
+					//设置未扫描状态
+					webLogin.setQrcodeStatus("1");
+					loginService.updateByPrimaryKeySelective(webLogin);
+				}else{
+					loginService.deleteByPrimatyKey(webLogin.getId());
+					result.put("message", "没有企业管理员的权限");
+					result.put("returnCode", "4002");
+					return result;
+				}
+			}else{
+				result.put("message", "二维码不正确");
+				result.put("returnCode", "4001");
+				return result;
+			}
+			result.put("message", "扫码成功,请确认登录");
+			result.put("returnCode", "3000");
+			return result;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3007");
+			result.put("message", "参数格式不正确");
+			return result;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3001");
+			result.put("message", "参数为null");
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3006");
+			result.put("message", "失败");
+			return result;
+		}
+	}
+	
+	public Map<String,Object> confirmLogin(HttpServletRequest request){
+		Map<String,Object> result = new HashMap<String,Object>();
+		try{
+			String token = request.getHeader("ACCESS_TOKEN");
+			
+			result.put("message", "登录成功");
+			result.put("returnCode", "3000");
+			return result;
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3007");
+			result.put("message", "参数格式不正确");
+			return result;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3001");
+			result.put("message", "参数为null");
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(e);
+			result.put("returnCode", "3006");
+			result.put("message", "失败");
+			return result;
+		}
+	}
+	
 	/**
 	 * @author 李业/web二维码轮询接口
 	 * @return
@@ -156,64 +262,6 @@ public class LoginController {
 		}
 	}
 	
-	
-	/**
-	 * app扫描二维码
-	 * @param qrcode
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/scanCode")
-	public Map<String,Object> scanCode(String qrcode,HttpServletRequest request){
-		Map<String, Object> result = new HashMap<String,Object>();
-		try{
-			RedisUtil redis = RedisUtil.getInstance();
-			String token = request.getHeader("ACCESS_TOKEN");
-			//二维码是否过期(过期时间300秒)
-			String redisQrcode = redis.new Hash().hget("qrcode_"+qrcode, "qrcode");
-			if(redisQrcode.equals(qrcode)){
-				//Login webLogin = loginService.selectByQrcode(qrcode);
-				Login appLogin = loginService.selectByToken(token);
-				Uusers user = uusersService.selectByPhone(appLogin.getPhone());
-				List<String> listRole = uusersService.selectRoles(appLogin.getPhone());
-				//判断是否是企业管理员,'0':不是,'1':是
-				int i = 0;
-				for(String role:listRole){
-					if("admin".equals(role)){
-						i=i+1;
-					}
-				}
-				if(i==1){
-					//建立qrcode,token,sessionId的关联
-					//webLogin.setQrcode(qrcode);
-					//设置未扫描状态
-					//webLogin.setQrcodeStatus("0");
-				}
-			}
-			
-			result.put("message", "成功");
-			result.put("returnCode", "3000");
-			return result;
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			logger.info(e);
-			result.put("returnCode", "3007");
-			result.put("message", "参数格式不正确");
-			return result;
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			logger.info(e);
-			result.put("returnCode", "3001");
-			result.put("message", "参数为null");
-			return result;
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.info(e);
-			result.put("returnCode", "3006");
-			result.put("message", "失败");
-			return result;
-		}
-	}
 	
 	/**
 	 * @author 李业/短信验证码登录
