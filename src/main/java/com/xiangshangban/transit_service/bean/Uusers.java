@@ -17,7 +17,7 @@ public class Uusers {
     private String username;
     private String phone;
     private String createTime;
-    private Date lastLoginTime;
+    private String lastLoginTime;
     private String status;
     private String companyId;
     private String wechatId;
@@ -31,7 +31,7 @@ public class Uusers {
 	}
 
 	public Uusers(String userid, String account, String userpwd, String temporarypwd, String salt, String username,
-			String phone, String createTime, Date lastLoginTime, String status, String companyId, String wechatId,
+			String phone, String createTime, String lastLoginTime, String status, String companyId, String wechatId,
 			String wechatCode, String wechatName, List<Uroles> urolesList) {
 		this.userid = userid;
 		this.account = account;
@@ -154,11 +154,11 @@ public class Uusers {
         this.phone = phone== null ? null : phone.trim();
     }
 
-    public Date getLastLoginTime() {
+    public String getLastLoginTime() {
         return lastLoginTime;
     }
 
-    public void setLastLoginTime(Date lastLoginTime) {
+    public void setLastLoginTime(String lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
     }
 

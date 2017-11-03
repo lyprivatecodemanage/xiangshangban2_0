@@ -28,6 +28,12 @@
     from login_
     where token = #{token,jdbcType=VARCHAR} 
   </select>
+  <select id="selectByQrcode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from login_
+    where qrcode = #{qrcode,jdbcType=VARCHAR} 
+  </select>
   <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
