@@ -29,17 +29,49 @@ public class UusersServiceImpl implements UusersService {
 		return uusersMapper.updateSmsCode(phone,smsCode);
 	}
 	
-	
-	
+
 	@Override
-	public Uusers selectByPrimaryKey(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+	public int deleteByPrimaryKey(String userid) {
+		return uusersMapper.deleteByPrimaryKey(userid);
 	}
+
+	@Override
+	public int insert(Uusers record) {
+		return uusersMapper.insert(record);
+	}
+	@Override
+	public int updateByPrimaryKey(Uusers record) {
+		return uusersMapper.updateByPrimaryKey(record);
+	}
+
+	@Override
+	public Uusers selectByPrimaryKey(String userid) {
+		
+		return uusersMapper.selectByPrimaryKey(userid);
+	}
+
+	@Override
+	public int updateByPrimaryKeySelective(Uusers record) {
+		return uusersMapper.updateByPrimaryKeySelective(record);
+	}
+
+	@Override
+	public int insertSelective(Uusers record) {
+		return uusersMapper.insertSelective(record);
+	}
+	
 	@Override
 	public List<String> selectRoles(String phone) {
 		// TODO Auto-generated method stub
 		return uusersMapper.selectRoles(phone);
 	}
+
+	@Override
+	public int SelecCountByPhone(String phone) {
+		return uusersMapper.SelecByPhone(phone);
+	}
+
+	
+	
 
 }

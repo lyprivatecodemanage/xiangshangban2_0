@@ -97,6 +97,8 @@ public class LoginController {
 			login.setSessionId(sessionId);
 			login.setQrcode(qrcode);
 			login.setQrcodeStatus("0");
+			login.setId(FormatUtil.createUuid());
+			loginService.insertSelective(login);
 			
 			result.put("qrcode", qrcode);
 			result.put("message", "成功");
@@ -166,13 +168,15 @@ public class LoginController {
 		Map<String, Object> result = new HashMap<String,Object>();
 		try{
 			RedisUtil redis = RedisUtil.getInstance();
-			String token = request.getHeader("token");
+			String token = request.getHeader("ACCESS_TOKEN");
+			//二维码是否过期(过期时间300秒)
 			String redisQrcode = redis.new Hash().hget("qrcode_"+qrcode, "qrcode");
 			if(redisQrcode.equals(qrcode)){
-				Login login = loginService.selectByToken(token);
-				Uusers user = uusersService.selectByPhone(login.getPhone());
-				List<String> listRole = uusersService.selectRoles(login.getPhone());
-				//判断是否是企业管理员
+				//Login webLogin = loginService.selectByQrcode(qrcode);
+				Login appLogin = loginService.selectByToken(token);
+				Uusers user = uusersService.selectByPhone(appLogin.getPhone());
+				List<String> listRole = uusersService.selectRoles(appLogin.getPhone());
+				//判断是否是企业管理员,'0':不是,'1':是
 				int i = 0;
 				for(String role:listRole){
 					if("admin".equals(role)){
@@ -180,7 +184,10 @@ public class LoginController {
 					}
 				}
 				if(i==1){
-					
+					//建立qrcode,token,sessionId的关联
+					//webLogin.setQrcode(qrcode);
+					//设置未扫描状态
+					//webLogin.setQrcodeStatus("0");
 				}
 			}
 			

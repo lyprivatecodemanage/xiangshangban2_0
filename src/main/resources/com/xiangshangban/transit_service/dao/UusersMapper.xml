@@ -7,12 +7,18 @@
 		<result column="userpwd" jdbcType="VARCHAR" property="userpwd" />
 		<result column="temporarypwd" jdbcType="VARCHAR" property="temporarypwd" />
 		<result column="salt" jdbcType="VARCHAR" property="salt" />
+		<result column="username" jdbcType="VARCHAR" property="username" />
 		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="create_time" jdbcType="VARCHAR" property="createTime" />
 		<result column="last_login_time" jdbcType="DATE" property="lastLoginTime" />
 		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="company_id" jdbcType="VARCHAR" property="companyId" />
+		<result column="wechat_id" jdbcType="VARCHAR" property="wechatId" />
+		<result column="wechat_code" jdbcType="VARCHAR" property="wechatCode" />
+		<result column="wechat_name" jdbcType="VARCHAR" property="wecharName" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		userid, account, userpwd, temporarypwd, salt, phone, last_login_time, status
+		userid, account, userpwd, temporarypwd, salt, username, phone, createTime, last_login_time, status, company_id, wechat_id, wechat_code, wechat_name
 	</sql>
 	<select id="selectRoles" parameterType="java.lang.String" resultType="java.lang.String">
 		select rolename
@@ -28,34 +34,33 @@
 		select
 		<include refid="Base_Column_List" />
 		from u_users
-		where status = '0' and userid = #{userid,jdbcType=VARCHAR}
+		where status = '0' and userid = #{userid}
 	</select>
 	<select id="selectByAccount" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from u_users
-		where account = #{account,jdbcType=VARCHAR}
+		where account = #{account}
 	</select>
 	<select id="selectByPhone" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from u_users
-		where phone = #{phone,jdbcType=VARCHAR}
+		where phone = #{phone}
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from u_users
-		where userid = #{userid,jdbcType=VARCHAR}
+		where userid = #{userid}
 	</delete>
 	<insert id="insert" parameterType="com.xiangshangban.transit_service.bean.Uusers">
 		insert into u_users (userid, account, userpwd,
-		temporarypwd, salt, phone,
-		last_login_time, status)
-		values (#{userid,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR},
-		#{userpwd,jdbcType=VARCHAR},
-		#{temporarypwd,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
-		#{lastLoginTime,jdbcType=DATE}, #{status,jdbcType=VARCHAR})
+		temporarypwd, salt, username, phone, create_time,
+		last_login_time, status, company_id, wechat_id, wechat_code, wechat_name)
+		values (#{userid}, #{account},#{userpwd},
+		#{temporarypwd}, #{salt}, #{username}, #{phone}, #{createTime}
+		#{lastLoginTime}, #{status}, #{companyId}, #{wechatId}, #{wechatCode}, #{wechatName})
 	</insert>
 	<insert id="insertSelective" parameterType="com.xiangshangban.transit_service.bean.Uusers">
 		insert into u_users
@@ -75,8 +80,14 @@
 			<if test="salt != null">
 				salt,
 			</if>
+			<if test="username != null">
+				username,
+			</if>
 			<if test="phone != null">
 				phone,
+			</if>
+			<if test="createTime != null">
+				create_time,
 			</if>
 			<if test="lastLoginTime != null">
 				last_login_time,
@@ -84,31 +95,61 @@
 			<if test="status != null">
 				status,
 			</if>
+			<if test="companyId != null">
+				company_id,
+			</if>
+			<if test="wechatId != null">
+				wechat_id,
+			</if>
+			<if test="wechatCode != null">
+				wechat_code,
+			</if>
+			<if test="wechatName != null">
+				wechat_name,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="userid != null">
-				#{userid,jdbcType=VARCHAR},
+				#{userid},
 			</if>
 			<if test="account != null">
-				#{account,jdbcType=VARCHAR},
+				#{account},
 			</if>
 			<if test="userpwd != null">
-				#{userpwd,jdbcType=VARCHAR},
+				#{userpwd},
 			</if>
 			<if test="temporarypwd != null">
-				#{temporarypwd,jdbcType=VARCHAR},
+				#{temporarypwd},
 			</if>
 			<if test="salt != null">
-				#{salt,jdbcType=VARCHAR},
+				#{salt},
+			</if>
+			<if test="username != null">
+				#{username},
 			</if>
 			<if test="phone != null">
-				#{phone,jdbcType=VARCHAR},
+				#{phone},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
 			</if>
 			<if test="lastLoginTime != null">
 				#{lastLoginTime,jdbcType=DATE},
 			</if>
 			<if test="status != null">
-				#{status,jdbcType=VARCHAR},
+				#{status},
+			</if>
+			<if test="companyId != null">
+				#{companyId},
+			</if>
+			<if test="wechatId != null">
+				#{wechatId},
+			</if>
+			<if test="wechatCode != null">
+				#{wechatCode},
+			</if>
+			<if test="wechatName != null">
+				#{wechatName},
 			</if>
 		</trim>
 	</insert>
@@ -116,39 +157,63 @@
 		update u_users
 		<set>
 			<if test="account != null">
-				account = #{account,jdbcType=VARCHAR},
+				account = #{account},
 			</if>
 			<if test="userpwd != null">
-				userpwd = #{userpwd,jdbcType=VARCHAR},
+				userpwd = #{userpwd},
 			</if>
 			<if test="temporarypwd != null">
-				temporarypwd = #{temporarypwd,jdbcType=VARCHAR},
+				temporarypwd = #{temporarypwd},
 			</if>
 			<if test="salt != null">
-				salt = #{salt,jdbcType=VARCHAR},
+				salt = #{salt},
+			</if>
+			<if test="username != null">
+				username = #{username},
 			</if>
 			<if test="phone != null">
-				phone = #{phone,jdbcType=VARCHAR},
+				phone = #{phone},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
 			</if>
 			<if test="lastLoginTime != null">
 				last_login_time = #{lastLoginTime,jdbcType=DATE},
 			</if>
 			<if test="status != null">
-				status = #{status,jdbcType=VARCHAR},
+				status = #{status},
+			</if>
+			<if test="companyId != null">
+				company_id = #{companyId},
+			</if>
+			<if test="wechatId != null">
+				wechat_id = #{wechatId},
+			</if>
+			<if test="wechatCode != null">
+				wechat_code = #{wechatCode},
+			</if>
+			<if test="wechatName != null">
+				wechat_name = #{wechatName},
 			</if>
 		</set>
-		where userid = #{userid,jdbcType=VARCHAR}
+		where userid = #{userid}
 	</update>
 	<update id="updateByPrimaryKey" parameterType="com.xiangshangban.transit_service.bean.Uusers">
 		update u_users
-		set account = #{account,jdbcType=VARCHAR},
-		userpwd = #{userpwd,jdbcType=VARCHAR},
-		temporarypwd = #{temporarypwd,jdbcType=VARCHAR},
-		salt = #{salt,jdbcType=VARCHAR},
-		phone = #{phone,jdbcType=VARCHAR},
+		set account = #{account},
+		userpwd = #{userpwd},
+		temporarypwd = #{temporarypwd},
+		salt = #{salt},
+		username = #{username},
+		phone = #{phone},
+		create_time = #{createTime},
 		last_login_time = #{lastLoginTime,jdbcType=DATE},
-		status = #{status,jdbcType=VARCHAR}
-		where userid = #{userid,jdbcType=VARCHAR}
+		status = #{status},
+		company_id = #{companyId},
+		wechat_id = #{wechatId},
+		wechat_code = #{wechatCode},
+		wechat_name = #{wechatName}
+		where userid = #{userid}
 	</update>
 	<update id="updateSmsCode">
 		update u_users

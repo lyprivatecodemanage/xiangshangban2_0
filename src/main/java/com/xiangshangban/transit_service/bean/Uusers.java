@@ -4,29 +4,101 @@ import java.util.Date;
 import java.util.List;
 
 public class Uusers {
+	 //禁止登录
+    public static String status_0 = "0";
+    //允许登录
+    public static String status_1 = "1";
+	
     private String userid;
-
     private String account;
-
     private String userpwd;
-
     private String temporarypwd;
-
     private String salt;
-
+    private String username;
     private String phone;
-
+    private String createTime;
     private Date lastLoginTime;
-
     private String status;
-    
-    
-    
+    private String companyId;
+    private String wechatId;
+    private String wechatCode;
+    private String wechatName;
     private List<Uroles> UrolesList;
     
     
 
-    public List<Uroles> getUrolesList() {
+    public Uusers() {
+	}
+
+	public Uusers(String userid, String account, String userpwd, String temporarypwd, String salt, String username,
+			String phone, String createTime, Date lastLoginTime, String status, String companyId, String wechatId,
+			String wechatCode, String wechatName, List<Uroles> urolesList) {
+		this.userid = userid;
+		this.account = account;
+		this.userpwd = userpwd;
+		this.temporarypwd = temporarypwd;
+		this.salt = salt;
+		this.username = username;
+		this.phone = phone;
+		this.createTime = createTime;
+		this.lastLoginTime = lastLoginTime;
+		this.status = status;
+		this.companyId = companyId;
+		this.wechatId = wechatId;
+		this.wechatCode = wechatCode;
+		this.wechatName = wechatName;
+		UrolesList = urolesList;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username== null ? null : username.trim();
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId== null ? null : companyId.trim();
+	}
+
+	public String getWechatId() {
+		return wechatId;
+	}
+
+	public void setWechatId(String wechatId) {
+		this.wechatId = wechatId== null ? null : wechatId.trim();
+	}
+
+	public String getWechatCode() {
+		return wechatCode;
+	}
+
+	public void setWechatCode(String wechatCode) {
+		this.wechatCode = wechatCode== null ? null : wechatCode.trim();
+	}
+
+	public String getWechatName() {
+		return wechatName;
+	}
+
+	public void setWechatName(String wechatName) {
+		this.wechatName = wechatName== null ? null : wechatName.trim();
+	}
+
+	public List<Uroles> getUrolesList() {
 		return UrolesList;
 	}
 
@@ -39,7 +111,7 @@ public class Uusers {
     }
 
     public void setUserid(String userid) {
-        this.userid = userid;
+        this.userid = userid== null ? null : userid.trim();
     }
 
     public String getAccount() {
@@ -47,7 +119,7 @@ public class Uusers {
     }
 
     public void setAccount(String account) {
-        this.account = account;
+        this.account = account== null ? null : account.trim();
     }
 
     public String getUserpwd() {
@@ -63,7 +135,7 @@ public class Uusers {
     }
 
     public void setTemporarypwd(String temporarypwd) {
-        this.temporarypwd = temporarypwd;
+        this.temporarypwd = temporarypwd== null ? null : temporarypwd.trim();
     }
 
     public String getSalt() {
@@ -71,7 +143,7 @@ public class Uusers {
     }
 
     public void setSalt(String salt) {
-        this.salt = salt;
+        this.salt = salt== null ? null : salt.trim();
     }
 
     public String getPhone() {
@@ -79,7 +151,7 @@ public class Uusers {
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        this.phone = phone== null ? null : phone.trim();
     }
 
     public Date getLastLoginTime() {
@@ -95,6 +167,6 @@ public class Uusers {
     }
 
     public void setStatus(String status) {
-        this.status = status;
+        this.status = status== null ? null : status.trim();
     }
 }

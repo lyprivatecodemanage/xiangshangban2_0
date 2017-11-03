@@ -20,4 +20,17 @@ public interface UusersService {
 	 
 	 List<String> selectRoles(String phone);
 	 
+	 
+	 int deleteByPrimaryKey(String userid);
+
+		int insert(Uusers record);
+
+		int updateByPrimaryKey(Uusers record);
+
+
+		int SelecCountByPhone(String phone);
+
+		int updateByPrimaryKeySelective(Uusers record);
+
+		int insertSelective(Uusers record);
 }
