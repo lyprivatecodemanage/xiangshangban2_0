@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aliyuncs.exceptions.ClientException;
 import com.xiangshangban.transit_service.bean.Login;
 import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.service.LoginService;
@@ -91,7 +90,7 @@ public class LoginController {
 			RedisUtil redis = RedisUtil.getInstance();
 			//将二位码存入redis,设置有效时间300秒
 			redis.new Hash().hset("qrcode_"+qrcode, "qrcode", qrcode);
-			redis.expire("qrcode_"+session, 300);
+			redis.expire("qrcode_"+qrcode, 300);
 			Login login = new Login();
 			login.setSessionId(sessionId);
 			login.setQrcode(qrcode);
@@ -147,7 +146,7 @@ public class LoginController {
 			if(redisQrcode.equals(qrcode)){
 				Login webLogin = loginService.selectByQrcode(qrcode);
 				Login appLogin = loginService.selectByToken(token);
-				Uusers user = uusersService.selectByPhone(appLogin.getPhone());
+				//Uusers user = uusersService.selectByPhone(appLogin.getPhone());
 				List<String> listRole = uusersService.selectRoles(appLogin.getPhone());
 				//判断是否是企业管理员,'0':不是,'1':是
 				int i = 0;
@@ -295,12 +294,13 @@ public class LoginController {
 	 */
 	@Transactional
 	@RequestMapping(value = "/loginUser")
-	public Map<String, Object> loginUser(String phone, String smsCode, String type, HttpSession session,HttpServletRequest request) {
-		// Principal principal = UserUtils.getPrincipal();
+	public Map<String, Object> loginUser(String phone, String smsCode, HttpSession session,HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar calendar = Calendar.getInstance();
-		String token = request.getHeader("token");
+		String type = request.getHeader("type");
+		String token = request.getHeader("ACCESS_TOKEN");
+		String UserAgent = request.getHeader("User-Agent");
 		RedisUtil redis = RedisUtil.getInstance();
 		String redisSmsCode ="";
 		if(phone != null && !"".equals(phone)){
@@ -405,9 +405,7 @@ public class LoginController {
 					}
 				}
 				
-				System.out.println(session.getId());
 				UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(phone, smsCode);
-				System.out.println(usernamePasswordToken.toString());
 				Subject subject = SecurityUtils.getSubject();
 				usernamePasswordToken.setRememberMe(true);
 				subject.login(usernamePasswordToken); // 完成登录
@@ -446,7 +444,6 @@ public class LoginController {
 	 */
 	@RequiresRoles(value={"admin","superAdmin"},logical=Logical.OR)
 	@RequestMapping(value = "/logOut")
-	// @RequestMapping(value="/logOut",method=RequestMethod.GET,produces="application/json;charset=utf-8")
 	public Map<String,Object> logOut(HttpSession session) {
 		Map<String,Object> result = new HashMap<String,Object>();
 		try{
