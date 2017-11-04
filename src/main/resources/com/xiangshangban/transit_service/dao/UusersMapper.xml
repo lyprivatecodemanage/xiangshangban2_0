@@ -18,7 +18,7 @@
 		<result column="wechat_name" jdbcType="VARCHAR" property="wecharName" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		userid, account, userpwd, temporarypwd, salt, username, phone, createTime, last_login_time, status, company_id, wechat_id, wechat_code, wechat_name
+		userid, account, userpwd, temporarypwd, salt, username, phone, create_time, last_login_time, status, company_id, wechat_id, wechat_code, wechat_name
 	</sql>
 	<select id="selectRoles" parameterType="java.lang.String" resultType="java.lang.String">
 		select rolename

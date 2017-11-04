@@ -430,7 +430,7 @@
   </update>
 
   <select id="selectByCompany" parameterType="java.lang.String" resultType="java.lang.Integer">
-    select count(company_id) from company_ where companyName = #{companyName,jdbcType=VARCHAR}
+    select count(company_id) from company_ where company_name = #{companyName,jdbcType=VARCHAR}
   </select>
 
   <select id="selectCompanyNo" parameterType="java.lang.String" resultType="java.lang.String">
