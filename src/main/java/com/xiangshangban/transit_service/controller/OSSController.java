@@ -12,7 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
 import com.xiangshangban.transit_service.bean.OSSFile;
+import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.service.OSSFileService;
+import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.OSSFileUtil;
 
 
@@ -21,6 +23,8 @@ import com.xiangshangban.transit_service.util.OSSFileUtil;
 public class OSSController {
 	@Autowired
 	OSSFileService oSSFileService;
+	@Autowired
+	UusersService uusersService; 
 	/**
 	 * 上传文件到OSS
 	 * @param file
@@ -32,6 +36,8 @@ public class OSSController {
 	public String appUpload(@RequestParam(value="file") MultipartFile file,@RequestHeader String ACCESS_TOKEN, 
 			@RequestParam(value="funcDirectory") String funcDirectory){ 
 		String token = ACCESS_TOKEN;
+		Uusers user = uusersService.selectCompanyByToken(token);
+		//String customerId = user.getCompanyId();
 		String customerId = "C001";//公司编号，此编号实际应用时，应根据token去查询
 		funcDirectory = "portrait";//portrait目录存储员工头像
 		if(StringUtils.isNotEmpty(token)){
@@ -49,11 +55,14 @@ public class OSSController {
 	 * @param ACCESS_TOKEN
 	 * @return
 	 */
-	@RequestMapping(value = "/path.shtml",produces = "application/json;charset=UTF-8",method=RequestMethod.GET)
+	@RequestMapping(value = "/getPath",produces = "application/json;charset=UTF-8",method=RequestMethod.GET)
 	public String appGetPath(String key,@RequestHeader String ACCESS_TOKEN, @RequestParam String funcDirectory){
 		String token = ACCESS_TOKEN;
+		Uusers user = uusersService.selectCompanyByToken(token);
+		//String customerId = user.getCompanyId();
 		String customerId = "C001";//公司编号，此编号实际应用时，应根据token去查询
-		return OSSFileUtil.getFilePath(customerId, funcDirectory, key);
+		String url = OSSFileUtil.getFilePath(customerId, funcDirectory, key);
+		return JSON.toJSONString(url);
 	}
 } 
 
