@@ -28,6 +28,13 @@
 		from u_users_roles where userid = (select userid from u_users where phone
 		= #{phone}))
 	</select>
+	<select id="selectCompanyByToken" parameterType="java.lang.String" resultType="com.xiangshangban.transit_service.bean.Uusers">
+		select 
+		<include refid="Base_Column_List" />
+		from
+		u_users u,login_ l 
+		where u.current_options = '1' and l.token = #{token} and l.phone = u.phone
+	</select>
 
 	<select id="selectByPrimaryKey" parameterType="java.lang.String"
 		resultMap="BaseResultMap">

@@ -70,6 +70,11 @@ public class UusersServiceImpl implements UusersService {
 	public int SelecCountByPhone(String phone) {
 		return uusersMapper.SelecByPhone(phone);
 	}
+	@Override
+	public Uusers selectCompanyByToken(String token) {
+		// TODO Auto-generated method stub
+		return uusersMapper.selectCompanyByToken(token);
+	}
 
 	
 	

@@ -55,9 +55,9 @@ public class ApiApplication
         ShiroFilterFactoryBean bean=new ShiroFilterFactoryBean();
         bean.setSecurityManager(manager);
         //配置登录的url和登录成功的url
-        bean.setLoginUrl("/loginController/loginUser");
+       /* bean.setLoginUrl("/loginController/loginUser");
         bean.setSuccessUrl("/loginController/logOut");
-        bean.setUnauthorizedUrl("/loginController/unAuthorizedUrl");
+        bean.setUnauthorizedUrl("/loginController/unAuthorizedUrl");*/
         //配置访问权限
        /* LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<String,String>();
         filterChainDefinitionMap.put("/loginUser", "anon");

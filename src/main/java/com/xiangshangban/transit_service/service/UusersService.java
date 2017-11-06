@@ -33,4 +33,6 @@ public interface UusersService {
 		int updateByPrimaryKeySelective(Uusers record);
 
 		int insertSelective(Uusers record);
+		
+		Uusers selectCompanyByToken(String token);
 }

@@ -28,7 +28,7 @@ public interface UusersMapper {
     
     //===========================>
 
-
+    Uusers selectCompanyByToken(String token);
 
 
     //注册时检查手机号是否已被注册

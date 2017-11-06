@@ -32,7 +32,7 @@ public class WebApprovalManagementController {
 	 * @return
 	 */
 	@RequestMapping(value = "/processDesign", produces = "application/json;charset=utf-8", method = RequestMethod.GET)
-	public Map<String, Object> processDesign(HttpServletRequest request) {
+	public Map<String, Object> processDesign() {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			String url = PropertiesUtils.pathUrl("processDesignUrl");
