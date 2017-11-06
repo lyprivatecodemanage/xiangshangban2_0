@@ -15,6 +15,7 @@
 		<result column="wechat_id" jdbcType="VARCHAR" property="wechatId" />
 		<result column="wechat_code" jdbcType="VARCHAR" property="wechatCode" />
 		<result column="wechat_name" jdbcType="VARCHAR" property="wecharName" />
+		<result column="company_id" property="companyId" />  
 	</resultMap>
 	<sql id="Base_Column_List">
 		u.userid, u.account, u.userpwd, u.temporarypwd, u.salt, u.username, u.phone, u.create_time, u.last_login_time, u.status, u.wechat_id, u.wechat_code, u.wechat_name
@@ -27,7 +28,7 @@
 		from u_users_roles where userid = (select userid from u_users where phone
 		= #{phone}))
 	</select>
-	<select id="selectCompanyByToken" parameterType="java.lang.String" resultType="com.xiangshangban.transit_service.bean.Uusers">
+	<select id="selectCompanyByToken" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select 
 		u.userid,uc.company_id
 		from
@@ -54,7 +55,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from u_users u
-		where phone = #{phone} and current_option = '1'
+		where phone = #{phone}
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from u_users
