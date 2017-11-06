@@ -2,9 +2,11 @@ package com.xiangshangban.transit_service.controller;
 
 import com.xiangshangban.transit_service.bean.CheckPendingJoinCompany;
 import com.xiangshangban.transit_service.bean.Company;
+import com.xiangshangban.transit_service.bean.UserCompanyKey;
 import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.service.CheckPendingJoinCompanyService;
 import com.xiangshangban.transit_service.service.CompanyService;
+import com.xiangshangban.transit_service.service.UserCompanyService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.PinYin2Abbreviation;
 import com.xiangshangban.transit_service.util.RedisUtil;
@@ -37,6 +39,9 @@ public class RegisterController{
 
     @Autowired
     CheckPendingJoinCompanyService checkPendingJoinCompanyService;
+
+    @Autowired
+    UserCompanyService userCompanyService;
 
 //    /***
 //     * 焦振/发送验证码
@@ -181,12 +186,13 @@ public class RegisterController{
                 //对创建公司的信息进行插入操作
                 companyService.insertSelective(company);
 
-                //将新创建的公司编号信息存入用户表中
-                Uusers users = new Uusers();
-                users.setCompanyId(companyId);
-                users.setUserid(userId);
-                users.setStatus(users.status_1);
-                uusersService.updateByPrimaryKeySelective(users);
+                //将新创建的公司编号信息存入用户与公司关联表中
+                UserCompanyKey userCompanyKey = new UserCompanyKey();
+                userCompanyKey.setCompany_id(companyId);
+                userCompanyKey.setUser_id(userId);
+                userCompanyKey.setCurrent_option("1");
+
+                userCompanyService.insertSelective(userCompanyKey);
 
                 map.put("returnCode","3000");
                 map.put("message","注册成功");
@@ -214,11 +220,11 @@ public class RegisterController{
                     checkPendingJoinCompany.setStatus("0");
                     checkPendingJoinCompanyService.insertSelective(checkPendingJoinCompany);
 
-                    //将获得的公司编号信息存入用户表中
-                    Uusers users = new Uusers();
-                    users.setCompanyId(company.getCompany_id());
-                    users.setUserid(userId);
-                    uusersService.updateByPrimaryKeySelective(users);
+                    //将加入的公司编号信息存入用户与公司关联表中
+                    UserCompanyKey userCompanyKey = new UserCompanyKey();
+                    userCompanyKey.setCompany_id(company.getCompany_id());
+                    userCompanyKey.setUser_id(userId);
+                    userCompanyKey.setCurrent_option("1");
                     //审核
                     map.put("returnCode", "3000");
                     map.put("message", "数据请求成功");

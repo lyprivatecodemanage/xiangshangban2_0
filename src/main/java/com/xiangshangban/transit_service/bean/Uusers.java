@@ -19,7 +19,6 @@ public class Uusers {
     private String createTime;
     private String lastLoginTime;
     private String status;
-    private String companyId;
     private String wechatId;
     private String wechatCode;
     private String wechatName;
@@ -31,7 +30,7 @@ public class Uusers {
 	}
 
 	public Uusers(String userid, String account, String userpwd, String temporarypwd, String salt, String username,
-			String phone, String createTime, String lastLoginTime, String status, String companyId, String wechatId,
+			String phone, String createTime, String lastLoginTime, String status, String wechatId,
 			String wechatCode, String wechatName, List<Uroles> urolesList) {
 		this.userid = userid;
 		this.account = account;
@@ -43,7 +42,6 @@ public class Uusers {
 		this.createTime = createTime;
 		this.lastLoginTime = lastLoginTime;
 		this.status = status;
-		this.companyId = companyId;
 		this.wechatId = wechatId;
 		this.wechatCode = wechatCode;
 		this.wechatName = wechatName;
@@ -64,14 +62,6 @@ public class Uusers {
 
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
-	}
-
-	public String getCompanyId() {
-		return companyId;
-	}
-
-	public void setCompanyId(String companyId) {
-		this.companyId = companyId== null ? null : companyId.trim();
 	}
 
 	public String getWechatId() {

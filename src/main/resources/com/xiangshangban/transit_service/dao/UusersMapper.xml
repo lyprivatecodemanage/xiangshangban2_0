@@ -12,13 +12,12 @@
 		<result column="create_time" jdbcType="VARCHAR" property="createTime" />
 		<result column="last_login_time" jdbcType="DATE" property="lastLoginTime" />
 		<result column="status" jdbcType="VARCHAR" property="status" />
-		<result column="company_id" jdbcType="VARCHAR" property="companyId" />
 		<result column="wechat_id" jdbcType="VARCHAR" property="wechatId" />
 		<result column="wechat_code" jdbcType="VARCHAR" property="wechatCode" />
 		<result column="wechat_name" jdbcType="VARCHAR" property="wecharName" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		userid, account, userpwd, temporarypwd, salt, username, phone, createTime, last_login_time, status, company_id, wechat_id, wechat_code, wechat_name
+		userid, account, userpwd, temporarypwd, salt, username, phone, createTime, last_login_time, status, _id, wechat_id, wechat_code, wechat_name
 	</sql>
 	<select id="selectRoles" parameterType="java.lang.String" resultType="java.lang.String">
 		select rolename
@@ -57,10 +56,10 @@
 	<insert id="insert" parameterType="com.xiangshangban.transit_service.bean.Uusers">
 		insert into organization.u_users (userid, account, userpwd,
 		temporarypwd, salt, username, phone, create_time,
-		last_login_time, status, company_id, wechat_id, wechat_code, wechat_name)
+		last_login_time, status, wechat_id, wechat_code, wechat_name)
 		values (#{userid}, #{account},#{userpwd},
 		#{temporarypwd}, #{salt}, #{username}, #{phone}, #{createTime}
-		#{lastLoginTime}, #{status}, #{companyId}, #{wechatId}, #{wechatCode}, #{wechatName})
+		#{lastLoginTime}, #{status}, #{wechatId}, #{wechatCode}, #{wechatName})
 	</insert>
 	<insert id="insertSelective" parameterType="com.xiangshangban.transit_service.bean.Uusers">
 		insert into organization.u_users
@@ -94,9 +93,6 @@
 			</if>
 			<if test="status != null">
 				status,
-			</if>
-			<if test="companyId != null">
-				company_id,
 			</if>
 			<if test="wechatId != null">
 				wechat_id,
@@ -139,9 +135,6 @@
 			<if test="status != null">
 				#{status},
 			</if>
-			<if test="companyId != null">
-				#{companyId},
-			</if>
 			<if test="wechatId != null">
 				#{wechatId},
 			</if>
@@ -183,9 +176,6 @@
 			<if test="status != null">
 				status = #{status},
 			</if>
-			<if test="companyId != null">
-				company_id = #{companyId},
-			</if>
 			<if test="wechatId != null">
 				wechat_id = #{wechatId},
 			</if>
@@ -209,7 +199,6 @@
 		create_time = #{createTime},
 		last_login_time = #{lastLoginTime,jdbcType=DATE},
 		status = #{status},
-		company_id = #{companyId},
 		wechat_id = #{wechatId},
 		wechat_code = #{wechatCode},
 		wechat_name = #{wechatName}
