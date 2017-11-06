@@ -1,20 +1,26 @@
 package com.xiangshangban.transit_service.controller;
 
-import com.aliyuncs.exceptions.ClientException;
+import com.xiangshangban.transit_service.bean.CheckPendingJoinCompany;
 import com.xiangshangban.transit_service.bean.Company;
 import com.xiangshangban.transit_service.bean.Uusers;
-import com.xiangshangban.transit_service.dao.UusersMapper;
+import com.xiangshangban.transit_service.service.CheckPendingJoinCompanyService;
 import com.xiangshangban.transit_service.service.CompanyService;
+import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.PinYin2Abbreviation;
 import com.xiangshangban.transit_service.util.RedisUtil;
-import com.xiangshangban.transit_service.util.YtxSmsUtil;
+import org.jboss.logging.Logger;
+import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by mian on 2017/10/30.
@@ -22,12 +28,15 @@ import java.util.*;
 @RestController
 @RequestMapping("/registerController")
 public class RegisterController{
-
+    Logger logger = Logger.getLogger(RegisterController.class);
     @Autowired
-    UusersMapper uusersMapper;
+    UusersService uusersService;
 
     @Autowired
     CompanyService companyService;
+
+    @Autowired
+    CheckPendingJoinCompanyService checkPendingJoinCompanyService;
 
 //    /***
 //     * 焦振/发送验证码
@@ -69,21 +78,59 @@ public class RegisterController{
 
     /***
      * 焦振/进行用户注册
-     * 公司注册
+     *      公司注册
      * @param phone
      * @param userName
      * @param companyName
      * @param type
      * @return
      */
-    @RequestMapping(value = "/registerUsers",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    @Transactional
+    @RequestMapping(value = "/registerUsers",method=RequestMethod.GET,produces="application/json;charset=utf-8")
     public Map<String,Object> registerUsers(String phone,String userName,String companyName,String type){
+
         Map<String,Object> map = new HashMap<String,Object>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         //全局 公司ID值
         String companyId = "";
+        //用户编号
+        String userId = "";
+        try {
+            //从redis中获取之前存入的验证码 判断是否还在有效期
+//            RedisUtil redis = RedisUtil.getInstance();
+//            String temporaryPwd = redis.new Hash().hget("smsCode_"+phone, "smsCode");
+              String temporaryPwd = "123456";
 
-        if(type.equals("register")){
+            if(!temporaryPwd.equals(null)){
+                //生成UUID作为用户编号
+                userId = UUID.randomUUID().toString();
+                //获取系统时间作为用户创建时间
+                Date date = new Date(System.currentTimeMillis());
+                //创建新增实体
+                Uusers uUsers = new Uusers();
+                uUsers.setUserid(userId);
+                uUsers.setPhone(phone);
+                uUsers.setTemporarypwd(temporaryPwd);
+                uUsers.setUsername(userName);
+                uUsers.setCreateTime(sdf.format(date));
+                uUsers.setStatus(Uusers.status_0);
+
+                uusersService.insertSelective(uUsers);
+            }else{
+                map.put("returnCode","1032");
+                map.put("message","验证码失效");
+                return map;
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+            logger.info(e);
+            map.put("returnCode","1031");
+            map.put("message","注册失败");
+            return map;
+        }
+
+        if(type.equals("0")){
             try{
                 //根据前台提供注册公司名称查询是否已被注册
                 int count = companyService.selectByCompany(companyName);
@@ -94,6 +141,7 @@ public class RegisterController{
                 }
             }catch(Exception e){
                 e.printStackTrace();
+                logger.info(e);
                 map.put("returnCode","1021");
                 map.put("message","失败");
                 return map;
@@ -108,6 +156,7 @@ public class RegisterController{
                 company.setCompany_id(companyId);
                 company.setCompany_name(companyName);
                 company.setCompany_creat_time(sdf.format(date));
+                company.setCompany_approve("0");
                 company.setUser_name(userName);
                 //注册公司名称首字母缩写
                 String companyNameLo = "";
@@ -117,11 +166,12 @@ public class RegisterController{
                 }else{
                     companyNameLo = new PinYin2Abbreviation().cn2py(companyName);
                 }
-                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-                String sDate = sdf.format(date);
+                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+                String sDate = sdf1.format(date);
                 //模糊查询今天是否有同音公司名称的注册信息
                 int num = companyService.selectCompanyNo(sDate+companyNameLo);
                 //将查询出来的条数+1存入  以便区别公司编号
+                num += 1;
                 if(num>9){
                     //公司编号
                     company.setCompany_no(sDate+companyNameLo+"0"+num);
@@ -130,55 +180,71 @@ public class RegisterController{
                 }
                 //对创建公司的信息进行插入操作
                 companyService.insertSelective(company);
+
+                //将新创建的公司编号信息存入用户表中
+                Uusers users = new Uusers();
+                users.setCompanyId(companyId);
+                users.setUserid(userId);
+                users.setStatus(users.status_1);
+                uusersService.updateByPrimaryKeySelective(users);
+
+                map.put("returnCode","3000");
+                map.put("message","注册成功");
+                return map;
             }catch(Exception e){
-                map.put("returnCode","1023");
+                e.printStackTrace();
+                logger.info(e);
+                map.put("returnCode","3001");
                 map.put("message","创建公司失败");
                 return map;
             }
         }
 
-        if(type.equals("join")){
-            //加入公司
-            //审核
-        }
+        if(type.equals("1")){
+            try {
+                //根据前台提供注册公司名称查询是否存在
+                int count = companyService.selectByCompany(companyName);
+                if(count>0){
+                    //根据输入公司名称获的公司的编号
+                    Company company = companyService.selectByCompanyName(companyName);
+                    //加入公司  新增待审核记录
+                    CheckPendingJoinCompany checkPendingJoinCompany = new CheckPendingJoinCompany();
+                    checkPendingJoinCompany.setUserid(userId);
+                    checkPendingJoinCompany.setCompanyid(company.getCompany_id());
+                    checkPendingJoinCompany.setStatus("0");
+                    checkPendingJoinCompanyService.insertSelective(checkPendingJoinCompany);
 
-        try {
-            //从redis中获取之前存入的验证码 判断是否还在有效期
-            RedisUtil redis = RedisUtil.getInstance();
-            String temporaryPwd = redis.new Hash().hget("smsCode_"+phone, "smsCode");
-
-            if(!temporaryPwd.equals(null)){
-                //生成UUID作为用户编号
-                String userId = UUID.randomUUID().toString();
-                //获取系统时间作为用户创建时间
-                Date date = new Date(System.currentTimeMillis());
-                //创建新增实体
-                Uusers uUsers = new Uusers();
-                uUsers.setUserid(userId);
-                uUsers.setPhone(phone);
-                uUsers.setTemporarypwd(temporaryPwd);
-                uUsers.setUsername(userName);
-                uUsers.setCreateTime(sdf.format(date));
-                //存入之前创建公司的编号
-                uUsers.setCompanyId(companyId);
-                uUsers.setStatus(Uusers.status_1);
-
-                uusersMapper.insertSelective(uUsers);
-                map.put("userId",userId);
-                map.put("returnCode","1030");
-                map.put("message","注册成功");
+                    //将获得的公司编号信息存入用户表中
+                    Uusers users = new Uusers();
+                    users.setCompanyId(company.getCompany_id());
+                    users.setUserid(userId);
+                    uusersService.updateByPrimaryKeySelective(users);
+                    //审核
+                    map.put("returnCode", "3000");
+                    map.put("message", "数据请求成功");
+                    return map;
+                }else{
+                    map.put("returnCode","3002");
+                    map.put("message","加入公司不存在");
+                    return map;
+                }
+            }catch(MyBatisSystemException e){
+                e.printStackTrace();
+                logger.info(e);
+                map.put("returnCode","3002");
+                map.put("message","返回多个结果");
                 return map;
-            }else{
-                map.put("returnCode","1032");
-                map.put("message","验证码失效");
+            }catch(Exception e){
+                e.printStackTrace();
+                logger.info(e);
+                map.put("returnCode","3001");
+                map.put("message","失败");
                 return map;
             }
-
-        }catch(Exception e){
-            map.put("returnCode","1031");
-            map.put("message","注册失败");
-            return map;
         }
+        map.put("returnCode","3001");
+        map.put("message","失败");
+        return null;
     }
 
     /***
@@ -186,12 +252,12 @@ public class RegisterController{
      * @param phone
      * @return
      */
-    @RequestMapping(value = "/SelectByPhone",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    @RequestMapping(value = "/SelectByPhone")
     public Map<String,Object> SelectByPhone(String phone){
         Map<String,Object> map = new HashMap<String,Object>();
         try {
             //查询条件为手机号，统计用户表中是否有用户使用了这个手机号
-            int count = uusersMapper.SelecByPhone(phone);
+            int count = uusersService.SelectCountByPhone(phone);
             //判断手机号是否被注册
             if(count>0){
                 map.put("returnCode","3001");
@@ -204,6 +270,7 @@ public class RegisterController{
             }
         }catch(Exception e){
             e.printStackTrace();
+            logger.info(e);
             map.put("returnCode","3002");
             map.put("message","错误");
             return map;

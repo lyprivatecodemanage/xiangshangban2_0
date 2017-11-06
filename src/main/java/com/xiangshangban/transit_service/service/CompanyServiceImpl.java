@@ -48,6 +48,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public Company selectByCompanyName(String companyName) {
+        return companyMapper.selectByCompanyName(companyName);
+    }
+
+    @Override
     public int insertSelective(Company record) {
         return companyMapper.insertSelective(record);
     }

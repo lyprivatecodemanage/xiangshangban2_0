@@ -7,6 +7,9 @@
     <result column="imei" jdbcType="VARCHAR" property="imei" />
     <result column="model" jdbcType="VARCHAR" property="model" />
   </resultMap>
+  <sql id="Base_Column_List">
+    client_id, type, imei, model
+  </sql>
   <insert id="insert" parameterType="com.xiangshangban.transit_service.bean.Client">
     insert into client_ (client_id, type, imei, 
       model)
@@ -44,4 +47,10 @@
       </if>
     </trim>
   </insert>
+  <select id="SelectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from client_
+    where client_id = #{clientId}
+  </select>
 </mapper>

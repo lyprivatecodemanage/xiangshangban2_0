@@ -1,10 +1,12 @@
-package com.xiangshangban.transit_service.dao;
+package com.xiangshangban.transit_service.service;
+
 
 import com.xiangshangban.transit_service.bean.Client;
-import org.apache.ibatis.annotations.Mapper;
 
-@Mapper
-public interface ClientMapper {
+/**
+ * Created by mian on 2017/11/3.
+ */
+public interface ClientService {
     int insert(Client record);
 
     int insertSelective(Client record);

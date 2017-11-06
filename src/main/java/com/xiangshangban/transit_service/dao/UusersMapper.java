@@ -26,13 +26,10 @@ public interface UusersMapper {
     
     int updateSmsCode(@Param("phone")String phone,@Param("temporarypwd")String smsCode);
     
-    //===========================>
-
-
 
 
     //注册时检查手机号是否已被注册
-    int SelecByPhone(String phone);
+    int SelectCountByPhone(String phone);
 
     //修改用户状态(当注册为加入公司情况时，待审核加入情况用户为不可用，加入后需对用户账号状态进行修改)
     int updateByPrimaryKeySelective(Uusers record);

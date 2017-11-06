@@ -67,11 +67,9 @@ public class UusersServiceImpl implements UusersService {
 	}
 
 	@Override
-	public int SelecCountByPhone(String phone) {
-		return uusersMapper.SelecByPhone(phone);
+	public int SelectCountByPhone(String phone) {
+		return uusersMapper.SelectCountByPhone(phone);
 	}
 
-	
-	
 
 }

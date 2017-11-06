@@ -35,12 +35,11 @@ import org.springframework.context.annotation.ComponentScan;
  *
  */
 @SpringBootApplication
-public class TransitServiceApplication
+public class ApiApplication
 {
     public static void main( String[] args )
     {
-        SpringApplication.run(TransitServiceApplication.class, args);
-
+        SpringApplication.run(ApiApplication.class, args);
     }
 
     @Bean
@@ -68,8 +67,6 @@ public class TransitServiceApplication
         filterChainDefinitionMap.put("/**", "roles");//表示需要认证才可以访问
         filterChainDefinitionMap.put("/*.*", "roles");
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);*/
-        bean.setLoginUrl("/login");
-        bean.setSuccessUrl("/home");
         //配置访问权限
         LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<String,String>();
        /* filterChainDefinitionMap.put("/jsp/login.jsp*", "anon"); //表示可以匿名访问
@@ -80,6 +77,7 @@ public class TransitServiceApplication
         filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
         filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
         filterChainDefinitionMap.put("/*.*", "authc");*/
+        filterChainDefinitionMap.put("/registerController/registerUsers", "anon");
         filterChainDefinitionMap.put("/*.*", "anon");
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return bean;

@@ -23,14 +23,15 @@ public interface UusersService {
 	 
 	 int deleteByPrimaryKey(String userid);
 
-		int insert(Uusers record);
+	 int insert(Uusers record);
 
-		int updateByPrimaryKey(Uusers record);
+ 	 int updateByPrimaryKey(Uusers record);
 
 
-		int SelecCountByPhone(String phone);
+	 //注册时检查手机号是否已被注册
+	 int SelectCountByPhone(String phone);
 
-		int updateByPrimaryKeySelective(Uusers record);
+	 int updateByPrimaryKeySelective(Uusers record);
 
-		int insertSelective(Uusers record);
+	 int insertSelective(Uusers record);
 }
