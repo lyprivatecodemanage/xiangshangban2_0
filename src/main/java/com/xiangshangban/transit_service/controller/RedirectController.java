@@ -42,19 +42,14 @@ public class RedirectController{
 		
 		//根据token获得当前用户id,公司id
 		String token = request.getHeader("ACCESS_TOKEN");
+		Uusers user = new Uusers();
 		if(StringUtils.isEmpty(token)){
 			String sessionId = request.getSession().getId();
-			Login login = loginService.selectBySessionId(sessionId);
-			if(StringUtils.isNotEmpty(token)){
-				token = login.getToken();
-			}else{
-				ReturnData returnData = new ReturnData();
-				returnData.setReturnCode("3003");
-				returnData.setMessage("用户身份获取失败");
-				return JSON.toJSONString(returnData);
-			}
+			user = userService.selectCompanyBySessionId(token);
+		}else{
+			user = userService.selectCompanyByToken(token);
 		}
-		Uusers user = userService.selectCompanyByToken(token);
+		
 		if(StringUtils.isEmpty(user.getCompanyId()) || StringUtils.isEmpty(user.getUserid())){
 			ReturnData returnData = new ReturnData();
 			returnData.setReturnCode("3003");
