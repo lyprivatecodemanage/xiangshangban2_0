@@ -29,7 +29,7 @@
 	</select>
 	<select id="selectCompanyByToken" parameterType="java.lang.String" resultType="com.xiangshangban.transit_service.bean.Uusers">
 		select 
-		<include refid="Base_Column_List" />
+		u.userid,uc.company_id
 		from
 		u_users u,login_ l,user_company uc 
 		where l.token = #{token} and l.phone = u.phone and uc.user_id = u.userid and uc.current_option = '1'

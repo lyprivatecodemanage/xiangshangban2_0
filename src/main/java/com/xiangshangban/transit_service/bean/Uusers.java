@@ -16,6 +16,7 @@ public class Uusers {
     private String salt;
     private String username;
     private String phone;
+    private String companyId;
     private String createTime;
     private String lastLoginTime;
     private String status;
@@ -48,6 +49,15 @@ public class Uusers {
 		UrolesList = urolesList;
 	}
 	
+	
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+
 	public String getUsername() {
 		return username;
 	}

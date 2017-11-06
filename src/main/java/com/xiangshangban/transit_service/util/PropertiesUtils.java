@@ -34,10 +34,6 @@ public class PropertiesUtils {
 		setPropertyName( "/properties/device.properties" );
 		return props.getProperty( property );
 	}
-	public static String  urlProperty( String property ) throws IOException{
-		setPropertyName( "/properties/url.properties" );
-		return props.getProperty( property );
-	}
 	public static String  pathUrl( String property ) throws IOException{
 		setPropertyName( "/properties/pathUrl.properties" );
 		return props.getProperty( property );
