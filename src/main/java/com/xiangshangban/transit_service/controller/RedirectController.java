@@ -45,7 +45,7 @@ public class RedirectController{
 		Uusers user = new Uusers();
 		if(StringUtils.isEmpty(token)){
 			String sessionId = request.getSession().getId();
-			user = userService.selectCompanyBySessionId(token);
+			user = userService.selectCompanyBySessionId(sessionId);
 		}else{
 			user = userService.selectCompanyByToken(token);
 		}
