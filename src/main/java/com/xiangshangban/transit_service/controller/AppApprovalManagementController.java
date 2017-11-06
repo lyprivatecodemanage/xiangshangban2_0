@@ -37,12 +37,12 @@ public class AppApprovalManagementController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getType", produces = "application/json;charset=utf-8", method = RequestMethod.POST)
-	public Map<String, Object> getType(@RequestBody String jsonString) {
+	public Map<String, Object> getType() {
 		Map<String, Object> result = new HashMap<String, Object>();
 
 		try {
 			String url = "http://localhost:8092/activiti/appApprovalController/applicationForLeave";
-			String str = HttpClientUtil.sendRequet(url, null);
+			String str = HttpClientUtil.sendRequet(url, "{}");
 			JSONObject jobj = JSON.parseObject(str);
 			result.put("applicationTypeList", jobj.get("list"));
 			result.put("returnCode", "3000");

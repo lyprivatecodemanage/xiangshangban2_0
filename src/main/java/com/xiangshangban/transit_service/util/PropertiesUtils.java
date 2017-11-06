@@ -17,7 +17,7 @@ public class PropertiesUtils {
 	}
 
 	public static String  redisProperty( String property ) throws IOException{
-		setPropertyName( "/redis.properties" );
+		setPropertyName( "/properties/redis.properties" );
 		return props.getProperty( property );
 	}
 	
@@ -26,7 +26,7 @@ public class PropertiesUtils {
 		return props.getProperty( property );
 	}
 	public static String  ossProperty( String property ) throws IOException{
-		setPropertyName( "/oss.properties" );
+		setPropertyName( "/properties/oss.properties" );
 		return props.getProperty( property );
 	}
 	
@@ -34,12 +34,8 @@ public class PropertiesUtils {
 		setPropertyName( "/properties/device.properties" );
 		return props.getProperty( property );
 	}
-	public static String  urlProperty( String property ) throws IOException{
-		setPropertyName( "/properties/url.properties" );
-		return props.getProperty( property );
-	}
 	public static String  pathUrl( String property ) throws IOException{
-		setPropertyName( "/pathUrl.properties" );
+		setPropertyName( "/properties/pathUrl.properties" );
 		return props.getProperty( property );
 	}
 }

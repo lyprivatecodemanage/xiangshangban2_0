@@ -26,6 +26,12 @@ public interface UusersMapper {
     
     int updateSmsCode(@Param("phone")String phone,@Param("temporarypwd")String smsCode);
     
+<<<<<<< HEAD
+=======
+    //===========================>
+
+    Uusers selectCompanyByToken(String token);
+>>>>>>> 98dfb3bb5c21b396901f83ef600494e59160160a
 
 
     //注册时检查手机号是否已被注册

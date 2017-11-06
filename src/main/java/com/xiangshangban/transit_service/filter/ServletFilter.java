@@ -3,7 +3,7 @@ package com.xiangshangban.transit_service.filter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
+import java.net.URLDecoder;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -13,6 +13,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.xiangshangban.transit_service.util.HttpClientUtil;
 
 @WebFilter(filterName="ServletFilter",urlPatterns="/*")
 public class ServletFilter implements Filter{
@@ -38,6 +40,8 @@ public class ServletFilter implements Filter{
 			throws IOException, ServletException {
 		HttpServletRequest req=(HttpServletRequest) request;
 		HttpServletResponse res=(HttpServletResponse) response;
+		String uri = req.getRequestURI();
+		System.out.println(uri);
 		/*res.setHeader("Access-Control-Allow-Credentials","true");
 		res.setHeader("Access-Control-Allow-Origin","http://192.168.0.114:8000");*/
 		 //这里填写你允许进行跨域的主机ip
@@ -47,8 +51,25 @@ public class ServletFilter implements Filter{
         //Access-Control-Max-Age 用于 CORS 相关配置的缓存
 		res.setHeader("Access-Control-Max-Age", "3600");
 		res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-		chain.doFilter(req, res);
-		System.out.println("嘻嘻嘻");
+		
+		String [] includeMode = HttpClientUtil.getIncludeMode();
+		String redirectUrl = "";
+		boolean redirect = false;
+		for(String mode : includeMode){
+			String checkUrl = "/api/"+mode+"/";
+			if(uri.contains(checkUrl)){
+				String sendurl = URLDecoder.decode(uri.replaceAll(checkUrl, ""),"UTF-8");
+				redirectUrl = "/redirectApi/sendRequest?url="+sendurl+"&mode="+mode;
+				redirect = true;
+			}
+		}
+		
+		if(redirect){
+			req.getRequestDispatcher(redirectUrl).forward(req, res);
+		}else{
+			chain.doFilter(req, res);
+			System.out.println("嘻嘻嘻");
+		}
 	}
 
 	public void destroy() {
