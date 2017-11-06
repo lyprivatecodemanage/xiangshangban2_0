@@ -28,9 +28,9 @@
 		from u_users_roles where userid = (select userid from u_users where phone
 		= #{phone}))
 	</select>
-	<select id="selectCompanyByToken" parameterType="java.lang.String" resultType="com.xiangshangban.transit_service.bean.Uusers">
+	<select id="selectCompanyByToken" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select 
-		userid, account, userpwd, temporarypwd, l.salt, username, l.phone, l.create_time, 
+		userid, account, userpwd, temporarypwd, l.salt, username, l.phone, l.create_time,  
 		last_login_time, status, company_id, wechat_id, wechat_code, wechat_name
 		from
 		u_users u,login_ l 

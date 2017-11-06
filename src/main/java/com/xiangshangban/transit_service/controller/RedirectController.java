@@ -41,7 +41,6 @@ public class RedirectController{
     public String register(HttpServletRequest request) {
 		String uri = request.getParameter("url");//转发路径
 		String modeCode = request.getParameter("mode");//模块
-		uri = "attendance/test/countDaily";
 		String sendurl = HttpClientUtil.getModeUrl(modeCode)+uri;
 		Map<String,String[]> paramMap =  (Map<String,String[]>)request.getParameterMap();
 		JSONObject newParamMap = new JSONObject();
@@ -58,12 +57,18 @@ public class RedirectController{
 				token = login.getToken();
 			}else{
 				ReturnData returnData = new ReturnData();
-				returnData.setReturnCode("3001");
-				returnData.setMessage("用户身份获取失败");
+				returnData.setReturnCode("3003");
+				returnData.setMessage("用户身份信息缺失");
 				return JSON.toJSONString(returnData);
 			}
 		}
 		Uusers user = userService.selectCompanyByToken(token);
+		if(StringUtils.isEmpty(user.getCompanyId()) || StringUtils.isEmpty(user.getUserid())){
+			ReturnData returnData = new ReturnData();
+			returnData.setReturnCode("3003");
+			returnData.setMessage("用户身份信息缺失");
+			return JSON.toJSONString(returnData);
+		}
 		Map<String,String> headers = new HashMap<String,String>();
 		headers.put("companyId", user.getCompanyId());
 		headers.put("accessUserId", user.getUserid());
