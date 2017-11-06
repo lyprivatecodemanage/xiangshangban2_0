@@ -19,7 +19,6 @@ public class Uusers {
     private String createTime;
     private String lastLoginTime;
     private String status;
-    private String companyId;
     private String wechatId;
     private String wechatCode;
     private String wechatName;
@@ -43,13 +42,12 @@ public class Uusers {
 		this.createTime = createTime;
 		this.lastLoginTime = lastLoginTime;
 		this.status = status;
-		this.companyId = companyId;
 		this.wechatId = wechatId;
 		this.wechatCode = wechatCode;
 		this.wechatName = wechatName;
 		UrolesList = urolesList;
 	}
-
+	
 	public String getUsername() {
 		return username;
 	}
@@ -64,14 +62,6 @@ public class Uusers {
 
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
-	}
-
-	public String getCompanyId() {
-		return companyId;
-	}
-
-	public void setCompanyId(String companyId) {
-		this.companyId = companyId== null ? null : companyId.trim();
 	}
 
 	public String getWechatId() {

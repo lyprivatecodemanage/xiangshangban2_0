@@ -12,13 +12,12 @@
 		<result column="create_time" jdbcType="VARCHAR" property="createTime" />
 		<result column="last_login_time" jdbcType="DATE" property="lastLoginTime" />
 		<result column="status" jdbcType="VARCHAR" property="status" />
-		<result column="company_id" jdbcType="VARCHAR" property="companyId" />
 		<result column="wechat_id" jdbcType="VARCHAR" property="wechatId" />
 		<result column="wechat_code" jdbcType="VARCHAR" property="wechatCode" />
 		<result column="wechat_name" jdbcType="VARCHAR" property="wecharName" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		userid, account, userpwd, temporarypwd, salt, username, phone, create_time, last_login_time, status, company_id, wechat_id, wechat_code, wechat_name
+		u.userid, u.account, u.userpwd, u.temporarypwd, u.salt, u.username, u.phone, u.create_time, u.last_login_time, u.status, u.wechat_id, u.wechat_code, u.wechat_name
 	</sql>
 	<select id="selectRoles" parameterType="java.lang.String" resultType="java.lang.String">
 		select rolename
@@ -32,30 +31,30 @@
 		select 
 		<include refid="Base_Column_List" />
 		from
-		u_users u,login_ l 
-		where u.current_options = '1' and l.token = #{token} and l.phone = u.phone
+		u_users u,login_ l,user_company uc 
+		where l.token = #{token} and l.phone = u.phone and uc.user_id = u.userid and uc.current_option = '1'
 	</select>
 
 	<select id="selectByPrimaryKey" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from u_users
+		from u_users u
 		where status = '0' and userid = #{userid}
 	</select>
 	<select id="selectByAccount" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from u_users
+		from u_users u
 		where account = #{account}
 	</select>
 	<select id="selectByPhone" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from u_users
-		where phone = #{phone}
+		from u_users u
+		where phone = #{phone} and current_option = '1'
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from u_users
@@ -102,9 +101,6 @@
 			<if test="status != null">
 				status,
 			</if>
-			<if test="companyId != null">
-				company_id,
-			</if>
 			<if test="wechatId != null">
 				wechat_id,
 			</if>
@@ -145,9 +141,6 @@
 			</if>
 			<if test="status != null">
 				#{status},
-			</if>
-			<if test="companyId != null">
-				#{companyId},
 			</if>
 			<if test="wechatId != null">
 				#{wechatId},
@@ -190,9 +183,6 @@
 			<if test="status != null">
 				status = #{status},
 			</if>
-			<if test="companyId != null">
-				company_id = #{companyId},
-			</if>
 			<if test="wechatId != null">
 				wechat_id = #{wechatId},
 			</if>
@@ -216,7 +206,6 @@
 		create_time = #{createTime},
 		last_login_time = #{lastLoginTime,jdbcType=DATE},
 		status = #{status},
-		company_id = #{companyId},
 		wechat_id = #{wechatId},
 		wechat_code = #{wechatCode},
 		wechat_name = #{wechatName}

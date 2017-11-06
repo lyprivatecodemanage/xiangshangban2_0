@@ -260,7 +260,7 @@ public class OSSFileUtil {
 	public static String getFilePath(String customerId, String directory, String key){
 		if(StringUtils.isNotEmpty(key)){
 			String filePath = StringUtils.isEmpty(customerId)?SYS_FILE_LOCATION + "/"+directory+"/"
-					: USER_FILE_LOCATION+"/"+customerId + "/"+directory+"/";
+					: USER_FILE_LOCATION+"/"+customerId + "/"+directory;
 			String ossEnvironment="";
 			try {
 				ossEnvironment = PropertiesUtils.ossProperty("ossEnvironment");
