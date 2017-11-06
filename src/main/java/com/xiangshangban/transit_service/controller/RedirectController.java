@@ -39,14 +39,16 @@ public class RedirectController{
 	 */
 	@RequestMapping("/sendRequest")
     public String register(HttpServletRequest request) {
-		String uri = request.getParameter("url");//转发路径
-		String modeCode = request.getParameter("mode");//模块
+		String uri = request.getParameter("redirectUrl");//转发路径
+		String modeCode = request.getParameter("redirectMode");//模块
 		String sendurl = HttpClientUtil.getModeUrl(modeCode)+uri;
 		Map<String,String[]> paramMap =  (Map<String,String[]>)request.getParameterMap();
 		JSONObject newParamMap = new JSONObject();
 		for (Map.Entry<String,String[]> entry : paramMap.entrySet()) {
 			logger.info(entry.getKey()+":"+entry.getValue()[0]);
-			newParamMap.put(entry.getKey(), entry.getValue().length>1?entry.getValue():entry.getValue()[0]);
+			if(!entry.getKey().equals("redirectUrl") && !entry.getKey().equals("redirectMode")){
+				newParamMap.put(entry.getKey(), entry.getValue().length>1?entry.getValue():entry.getValue()[0]);
+			}
 		}
 		//根据token获得当前用户id,公司id
 		String token = request.getHeader("ACCESS_TOKEN");
