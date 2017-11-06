@@ -316,6 +316,7 @@ public class LoginController {
 		 }
 		}
 		try {
+		
 				String salt = FileMD5Util.GetSalt();
 				String sessionId= session.getId();
 				String effectiveTime = "1";
@@ -345,14 +346,13 @@ public class LoginController {
 								//产生新的token
 								token = FileMD5Util.getMD5String(phone + now + salt);
 							}
-							login.setId(FormatUtil.createUuid());
 							login.setSalt(salt);
 							login.setToken(token);
 							login.setCreateTime(now);
 							login.setPhone(phone);
 							login.setEffectiveTime(effectiveTime);
 							login.setSessionId(sessionId);
-							loginService.insertSelective(login);
+							loginService.updateByPrimaryKeySelective(login);
 						}
 					}else{
 						//首次登录,或退出账号时
@@ -383,14 +383,13 @@ public class LoginController {
 						}
 						//记录登录信息
 						token = FileMD5Util.getMD5String(phone + now + salt);
-						login.setId(FormatUtil.createUuid());
 						login.setSalt(salt);
 						login.setToken(token);
 						login.setCreateTime(now);
 						login.setPhone(phone);
 						login.setEffectiveTime(effectiveTime);
 						login.setSessionId(sessionId);
-						loginService.insertSelective(login);
+						loginService.updateByPrimaryKeySelective(login);
 					}else{
 						loginService.selectByPhone(phone);
 						//首次登录,或退出账号时
@@ -535,3 +534,4 @@ public class LoginController {
 		return result;
 	}
 }
+
