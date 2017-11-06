@@ -72,8 +72,13 @@ public class UusersServiceImpl implements UusersService {
 	}
 	@Override
 	public Uusers selectCompanyByToken(String token) {
-		// TODO Auto-generated method stub
+		
 		return uusersMapper.selectCompanyByToken(token);
+	}
+	@Override
+	public Uusers selectCompanyBySessionId(String sessionId) {
+		
+		return uusersMapper.selectCompanyBySessionId(sessionId);
 	}
 
 	

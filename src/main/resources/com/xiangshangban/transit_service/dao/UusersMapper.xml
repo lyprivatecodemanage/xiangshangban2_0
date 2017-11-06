@@ -35,6 +35,13 @@
 		u_users u,login_ l,user_company uc 
 		where l.token = #{token} and l.phone = u.phone and uc.user_id = u.userid and uc.current_option = '1'
 	</select>
+	<select id="selectCompanyBySessionId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select 
+		u.userid,uc.company_id
+		from
+		u_users u,login_ l,user_company uc 
+		where l.session_id = #{sessionId} and l.phone = u.phone and uc.user_id = u.userid and uc.current_option = '1'
+	</select>
 
 	<select id="selectByPrimaryKey" parameterType="java.lang.String"
 		resultMap="BaseResultMap">

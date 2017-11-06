@@ -30,6 +30,7 @@ public interface UusersMapper {
 
     Uusers selectCompanyByToken(String token);
 
+    Uusers selectCompanyBySessionId(String sessionId);
 
     //注册时检查手机号是否已被注册
     int SelecByPhone(String phone);
