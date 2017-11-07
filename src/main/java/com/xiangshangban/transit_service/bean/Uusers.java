@@ -1,6 +1,5 @@
 package com.xiangshangban.transit_service.bean;
 
-import java.util.Date;
 import java.util.List;
 
 public class Uusers {
