@@ -17,11 +17,8 @@
 		<result column="wechat_name" jdbcType="VARCHAR" property="wecharName" />
 	</resultMap>
 	<sql id="Base_Column_List">
-<<<<<<< HEAD
 		userid, account, userpwd, temporarypwd, salt, username, phone, createTime, last_login_time, status, _id, wechat_id, wechat_code, wechat_name
-=======
 		u.userid, u.account, u.userpwd, u.temporarypwd, u.salt, u.username, u.phone, u.create_time, u.last_login_time, u.status, u.wechat_id, u.wechat_code, u.wechat_name
->>>>>>> 98dfb3bb5c21b396901f83ef600494e59160160a
 	</sql>
 	<select id="selectRoles" parameterType="java.lang.String" resultType="java.lang.String">
 		select rolename
@@ -43,35 +40,22 @@
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-<<<<<<< HEAD
 		from organization.u_users
-=======
-		from u_users u
->>>>>>> 98dfb3bb5c21b396901f83ef600494e59160160a
 		where status = '0' and userid = #{userid}
 	</select>
 	<select id="selectByAccount" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-<<<<<<< HEAD
 		from organization.u_users
-=======
-		from u_users u
->>>>>>> 98dfb3bb5c21b396901f83ef600494e59160160a
 		where account = #{account}
 	</select>
 	<select id="selectByPhone" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-<<<<<<< HEAD
-		from organization.u_users
-		where phone = #{phone}
-=======
 		from u_users u
 		where phone = #{phone} and current_option = '1'
->>>>>>> 98dfb3bb5c21b396901f83ef600494e59160160a
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from organization.u_users

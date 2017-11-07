@@ -1,7 +1,7 @@
 package com.xiangshangban.transit_service.service;
 
-import com.xiangshangban.transit_service.bean.UserCompanyKey;
-import com.xiangshangban.transit_service.dao.UserCompanyMapper;
+import com.xiangshangban.transit_service.bean.UserCompanyDefault;
+import com.xiangshangban.transit_service.dao.UserCompanyDefaultMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,20 +12,20 @@ import org.springframework.stereotype.Service;
 public class UserCompanyServiceImpl implements UserCompanyService {
 
     @Autowired
-    UserCompanyMapper userCompanyMapper;
+    UserCompanyDefaultMapper userCompanyDefaultMapper;
 
     @Override
-    public int deleteByPrimaryKey(UserCompanyKey key) {
-        return userCompanyMapper.deleteByPrimaryKey(key);
+    public int deleteByPrimaryKey(UserCompanyDefault key) {
+        return userCompanyDefaultMapper.deleteByPrimaryKey(key);
     }
 
     @Override
-    public int insert(UserCompanyKey record) {
-        return userCompanyMapper.insert(record);
+    public int insert(UserCompanyDefault record) {
+        return userCompanyDefaultMapper.insert(record);
     }
 
     @Override
-    public int insertSelective(UserCompanyKey record) {
-        return userCompanyMapper.insertSelective(record);
+    public int insertSelective(UserCompanyDefault record) {
+        return userCompanyDefaultMapper.insertSelective(record);
     }
 }

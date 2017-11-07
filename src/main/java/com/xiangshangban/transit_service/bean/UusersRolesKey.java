@@ -20,4 +20,12 @@ public class UusersRolesKey {
     public void setUserid(String userid) {
         this.userid = userid;
     }
+
+    public UusersRolesKey() {
+    }
+
+    public UusersRolesKey(String roleid, String userid) {
+        this.roleid = roleid;
+        this.userid = userid;
+    }
 }

@@ -20,24 +20,18 @@ public interface UusersService {
 	 
 	 List<String> selectRoles(String phone);
 	 
-	 
 	 int deleteByPrimaryKey(String userid);
 
 	 int insert(Uusers record);
 
  	 int updateByPrimaryKey(Uusers record);
 
-
 	 //注册时检查手机号是否已被注册
-	 int SelectCountByPhone(String phone);
+	int SelectCountByPhone(String phone);
 
-	 int updateByPrimaryKeySelective(Uusers record);
+	int updateByPrimaryKeySelective(Uusers record);
 
-<<<<<<< HEAD
-	 int insertSelective(Uusers record);
-=======
-		int insertSelective(Uusers record);
+	int insertSelective(Uusers record);
 		
-		Uusers selectCompanyByToken(String token);
->>>>>>> 98dfb3bb5c21b396901f83ef600494e59160160a
+	Uusers selectCompanyByToken(String token);
 }

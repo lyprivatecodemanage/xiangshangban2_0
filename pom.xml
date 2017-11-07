@@ -86,7 +86,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -104,10 +104,6 @@
 			<artifactId>shiro-all</artifactId>
 			<version>1.2.3</version>
 		</dependency>
-
-		
-
-		
 
 		<!-- aliyun 短信jar包 -->
 		<dependency>
@@ -211,8 +207,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		
-		
 	</dependencies>
 	<build>
 		<plugins>

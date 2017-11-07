@@ -2,14 +2,13 @@ package com.xiangshangban.transit_service.controller;
 
 import com.xiangshangban.transit_service.bean.CheckPendingJoinCompany;
 import com.xiangshangban.transit_service.bean.Company;
-import com.xiangshangban.transit_service.bean.UserCompanyKey;
+import com.xiangshangban.transit_service.bean.UserCompanyDefault;
 import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.service.CheckPendingJoinCompanyService;
 import com.xiangshangban.transit_service.service.CompanyService;
 import com.xiangshangban.transit_service.service.UserCompanyService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.PinYin2Abbreviation;
-import com.xiangshangban.transit_service.util.RedisUtil;
 import org.jboss.logging.Logger;
 import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +121,7 @@ public class RegisterController{
 
                 uusersService.insertSelective(uUsers);
             }else{
-                map.put("returnCode","1032");
+                map.put("returnCode","4001");
                 map.put("message","验证码失效");
                 return map;
             }
@@ -130,8 +129,8 @@ public class RegisterController{
         }catch(Exception e){
             e.printStackTrace();
             logger.info(e);
-            map.put("returnCode","1031");
-            map.put("message","注册失败");
+            map.put("returnCode","3001");
+            map.put("message","服务器错误");
             return map;
         }
 
@@ -140,15 +139,15 @@ public class RegisterController{
                 //根据前台提供注册公司名称查询是否已被注册
                 int count = companyService.selectByCompany(companyName);
                 if(count>0){
-                    map.put("returnCode","1022");
+                    map.put("returnCode","4007");
                     map.put("message","公司名称已被注册");
                     return map;
                 }
             }catch(Exception e){
                 e.printStackTrace();
                 logger.info(e);
-                map.put("returnCode","1021");
-                map.put("message","失败");
+                map.put("returnCode","3001");
+                map.put("message","服务器错误");
                 return map;
             }
             try {
@@ -187,21 +186,21 @@ public class RegisterController{
                 companyService.insertSelective(company);
 
                 //将新创建的公司编号信息存入用户与公司关联表中
-                UserCompanyKey userCompanyKey = new UserCompanyKey();
-                userCompanyKey.setCompany_id(companyId);
-                userCompanyKey.setUser_id(userId);
-                userCompanyKey.setCurrent_option("1");
+                UserCompanyDefault userCompanyKey = new UserCompanyDefault();
+                userCompanyKey.setCompanyId(companyId);
+                userCompanyKey.setUserId(userId);
+                userCompanyKey.setCurrentOption("1");
 
                 userCompanyService.insertSelective(userCompanyKey);
 
                 map.put("returnCode","3000");
-                map.put("message","注册成功");
+                map.put("message","数据请求成功");
                 return map;
             }catch(Exception e){
                 e.printStackTrace();
                 logger.info(e);
                 map.put("returnCode","3001");
-                map.put("message","创建公司失败");
+                map.put("message","服务器错误");
                 return map;
             }
         }
@@ -221,35 +220,29 @@ public class RegisterController{
                     checkPendingJoinCompanyService.insertSelective(checkPendingJoinCompany);
 
                     //将加入的公司编号信息存入用户与公司关联表中
-                    UserCompanyKey userCompanyKey = new UserCompanyKey();
-                    userCompanyKey.setCompany_id(company.getCompany_id());
-                    userCompanyKey.setUser_id(userId);
-                    userCompanyKey.setCurrent_option("1");
+                    UserCompanyDefault userCompanyKey = new UserCompanyDefault();
+                    userCompanyKey.setCompanyId(company.getCompany_id());
+                    userCompanyKey.setUserId(userId);
+                    userCompanyKey.setCurrentOption("1");
                     //审核
                     map.put("returnCode", "3000");
                     map.put("message", "数据请求成功");
                     return map;
                 }else{
-                    map.put("returnCode","3002");
+                    map.put("returnCode","4006");
                     map.put("message","加入公司不存在");
                     return map;
                 }
-            }catch(MyBatisSystemException e){
-                e.printStackTrace();
-                logger.info(e);
-                map.put("returnCode","3002");
-                map.put("message","返回多个结果");
-                return map;
             }catch(Exception e){
                 e.printStackTrace();
                 logger.info(e);
                 map.put("returnCode","3001");
-                map.put("message","失败");
+                map.put("message","服务器错误");
                 return map;
             }
         }
         map.put("returnCode","3001");
-        map.put("message","失败");
+        map.put("message","服务器错误");
         return null;
     }
 
@@ -266,19 +259,21 @@ public class RegisterController{
             int count = uusersService.SelectCountByPhone(phone);
             //判断手机号是否被注册
             if(count>0){
-                map.put("returnCode","3001");
+                map.put("status","1");
+                map.put("returnCode","4005");
                 map.put("message","手机号已被注册");
                 return map;
             }else{
-                map.put("returnCode","3000");
+                map.put("status","0");
+                map.put("returnCode","4004");
                 map.put("message","手机号可注册");
                 return map;
             }
         }catch(Exception e){
             e.printStackTrace();
             logger.info(e);
-            map.put("returnCode","3002");
-            map.put("message","错误");
+            map.put("returnCode","3001");
+            map.put("message","服务器错误");
             return map;
         }
     }

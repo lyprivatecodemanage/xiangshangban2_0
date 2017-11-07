@@ -1,15 +1,15 @@
 package com.xiangshangban.transit_service.service;
 
-import com.xiangshangban.transit_service.bean.UserCompanyKey;
+import com.xiangshangban.transit_service.bean.UserCompanyDefault;
 
 /**
  * Created by mian on 2017/11/6.
  */
 public interface UserCompanyService {
 
-    int deleteByPrimaryKey(UserCompanyKey key);
+    int deleteByPrimaryKey(UserCompanyDefault key);
 
-    int insert(UserCompanyKey record);
+    int insert(UserCompanyDefault record);
 
-    int insertSelective(UserCompanyKey record);
+    int insertSelective(UserCompanyDefault record);
 }
