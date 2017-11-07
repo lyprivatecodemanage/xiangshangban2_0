@@ -40,6 +40,14 @@
     from login_
     where phone = #{phone} 
   </select>
+  <select id="selectOneByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List"/>
+     from login_ 
+     where phone = #{phone} 
+     order by create_time desc 
+     limit 1 offset 0
+  </select>
   <select id="selectBySessionId" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

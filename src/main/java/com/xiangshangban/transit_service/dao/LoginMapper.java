@@ -39,4 +39,6 @@ public interface LoginMapper {
     Login selectBySessionId(String sessionId);
     
     List<Login> selectByPhone(String phone);
+    
+    Login selectOneByPhone(String phone);
 }

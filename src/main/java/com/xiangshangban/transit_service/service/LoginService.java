@@ -30,6 +30,8 @@ public interface LoginService {
 	 */
 	List<Login> selectByPhone(String phone);
 	
+	Login selectOneByPhone(String phone);
+	
 	Login selectByQrcode(String qrcode);
 	
 	int updateByPrimaryKeySelective(Login record);
