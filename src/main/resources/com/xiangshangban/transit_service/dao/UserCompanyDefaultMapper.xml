@@ -19,38 +19,38 @@
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="com.xiangshangban.transit_service.bean.UserCompanyDefault" >
 		delete from user_company
-		where user_id = #{user_id,jdbcType=VARCHAR}
-		and company_id = #{company_id,jdbcType=VARCHAR}
-		and current_option = #{current_option,jdbcType=VARCHAR}
+		where user_id = #{userId}
+		and company_id = #{companyId}
+		and current_option = #{currentOption}
 	</delete>
 	<insert id="insert" parameterType="com.xiangshangban.transit_service.bean.UserCompanyDefault" >
 		insert into user_company (user_id, company_id, current_option
 		)
-		values (#{user_id,jdbcType=VARCHAR}, #{company_id,jdbcType=VARCHAR}, #{current_option,jdbcType=VARCHAR}
+		values (#{userId}, #{companyId}, #{currentOption}
 		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.xiangshangban.transit_service.bean.UserCompanyDefault" >
 		insert into user_company
 		<trim prefix="(" suffix=")" suffixOverrides="," >
-			<if test="user_id != null" >
+			<if test="userId != null" >
 				user_id,
 			</if>
-			<if test="company_id != null" >
+			<if test="companyId != null" >
 				company_id,
 			</if>
-			<if test="current_option != null" >
+			<if test="currentOption != null" >
 				current_option,
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides="," >
-			<if test="user_id != null" >
-				#{user_id,jdbcType=VARCHAR},
+			<if test="userId != null" >
+				#{userId},
 			</if>
-			<if test="company_id != null" >
-				#{company_id,jdbcType=VARCHAR},
+			<if test="companyId != null" >
+				#{companyId},
 			</if>
-			<if test="current_option != null" >
-				#{current_option,jdbcType=VARCHAR},
+			<if test="currentOption != null" >
+				#{currentOption},
 			</if>
 		</trim>
 	</insert>
