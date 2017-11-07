@@ -40,4 +40,14 @@ public class Client {
     public void setModel(String model) {
         this.model = model;
     }
+
+    public Client() {
+    }
+
+    public Client(String clientId, String type, String imei, String model) {
+        this.clientId = clientId;
+        this.type = type;
+        this.imei = imei;
+        this.model = model;
+    }
 }

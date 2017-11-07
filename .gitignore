@@ -1,7 +1,9 @@
 /target/
-
 /.apt_generated/
-
-/bin/
-
-.classpath
+/.idea/
+/.settings/
+.factotypath
+.gitignore
+.project
+.springBeans
+.transit_service.iml

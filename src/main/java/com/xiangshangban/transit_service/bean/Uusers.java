@@ -31,7 +31,7 @@ public class Uusers {
 	}
 
 	public Uusers(String userid, String account, String userpwd, String temporarypwd, String salt, String username,
-			String phone, String createTime, String lastLoginTime, String status, String companyId, String wechatId,
+			String phone, String createTime, String lastLoginTime, String status, String wechatId,
 			String wechatCode, String wechatName, List<Uroles> urolesList) {
 		this.userid = userid;
 		this.account = account;

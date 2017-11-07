@@ -18,11 +18,12 @@
 		<result column="company_id" property="companyId" />  
 	</resultMap>
 	<sql id="Base_Column_List">
+		userid, account, userpwd, temporarypwd, salt, username, phone, createTime, last_login_time, status, _id, wechat_id, wechat_code, wechat_name
 		u.userid, u.account, u.userpwd, u.temporarypwd, u.salt, u.username, u.phone, u.create_time, u.last_login_time, u.status, u.wechat_id, u.wechat_code, u.wechat_name
 	</sql>
 	<select id="selectRoles" parameterType="java.lang.String" resultType="java.lang.String">
 		select rolename
-		from u_roles
+		from organization.u_roles
 		where roleid in (
 		select roleid
 		from u_users_roles where userid = (select userid from u_users where phone
@@ -47,14 +48,14 @@
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from u_users u
+		from organization.u_users
 		where status = '0' and userid = #{userid}
 	</select>
 	<select id="selectByAccount" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from u_users u
+		from organization.u_users
 		where account = #{account}
 	</select>
 	<select id="selectByPhone" parameterType="java.lang.String"
@@ -65,19 +66,19 @@
 		where phone = #{phone}
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-		delete from u_users
+		delete from organization.u_users
 		where userid = #{userid}
 	</delete>
 	<insert id="insert" parameterType="com.xiangshangban.transit_service.bean.Uusers">
-		insert into u_users (userid, account, userpwd,
+		insert into organization.u_users (userid, account, userpwd,
 		temporarypwd, salt, username, phone, create_time,
-		last_login_time, status, company_id, wechat_id, wechat_code, wechat_name)
+		last_login_time, status, wechat_id, wechat_code, wechat_name)
 		values (#{userid}, #{account},#{userpwd},
 		#{temporarypwd}, #{salt}, #{username}, #{phone}, #{createTime}
-		#{lastLoginTime}, #{status}, #{companyId}, #{wechatId}, #{wechatCode}, #{wechatName})
+		#{lastLoginTime}, #{status}, #{wechatId}, #{wechatCode}, #{wechatName})
 	</insert>
 	<insert id="insertSelective" parameterType="com.xiangshangban.transit_service.bean.Uusers">
-		insert into u_users
+		insert into organization.u_users
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="userid != null">
 				userid,
@@ -145,7 +146,7 @@
 				#{createTime},
 			</if>
 			<if test="lastLoginTime != null">
-				#{lastLoginTime,jdbcType=DATE},
+				#{lastLoginTime},
 			</if>
 			<if test="status != null">
 				#{status},
@@ -162,7 +163,7 @@
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective" parameterType="com.xiangshangban.transit_service.bean.Uusers">
-		update u_users
+		update organization.u_users
 		<set>
 			<if test="account != null">
 				account = #{account},
@@ -186,7 +187,7 @@
 				create_time = #{createTime},
 			</if>
 			<if test="lastLoginTime != null">
-				last_login_time = #{lastLoginTime,jdbcType=DATE},
+				last_login_time = #{lastLoginTime},
 			</if>
 			<if test="status != null">
 				status = #{status},
@@ -204,7 +205,7 @@
 		where userid = #{userid}
 	</update>
 	<update id="updateByPrimaryKey" parameterType="com.xiangshangban.transit_service.bean.Uusers">
-		update u_users
+		update organization.u_users
 		set account = #{account},
 		userpwd = #{userpwd},
 		temporarypwd = #{temporarypwd},
@@ -220,8 +221,13 @@
 		where userid = #{userid}
 	</update>
 	<update id="updateSmsCode">
-		update u_users
+		update organization.u_users
 		set temporarypwd = #{temporarypwd}
 		where phone = #{phone}
 	</update>
+	<select id="SelectCountByPhone" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(userid)
+		from organization.u_users
+		where phone = #{phone}
+	</select>
 </mapper>

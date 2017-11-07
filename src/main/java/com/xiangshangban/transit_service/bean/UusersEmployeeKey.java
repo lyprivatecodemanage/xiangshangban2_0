@@ -7,6 +7,15 @@ public class UusersEmployeeKey {
 
     private String companyId;
 
+    public UusersEmployeeKey() {
+    }
+
+    public UusersEmployeeKey(String userId, String employeeId, String companyId) {
+        this.userId = userId;
+        this.employeeId = employeeId;
+        this.companyId = companyId;
+    }
+
     public String getUserId() {
         return userId;
     }

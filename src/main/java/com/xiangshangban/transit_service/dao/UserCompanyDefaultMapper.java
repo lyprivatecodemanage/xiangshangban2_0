@@ -10,5 +10,10 @@ import com.xiangshangban.transit_service.bean.UserCompanyDefault;
 public interface UserCompanyDefaultMapper {
 	
 	List<UserCompanyDefault> selectByUserId(String userId);
-	
+
+	int deleteByPrimaryKey(UserCompanyDefault key);
+
+	int insert(UserCompanyDefault record);
+
+	int insertSelective(UserCompanyDefault record);
 }

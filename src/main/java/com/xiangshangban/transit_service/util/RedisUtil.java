@@ -267,7 +267,7 @@ public class RedisUtil {
             /**
              * 删除keys对应的记录,可以是多个key
              *
-             * @param String
+             * @param keys
              *            ... keys
              * @return 删除的记录数
              * */
@@ -281,7 +281,7 @@ public class RedisUtil {
             /**
              * 删除keys对应的记录,可以是多个key
              *
-             * @param String
+             * @param keys
              *            ... keys
              * @return 删除的记录数
              * */

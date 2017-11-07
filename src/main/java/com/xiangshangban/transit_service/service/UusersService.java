@@ -20,21 +20,20 @@ public interface UusersService {
 	 
 	 List<String> selectRoles(String phone);
 	 
-	 
 	 int deleteByPrimaryKey(String userid);
 
-		int insert(Uusers record);
+	 int insert(Uusers record);
 
-		int updateByPrimaryKey(Uusers record);
+ 	 int updateByPrimaryKey(Uusers record);
 
+	 //注册时检查手机号是否已被注册
+	int SelectCountByPhone(String phone);
 
-		int SelecCountByPhone(String phone);
+	int updateByPrimaryKeySelective(Uusers record);
 
-		int updateByPrimaryKeySelective(Uusers record);
-
-		int insertSelective(Uusers record);
+	int insertSelective(Uusers record);
 		
-		Uusers selectCompanyByToken(String token);
-		
-		Uusers selectCompanyBySessionId(String sessionId);
+	Uusers selectCompanyByToken(String token);
+
+	Uusers selectCompanyBySessionId(String sessionId);
 }
