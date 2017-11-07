@@ -1,5 +1,7 @@
 package com.xiangshangban.transit_service.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +59,7 @@ public class LoginServiceImpl implements LoginService {
 	 * @return
 	 */
 	@Override
-	public Login selectByPhone(String phone) {
+	public List<Login> selectByPhone(String phone) {
 		return loginMapper.selectByPhone(phone);
 	}
 

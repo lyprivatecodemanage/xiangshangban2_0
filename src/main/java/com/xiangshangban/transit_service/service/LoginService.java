@@ -1,5 +1,7 @@
 package com.xiangshangban.transit_service.service;
 
+import java.util.List;
+
 import com.xiangshangban.transit_service.bean.Login;
 
 public interface LoginService {
@@ -26,7 +28,7 @@ public interface LoginService {
 	 * @param phone
 	 * @return
 	 */
-	Login selectByPhone(String phone);
+	List<Login> selectByPhone(String phone);
 	
 	Login selectByQrcode(String qrcode);
 	

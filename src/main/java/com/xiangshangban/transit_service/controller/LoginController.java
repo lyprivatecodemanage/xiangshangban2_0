@@ -76,12 +76,12 @@ public class LoginController {
 	}*/
 	
 	/**
-	 * @author 李业/web请求获取二维码
+	 * @author 李业/获取二维码
 	 * @param session
 	 * @return
 	 */
 	@RequestMapping("/getQrcode")
-	public Map<String,Object> getQrcode(HttpSession session){
+	public Map<String,Object> getQrcode(String type,HttpSession session){
 		Map<String,Object> result = new HashMap<String,Object>();
 		try{
 			String sessionId = session.getId();
@@ -97,7 +97,14 @@ public class LoginController {
 			login.setQrcodeStatus("0");
 			login.setId(FormatUtil.createUuid());
 			loginService.insertSelective(login);
-			
+			//登录
+			if(Integer.valueOf(type)==0){
+				qrcode="login="+qrcode;
+			}
+			//注册
+			if(Integer.valueOf(type)==1){
+				qrcode="invite="+qrcode;
+			}
 			result.put("qrcode", qrcode);
 			result.put("message", "成功");
 			result.put("returnCode", "3000");
@@ -390,7 +397,7 @@ public class LoginController {
 						login.setSessionId(sessionId);
 						loginService.updateByPrimaryKeySelective(login);
 					}else{
-						loginService.selectByPhone(phone);
+						//loginService.selectByPhone(phone);
 						//首次登录,或退出账号时
 						token = FileMD5Util.getMD5String(phone + now + salt);
 						newLogin.setCreateTime(now);
