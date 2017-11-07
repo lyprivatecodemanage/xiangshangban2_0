@@ -111,13 +111,13 @@ public class LoginController {
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			logger.info(e);
-			result.put("returnCode", "3001");
+			result.put("returnCode", "3006");
 			result.put("message", "参数为null");
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info(e);
-			result.put("returnCode", "3006");
+			result.put("returnCode", "3001");
 			result.put("message", "失败");
 			return result;
 		}
@@ -187,13 +187,13 @@ public class LoginController {
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			logger.info(e);
-			result.put("returnCode", "3001");
+			result.put("returnCode", "3006");
 			result.put("message", "参数为null");
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info(e);
-			result.put("returnCode", "3006");
+			result.put("returnCode", "3001");
 			result.put("message", "失败");
 			return result;
 		}
@@ -227,13 +227,13 @@ public class LoginController {
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			logger.info(e);
-			result.put("returnCode", "3001");
+			result.put("returnCode", "3006");
 			result.put("message", "参数为null");
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info(e);
-			result.put("returnCode", "3006");
+			result.put("returnCode", "3001");
 			result.put("message", "失败");
 			return result;
 		}
@@ -269,13 +269,13 @@ public class LoginController {
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			logger.info(e);
-			result.put("returnCode", "3001");
+			result.put("returnCode", "3006");
 			result.put("message", "参数为null");
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info(e);
-			result.put("returnCode", "3006");
+			result.put("returnCode", "3001");
 			result.put("message", "失败");
 			return result;
 		}
@@ -316,7 +316,6 @@ public class LoginController {
 		 }
 		}
 		try {
-		
 				String salt = FileMD5Util.GetSalt();
 				String sessionId= session.getId();
 				String effectiveTime = "1";
@@ -424,13 +423,13 @@ public class LoginController {
 			return result;
 		} catch (NullPointerException e) {
 			e.printStackTrace();
-			result.put("returnCode", "3001");
+			result.put("returnCode", "3006");
 			result.put("message", "参数为null");
 			logger.info(e);
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("returnCode", "3006");
+			result.put("returnCode", "3001");
 			result.put("message", "失败");
 			logger.info(e);
 			return result;
@@ -460,13 +459,13 @@ public class LoginController {
 			return result;
 		} catch (NullPointerException e) {
 			e.printStackTrace();
-			result.put("returnCode", "3001");
+			result.put("returnCode", "3006");
 			result.put("message", "参数为null");
 			logger.info(e);
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("returnCode", "3006");
+			result.put("returnCode", "3001");
 			result.put("message", "失败");
 			logger.info(e);
 			return result;
@@ -508,13 +507,13 @@ public class LoginController {
 			return result;
 		} catch (NullPointerException e) {
 			e.printStackTrace();
-			result.put("returnCode", "3001");
+			result.put("returnCode", "3006");
 			result.put("message", "参数为null");
 			logger.info(e);
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("returnCode", "3006");
+			result.put("returnCode", "3001");
 			result.put("message", "失败");
 			logger.info(e);
 			return result;

@@ -44,6 +44,7 @@ public class ServletFilter implements Filter{
 		System.out.println(uri);
 		/*res.setHeader("Access-Control-Allow-Credentials","true");
 		res.setHeader("Access-Control-Allow-Origin","http://192.168.0.114:8000");*/
+		res.setHeader("Access-Control-Allow-Origin","http://192.168.0.242:8000");
 		 //这里填写你允许进行跨域的主机ip
 		res.setHeader("Access-Control-Allow-Origin", "*");
         //允许的访问方法
