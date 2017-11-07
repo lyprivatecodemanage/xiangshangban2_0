@@ -34,4 +34,6 @@ public interface UusersService {
 	int insertSelective(Uusers record);
 		
 	Uusers selectCompanyByToken(String token);
+
+	Uusers selectCompanyBySessionId(String sessionId);
 }

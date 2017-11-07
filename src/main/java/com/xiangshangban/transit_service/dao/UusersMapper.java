@@ -12,7 +12,6 @@ public interface UusersMapper {
 
     int insert(Uusers record);
 
-
     Uusers selectByPrimaryKey(String userId);
     
     Uusers selectByPhone(String phone);
@@ -26,6 +25,8 @@ public interface UusersMapper {
     int updateSmsCode(@Param("phone")String phone,@Param("temporarypwd")String smsCode);
 
     Uusers selectCompanyByToken(String token);
+
+    Uusers selectCompanyBySessionId(String sessionId);
 
     //注册时检查手机号是否已被注册
     int SelectCountByPhone(String phone);

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xiangshangban.transit_service.dao.CompanyMapper" >
@@ -444,4 +445,449 @@
     <include refid="Base_Column_List"/>
     from organization.company_ where company_name = #{companyName,jdbcType=VARCHAR}
   </select>
+=======
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xiangshangban.transit_service.dao.CompanyMapper" >
+  <resultMap id="BaseResultMap" type="com.xiangshangban.transit_service.bean.Company" >
+    <constructor >
+      <idArg column="company_id" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_english_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_abbreviation_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_address_detail" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_phone" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_email" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_postalcode" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_business_license" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="juridical_person" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="brought_accoun" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="registered_capital" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="join_date" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_state" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="registration_number" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="business_registration_number" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="uniform_credit_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="type_enterprise" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="taxpayer_registration_number" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="industry_type" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="begin_business_time" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="end_business_time" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="dateof_approval" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="registration_authority" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="registered_address" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_creat_time" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_area" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_logo" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_approve" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_personal_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="user_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="company_no" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    company_id, company_name, company_english_name, company_abbreviation_name, company_address_detail, 
+    company_phone, company_email, company_postalcode, company_business_license, juridical_person, 
+    brought_accoun, registered_capital, join_date, company_state, registration_number, 
+    business_registration_number, uniform_credit_code, type_enterprise, taxpayer_registration_number, 
+    industry_type, begin_business_time, end_business_time, dateof_approval, registration_authority, 
+    registered_address, company_creat_time, company_area, company_code, company_logo, 
+    company_approve, company_personal_name, user_name, company_no
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from company_
+    where company_id = #{company_id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from company_
+    where company_id = #{company_id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.xiangshangban.transit_service.bean.Company" >
+    insert into company_ (company_id, company_name, company_english_name, 
+      company_abbreviation_name, company_address_detail, 
+      company_phone, company_email, company_postalcode, 
+      company_business_license, juridical_person, 
+      brought_accoun, registered_capital, join_date, 
+      company_state, registration_number, business_registration_number, 
+      uniform_credit_code, type_enterprise, taxpayer_registration_number, 
+      industry_type, begin_business_time, end_business_time, 
+      dateof_approval, registration_authority, 
+      registered_address, company_creat_time, 
+      company_area, company_code, company_logo, 
+      company_approve, company_personal_name, 
+      user_name, company_no)
+    values (#{company_id,jdbcType=VARCHAR}, #{company_name,jdbcType=VARCHAR}, #{company_english_name,jdbcType=VARCHAR}, 
+      #{company_abbreviation_name,jdbcType=VARCHAR}, #{company_address_detail,jdbcType=VARCHAR}, 
+      #{company_phone,jdbcType=VARCHAR}, #{company_email,jdbcType=VARCHAR}, #{company_postalcode,jdbcType=VARCHAR}, 
+      #{company_business_license,jdbcType=VARCHAR}, #{juridical_person,jdbcType=VARCHAR}, 
+      #{brought_accoun,jdbcType=VARCHAR}, #{registered_capital,jdbcType=VARCHAR}, #{join_date,jdbcType=VARCHAR}, 
+      #{company_state,jdbcType=VARCHAR}, #{registration_number,jdbcType=VARCHAR}, #{business_registration_number,jdbcType=VARCHAR}, 
+      #{uniform_credit_code,jdbcType=VARCHAR}, #{type_enterprise,jdbcType=VARCHAR}, #{taxpayer_registration_number,jdbcType=VARCHAR}, 
+      #{industry_type,jdbcType=VARCHAR}, #{begin_business_time,jdbcType=VARCHAR}, #{end_business_time,jdbcType=VARCHAR}, 
+      #{dateof_approval,jdbcType=VARCHAR}, #{registration_authority,jdbcType=VARCHAR}, 
+      #{registered_address,jdbcType=VARCHAR}, #{company_creat_time,jdbcType=VARCHAR}, 
+      #{company_area,jdbcType=VARCHAR}, #{company_code,jdbcType=VARCHAR}, #{company_logo,jdbcType=VARCHAR}, 
+      #{company_approve,jdbcType=VARCHAR}, #{company_personal_name,jdbcType=VARCHAR}, 
+      #{user_name,jdbcType=VARCHAR}, #{company_no,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.xiangshangban.transit_service.bean.Company" >
+    insert into company_
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="company_id != null" >
+        company_id,
+      </if>
+      <if test="company_name != null" >
+        company_name,
+      </if>
+      <if test="company_english_name != null" >
+        company_english_name,
+      </if>
+      <if test="company_abbreviation_name != null" >
+        company_abbreviation_name,
+      </if>
+      <if test="company_address_detail != null" >
+        company_address_detail,
+      </if>
+      <if test="company_phone != null" >
+        company_phone,
+      </if>
+      <if test="company_email != null" >
+        company_email,
+      </if>
+      <if test="company_postalcode != null" >
+        company_postalcode,
+      </if>
+      <if test="company_business_license != null" >
+        company_business_license,
+      </if>
+      <if test="juridical_person != null" >
+        juridical_person,
+      </if>
+      <if test="brought_accoun != null" >
+        brought_accoun,
+      </if>
+      <if test="registered_capital != null" >
+        registered_capital,
+      </if>
+      <if test="join_date != null" >
+        join_date,
+      </if>
+      <if test="company_state != null" >
+        company_state,
+      </if>
+      <if test="registration_number != null" >
+        registration_number,
+      </if>
+      <if test="business_registration_number != null" >
+        business_registration_number,
+      </if>
+      <if test="uniform_credit_code != null" >
+        uniform_credit_code,
+      </if>
+      <if test="type_enterprise != null" >
+        type_enterprise,
+      </if>
+      <if test="taxpayer_registration_number != null" >
+        taxpayer_registration_number,
+      </if>
+      <if test="industry_type != null" >
+        industry_type,
+      </if>
+      <if test="begin_business_time != null" >
+        begin_business_time,
+      </if>
+      <if test="end_business_time != null" >
+        end_business_time,
+      </if>
+      <if test="dateof_approval != null" >
+        dateof_approval,
+      </if>
+      <if test="registration_authority != null" >
+        registration_authority,
+      </if>
+      <if test="registered_address != null" >
+        registered_address,
+      </if>
+      <if test="company_creat_time != null" >
+        company_creat_time,
+      </if>
+      <if test="company_area != null" >
+        company_area,
+      </if>
+      <if test="company_code != null" >
+        company_code,
+      </if>
+      <if test="company_logo != null" >
+        company_logo,
+      </if>
+      <if test="company_approve != null" >
+        company_approve,
+      </if>
+      <if test="company_personal_name != null" >
+        company_personal_name,
+      </if>
+      <if test="user_name != null" >
+        user_name,
+      </if>
+      <if test="company_no != null" >
+        company_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="company_id != null" >
+        #{company_id,jdbcType=VARCHAR},
+      </if>
+      <if test="company_name != null" >
+        #{company_name,jdbcType=VARCHAR},
+      </if>
+      <if test="company_english_name != null" >
+        #{company_english_name,jdbcType=VARCHAR},
+      </if>
+      <if test="company_abbreviation_name != null" >
+        #{company_abbreviation_name,jdbcType=VARCHAR},
+      </if>
+      <if test="company_address_detail != null" >
+        #{company_address_detail,jdbcType=VARCHAR},
+      </if>
+      <if test="company_phone != null" >
+        #{company_phone,jdbcType=VARCHAR},
+      </if>
+      <if test="company_email != null" >
+        #{company_email,jdbcType=VARCHAR},
+      </if>
+      <if test="company_postalcode != null" >
+        #{company_postalcode,jdbcType=VARCHAR},
+      </if>
+      <if test="company_business_license != null" >
+        #{company_business_license,jdbcType=VARCHAR},
+      </if>
+      <if test="juridical_person != null" >
+        #{juridical_person,jdbcType=VARCHAR},
+      </if>
+      <if test="brought_accoun != null" >
+        #{brought_accoun,jdbcType=VARCHAR},
+      </if>
+      <if test="registered_capital != null" >
+        #{registered_capital,jdbcType=VARCHAR},
+      </if>
+      <if test="join_date != null" >
+        #{join_date,jdbcType=VARCHAR},
+      </if>
+      <if test="company_state != null" >
+        #{company_state,jdbcType=VARCHAR},
+      </if>
+      <if test="registration_number != null" >
+        #{registration_number,jdbcType=VARCHAR},
+      </if>
+      <if test="business_registration_number != null" >
+        #{business_registration_number,jdbcType=VARCHAR},
+      </if>
+      <if test="uniform_credit_code != null" >
+        #{uniform_credit_code,jdbcType=VARCHAR},
+      </if>
+      <if test="type_enterprise != null" >
+        #{type_enterprise,jdbcType=VARCHAR},
+      </if>
+      <if test="taxpayer_registration_number != null" >
+        #{taxpayer_registration_number,jdbcType=VARCHAR},
+      </if>
+      <if test="industry_type != null" >
+        #{industry_type,jdbcType=VARCHAR},
+      </if>
+      <if test="begin_business_time != null" >
+        #{begin_business_time,jdbcType=VARCHAR},
+      </if>
+      <if test="end_business_time != null" >
+        #{end_business_time,jdbcType=VARCHAR},
+      </if>
+      <if test="dateof_approval != null" >
+        #{dateof_approval,jdbcType=VARCHAR},
+      </if>
+      <if test="registration_authority != null" >
+        #{registration_authority,jdbcType=VARCHAR},
+      </if>
+      <if test="registered_address != null" >
+        #{registered_address,jdbcType=VARCHAR},
+      </if>
+      <if test="company_creat_time != null" >
+        #{company_creat_time,jdbcType=VARCHAR},
+      </if>
+      <if test="company_area != null" >
+        #{company_area,jdbcType=VARCHAR},
+      </if>
+      <if test="company_code != null" >
+        #{company_code,jdbcType=VARCHAR},
+      </if>
+      <if test="company_logo != null" >
+        #{company_logo,jdbcType=VARCHAR},
+      </if>
+      <if test="company_approve != null" >
+        #{company_approve,jdbcType=VARCHAR},
+      </if>
+      <if test="company_personal_name != null" >
+        #{company_personal_name,jdbcType=VARCHAR},
+      </if>
+      <if test="user_name != null" >
+        #{user_name,jdbcType=VARCHAR},
+      </if>
+      <if test="company_no != null" >
+        #{company_no,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.xiangshangban.transit_service.bean.Company" >
+    update company_
+    <set >
+      <if test="company_name != null" >
+        company_name = #{company_name,jdbcType=VARCHAR},
+      </if>
+      <if test="company_english_name != null" >
+        company_english_name = #{company_english_name,jdbcType=VARCHAR},
+      </if>
+      <if test="company_abbreviation_name != null" >
+        company_abbreviation_name = #{company_abbreviation_name,jdbcType=VARCHAR},
+      </if>
+      <if test="company_address_detail != null" >
+        company_address_detail = #{company_address_detail,jdbcType=VARCHAR},
+      </if>
+      <if test="company_phone != null" >
+        company_phone = #{company_phone,jdbcType=VARCHAR},
+      </if>
+      <if test="company_email != null" >
+        company_email = #{company_email,jdbcType=VARCHAR},
+      </if>
+      <if test="company_postalcode != null" >
+        company_postalcode = #{company_postalcode,jdbcType=VARCHAR},
+      </if>
+      <if test="company_business_license != null" >
+        company_business_license = #{company_business_license,jdbcType=VARCHAR},
+      </if>
+      <if test="juridical_person != null" >
+        juridical_person = #{juridical_person,jdbcType=VARCHAR},
+      </if>
+      <if test="brought_accoun != null" >
+        brought_accoun = #{brought_accoun,jdbcType=VARCHAR},
+      </if>
+      <if test="registered_capital != null" >
+        registered_capital = #{registered_capital,jdbcType=VARCHAR},
+      </if>
+      <if test="join_date != null" >
+        join_date = #{join_date,jdbcType=VARCHAR},
+      </if>
+      <if test="company_state != null" >
+        company_state = #{company_state,jdbcType=VARCHAR},
+      </if>
+      <if test="registration_number != null" >
+        registration_number = #{registration_number,jdbcType=VARCHAR},
+      </if>
+      <if test="business_registration_number != null" >
+        business_registration_number = #{business_registration_number,jdbcType=VARCHAR},
+      </if>
+      <if test="uniform_credit_code != null" >
+        uniform_credit_code = #{uniform_credit_code,jdbcType=VARCHAR},
+      </if>
+      <if test="type_enterprise != null" >
+        type_enterprise = #{type_enterprise,jdbcType=VARCHAR},
+      </if>
+      <if test="taxpayer_registration_number != null" >
+        taxpayer_registration_number = #{taxpayer_registration_number,jdbcType=VARCHAR},
+      </if>
+      <if test="industry_type != null" >
+        industry_type = #{industry_type,jdbcType=VARCHAR},
+      </if>
+      <if test="begin_business_time != null" >
+        begin_business_time = #{begin_business_time,jdbcType=VARCHAR},
+      </if>
+      <if test="end_business_time != null" >
+        end_business_time = #{end_business_time,jdbcType=VARCHAR},
+      </if>
+      <if test="dateof_approval != null" >
+        dateof_approval = #{dateof_approval,jdbcType=VARCHAR},
+      </if>
+      <if test="registration_authority != null" >
+        registration_authority = #{registration_authority,jdbcType=VARCHAR},
+      </if>
+      <if test="registered_address != null" >
+        registered_address = #{registered_address,jdbcType=VARCHAR},
+      </if>
+      <if test="company_creat_time != null" >
+        company_creat_time = #{company_creat_time,jdbcType=VARCHAR},
+      </if>
+      <if test="company_area != null" >
+        company_area = #{company_area,jdbcType=VARCHAR},
+      </if>
+      <if test="company_code != null" >
+        company_code = #{company_code,jdbcType=VARCHAR},
+      </if>
+      <if test="company_logo != null" >
+        company_logo = #{company_logo,jdbcType=VARCHAR},
+      </if>
+      <if test="company_approve != null" >
+        company_approve = #{company_approve,jdbcType=VARCHAR},
+      </if>
+      <if test="company_personal_name != null" >
+        company_personal_name = #{company_personal_name,jdbcType=VARCHAR},
+      </if>
+      <if test="user_name != null" >
+        user_name = #{user_name,jdbcType=VARCHAR},
+      </if>
+      <if test="company_no != null" >
+        company_no = #{company_no,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where company_id = #{company_id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.xiangshangban.transit_service.bean.Company" >
+    update company_
+    set company_name = #{company_name,jdbcType=VARCHAR},
+      company_english_name = #{company_english_name,jdbcType=VARCHAR},
+      company_abbreviation_name = #{company_abbreviation_name,jdbcType=VARCHAR},
+      company_address_detail = #{company_address_detail,jdbcType=VARCHAR},
+      company_phone = #{company_phone,jdbcType=VARCHAR},
+      company_email = #{company_email,jdbcType=VARCHAR},
+      company_postalcode = #{company_postalcode,jdbcType=VARCHAR},
+      company_business_license = #{company_business_license,jdbcType=VARCHAR},
+      juridical_person = #{juridical_person,jdbcType=VARCHAR},
+      brought_accoun = #{brought_accoun,jdbcType=VARCHAR},
+      registered_capital = #{registered_capital,jdbcType=VARCHAR},
+      join_date = #{join_date,jdbcType=VARCHAR},
+      company_state = #{company_state,jdbcType=VARCHAR},
+      registration_number = #{registration_number,jdbcType=VARCHAR},
+      business_registration_number = #{business_registration_number,jdbcType=VARCHAR},
+      uniform_credit_code = #{uniform_credit_code,jdbcType=VARCHAR},
+      type_enterprise = #{type_enterprise,jdbcType=VARCHAR},
+      taxpayer_registration_number = #{taxpayer_registration_number,jdbcType=VARCHAR},
+      industry_type = #{industry_type,jdbcType=VARCHAR},
+      begin_business_time = #{begin_business_time,jdbcType=VARCHAR},
+      end_business_time = #{end_business_time,jdbcType=VARCHAR},
+      dateof_approval = #{dateof_approval,jdbcType=VARCHAR},
+      registration_authority = #{registration_authority,jdbcType=VARCHAR},
+      registered_address = #{registered_address,jdbcType=VARCHAR},
+      company_creat_time = #{company_creat_time,jdbcType=VARCHAR},
+      company_area = #{company_area,jdbcType=VARCHAR},
+      company_code = #{company_code,jdbcType=VARCHAR},
+      company_logo = #{company_logo,jdbcType=VARCHAR},
+      company_approve = #{company_approve,jdbcType=VARCHAR},
+      company_personal_name = #{company_personal_name,jdbcType=VARCHAR},
+      user_name = #{user_name,jdbcType=VARCHAR},
+      company_no = #{company_no,jdbcType=VARCHAR}
+    where company_id = #{company_id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectByCompany" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(company_id) from company_ where company_name = #{companyName,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectCompanyNo" parameterType="java.lang.String" resultType="java.lang.String">
+    select count(company_no)
+    from company_
+    where company_no
+    <trim prefix="like '%" suffix="%'">
+      #{companyNo,jdbcType=VARCHAR}
+    </trim>
+  </select>
+>>>>>>> d58a84a3aa62c7e4d617a6052ac92d48d28c6a17
 </mapper>
