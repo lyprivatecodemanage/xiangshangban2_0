@@ -265,7 +265,7 @@ public class RegisterController {
                 return map;
             } else {
                 map.put("status", "0");
-                map.put("returnCode", "4004");
+                map.put("returnCode", "3000");
                 map.put("message", "手机号可注册");
                 return map;
             }
