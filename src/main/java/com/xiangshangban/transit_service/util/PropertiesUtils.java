@@ -38,4 +38,9 @@ public class PropertiesUtils {
 		setPropertyName( "/properties/pathUrl.properties" );
 		return props.getProperty( property );
 	}
+	
+	public static String  versionProperty( String property ) throws IOException{
+		setPropertyName( "/properties/version.properties" );
+		return props.getProperty( property );
+	}
 }
