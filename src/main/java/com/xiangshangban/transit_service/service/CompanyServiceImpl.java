@@ -43,13 +43,13 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public int selectByCompany(String companyName) {
-        return companyMapper.selectByCompany(companyName);
+    public int selectByCompany(String company_no) {
+        return companyMapper.selectByCompany(company_no);
     }
 
     @Override
-    public Company selectByCompanyName(String companyName) {
-        return companyMapper.selectByCompanyName(companyName);
+    public Company selectByCompanyName(String company_no) {
+        return companyMapper.selectByCompanyName(company_no);
     }
 
     @Override

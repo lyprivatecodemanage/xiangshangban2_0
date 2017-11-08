@@ -430,7 +430,7 @@
   </update>
 
   <select id="selectByCompany" parameterType="java.lang.String" resultType="java.lang.Integer">
-    select count(company_id) from organization.company_ where company_name = #{companyName,jdbcType=VARCHAR}
+    select count(company_id) from organization.company_ where company_no = #{company_no,jdbcType=VARCHAR}
   </select>
 
   <select id="selectCompanyNo" resultType="java.lang.Integer">
@@ -442,6 +442,6 @@
   <select id="selectByCompanyName" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
-    from organization.company_ where company_name = #{companyName,jdbcType=VARCHAR}
+    from organization.company_ where company_no = #{company_no,jdbcType=VARCHAR}
   </select>
 </mapper>
