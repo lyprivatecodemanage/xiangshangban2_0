@@ -14,7 +14,7 @@ import com.xiangshangban.transit_service.bean.Version;
 import com.xiangshangban.transit_service.util.PropertiesUtils;
 
 @Controller
-@RequestMapping(value="/x/version")
+@RequestMapping(value="/version")
 public class VersionController {
 	private static final Log LOG = LogFactory.getLog(VersionController.class);
 	@RequestMapping(value="/getVersion.shtml",produces = "application/json;charset=UTF-8",method=RequestMethod.GET)
