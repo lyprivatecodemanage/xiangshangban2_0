@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.xiangshangban.transit_service.bean.PersonalInformationVerification;
 import com.xiangshangban.transit_service.bean.Uusers;
 @Mapper
 public interface UusersMapper {
@@ -19,7 +20,11 @@ public interface UusersMapper {
     List<String> selectRoles(String phone);
     
     Uusers selectByAccount(String account);
-
+    
+    int selectIdentityAuthentication(@Param("phone") String phone,@Param("userName") String userName,@Param("companyName") String companyName);
+    
+    PersonalInformationVerification selectPersonalInformationVerification(@Param("phone")String phone,@Param("userName")String userName,@Param("postName")String postName);
+    
     int updateByPrimaryKey(Uusers record);
     
     int updateSmsCode(@Param("phone")String phone,@Param("temporarypwd")String smsCode);

@@ -2,48 +2,86 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xiangshangban.transit_service.dao.UusersMapper">
 	<resultMap id="BaseResultMap" type="com.xiangshangban.transit_service.bean.Uusers">
-		<id column="userid" jdbcType="VARCHAR" property="userid" />
-		<result column="account" jdbcType="VARCHAR" property="account" />
-		<result column="userpwd" jdbcType="VARCHAR" property="userpwd" />
-		<result column="temporarypwd" jdbcType="VARCHAR" property="temporarypwd" />
-		<result column="salt" jdbcType="VARCHAR" property="salt" />
-		<result column="username" jdbcType="VARCHAR" property="username" />
-		<result column="phone" jdbcType="VARCHAR" property="phone" />
-		<result column="create_time" jdbcType="VARCHAR" property="createTime" />
+		<id column="userid"  property="userid" />
+		<result column="account"  property="account" />
+		<result column="userpwd"  property="userpwd" />
+		<result column="temporarypwd"  property="temporarypwd" />
+		<result column="salt"  property="salt" />
+		<result column="username"  property="username" />
+		<result column="phone"  property="phone" />
+		<result column="create_time"  property="createTime" />
 		<result column="last_login_time" jdbcType="DATE" property="lastLoginTime" />
-		<result column="status" jdbcType="VARCHAR" property="status" />
-		<result column="wechat_id" jdbcType="VARCHAR" property="wechatId" />
-		<result column="wechat_code" jdbcType="VARCHAR" property="wechatCode" />
-		<result column="wechat_name" jdbcType="VARCHAR" property="wecharName" />
-		<result column="company_id" property="companyId" />  
+		<result column="status"  property="status" />
+		<result column="wechat_id"  property="wechatId" />
+		<result column="wechat_code"  property="wechatCode" />
+		<result column="wechat_name"  property="wecharName" />
+		<result column="company_id" property="companyId" />
 	</resultMap>
+	<resultMap type="com.xiangshangban.transit_service.bean.PersonalInformationVerification" id="PersonalInformationVerificationResultMap">
+		<result column="userid"  property="userId" />
+		<result column="username"  property="userName" />
+		<result column="company_id"  property="companyId" />
+		<result column="company_name" property="companyName" />
+	</resultMap>
+	
 	<sql id="Base_Column_List">
-		userid, account, userpwd, temporarypwd, salt, username, phone, create_time, last_login_time, status, wechat_id, wechat_code, wechat_name
+		userid, account, userpwd, temporarypwd, salt, username,
+		phone, create_time, last_login_time, status, wechat_id, wechat_code,
+		wechat_name
 	</sql>
 	<sql id="Base_Column_List_A">
-		u.userid, u.account, u.userpwd, u.temporarypwd, u.salt, u.username, u.phone, u.create_time, u.last_login_time, u.status, u.wechat_id, u.wechat_code, u.wechat_name
+		u.userid, u.account, u.userpwd, u.temporarypwd, u.salt,
+		u.username, u.phone, u.create_time, u.last_login_time, u.status,
+		u.wechat_id, u.wechat_code, u.wechat_name
 	</sql>
-	<select id="selectRoles" parameterType="java.lang.String" resultType="java.lang.String">
+	<select id="selectIdentityAuthentication" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		select count(*) from u_users u,user_company uc,company_ c
+		where u.phone =
+		#{phone} and u.username = #{userName} and
+		c.company_name = #{companyName}
+		and u.userid = uc.user_id and
+		uc.company_id = c.company_id
+	</select>
+	<select id="selectPersonalInformationVerification" parameterType="java.lang.String" resultMap="PersonalInformationVerificationResultMap">
+		select u.userid,u.username,c.company_id,c.company_name from
+		u_users u,user_company uc,company_ c,post_ p,u_users_roles ur where
+		u.phone = #{phone} and u.username = #{userName} and p.post_name = #{postName}
+		and p.company_id = c.company_id and u.userid = uc.user_id and
+		uc.company_id = c.company_id and u.userid = ur.userid and
+		ur.company_id = c.company_id
+	</select>
+	<select id="selectRoles" parameterType="java.lang.String"
+		resultType="java.lang.String">
 		select rolename
 		from organization.u_roles
 		where roleid in (
 		select roleid
-		from u_users_roles where userid = (select userid from u_users where phone
+		from u_users_roles where userid = (select userid from
+		u_users where phone
 		= #{phone}))
 	</select>
-	<select id="selectCompanyByToken" parameterType="java.lang.String" resultMap="BaseResultMap">
-		select 
+	<select id="selectCompanyByToken" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
 		u.userid,uc.company_id
 		from
-		u_users u,login_ l,user_company uc 
-		where l.token = #{token} and l.phone = u.phone and uc.user_id = u.userid and uc.current_option = '1'
+		u_users u,login_
+		l,user_company uc
+		where l.token = #{token} and l.phone = u.phone and
+		uc.user_id = u.userid
+		and uc.current_option = '1'
 	</select>
-	<select id="selectCompanyBySessionId" parameterType="java.lang.String" resultMap="BaseResultMap">
-		select 
+	<select id="selectCompanyBySessionId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
 		u.userid,uc.company_id
 		from
-		u_users u,login_ l,user_company uc 
-		where l.session_id = #{sessionId} and l.phone = u.phone and uc.user_id = u.userid and uc.current_option = '1'
+		u_users u,login_
+		l,user_company uc
+		where l.session_id = #{sessionId} and l.phone =
+		u.phone and uc.user_id =
+		u.userid and uc.current_option = '1'
 	</select>
 
 	<select id="selectByPrimaryKey" parameterType="java.lang.String"
@@ -68,16 +106,21 @@
 		where status = '1' and phone = #{phone}
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-		delete from organization.u_users
+		delete from
+		organization.u_users
 		where userid = #{userid}
 	</delete>
 	<insert id="insert" parameterType="com.xiangshangban.transit_service.bean.Uusers">
-		insert into organization.u_users (userid, account, userpwd,
-		temporarypwd, salt, username, phone, create_time,
-		last_login_time, status, wechat_id, wechat_code, wechat_name)
+		insert into
+		organization.u_users (userid, account, userpwd,
+		temporarypwd, salt,
+		username, phone, create_time,
+		last_login_time, status, wechat_id,
+		wechat_code, wechat_name)
 		values (#{userid}, #{account},#{userpwd},
 		#{temporarypwd}, #{salt}, #{username}, #{phone}, #{createTime}
-		#{lastLoginTime}, #{status}, #{wechatId}, #{wechatCode}, #{wechatName})
+		#{lastLoginTime}, #{status}, #{wechatId}, #{wechatCode},
+		#{wechatName})
 	</insert>
 	<insert id="insertSelective" parameterType="com.xiangshangban.transit_service.bean.Uusers">
 		insert into organization.u_users
@@ -207,7 +250,8 @@
 		where userid = #{userid}
 	</update>
 	<update id="updateByPrimaryKey" parameterType="com.xiangshangban.transit_service.bean.Uusers">
-		update organization.u_users
+		update
+		organization.u_users
 		set account = #{account},
 		userpwd = #{userpwd},
 		temporarypwd = #{temporarypwd},
@@ -215,21 +259,26 @@
 		username = #{username},
 		phone = #{phone},
 		create_time = #{createTime},
-		last_login_time = #{lastLoginTime,jdbcType=DATE},
+		last_login_time =
+		#{lastLoginTime,jdbcType=DATE},
 		status = #{status},
-		wechat_id = #{wechatId},
+		wechat_id =
+		#{wechatId},
 		wechat_code = #{wechatCode},
 		wechat_name = #{wechatName}
 		where userid = #{userid}
 	</update>
 	<update id="updateSmsCode">
 		update organization.u_users
-		set temporarypwd = #{temporarypwd}
+		set temporarypwd =
+		#{temporarypwd}
 		where phone = #{phone}
 	</update>
-	<select id="SelectCountByPhone" parameterType="java.lang.String" resultType="java.lang.Integer">
+	<select id="SelectCountByPhone" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
 		select count(userid)
 		from organization.u_users
-		where phone = #{phone}
+		where phone =
+		#{phone}
 	</select>
 </mapper>

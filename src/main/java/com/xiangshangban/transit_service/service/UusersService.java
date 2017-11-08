@@ -2,6 +2,9 @@ package com.xiangshangban.transit_service.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.xiangshangban.transit_service.bean.PersonalInformationVerification;
 import com.xiangshangban.transit_service.bean.Uusers;
 
 public interface UusersService {
@@ -15,6 +18,10 @@ public interface UusersService {
 	  * @return
 	  */
 	 Uusers selectByPhone(String phone);
+	 
+	 int selectIdentityAuthentication(String phone,String userName,String companyName);
+	 
+	 PersonalInformationVerification selectPersonalInformationVerification(String phone,String userName,String postName);
 	 
 	 int updateSmsCode(String Phone, String smsCode);
 	 
