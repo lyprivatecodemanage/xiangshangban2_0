@@ -1,5 +1,7 @@
 package com.xiangshangban.transit_service.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.xiangshangban.transit_service.bean.Login;
@@ -36,5 +38,7 @@ public interface LoginMapper {
 	 */
     Login selectBySessionId(String sessionId);
     
-    Login selectByPhone(String phone);
+    List<Login> selectByPhone(String phone);
+    
+    Login selectOneByPhone(String phone);
 }

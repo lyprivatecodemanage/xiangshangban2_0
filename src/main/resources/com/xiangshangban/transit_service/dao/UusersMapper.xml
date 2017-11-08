@@ -18,7 +18,9 @@
 		<result column="company_id" property="companyId" />  
 	</resultMap>
 	<sql id="Base_Column_List">
-		userid, account, userpwd, temporarypwd, salt, username, phone, createTime, last_login_time, status, _id, wechat_id, wechat_code, wechat_name
+		userid, account, userpwd, temporarypwd, salt, username, phone, create_time, last_login_time, status, wechat_id, wechat_code, wechat_name
+	</sql>
+	<sql id="Base_Column_List_A">
 		u.userid, u.account, u.userpwd, u.temporarypwd, u.salt, u.username, u.phone, u.create_time, u.last_login_time, u.status, u.wechat_id, u.wechat_code, u.wechat_name
 	</sql>
 	<select id="selectRoles" parameterType="java.lang.String" resultType="java.lang.String">
@@ -62,8 +64,8 @@
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from u_users u
-		where phone = #{phone}
+		from u_users
+		where status = '1' and phone = #{phone}
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from organization.u_users

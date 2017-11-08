@@ -297,12 +297,12 @@ public class RegisterController {
             if (count > 0) {
                 map.put("status", "1");
                 map.put("returnCode", "4005");
-                map.put("message", "手机号已被注册");
+                map.put("message", "已注册");
                 return map;
             } else {
                 map.put("status", "0");
                 map.put("returnCode", "3000");
-                map.put("message", "手机号可注册");
+                map.put("message", "未注册");
                 return map;
             }
         } catch (Exception e) {
