@@ -42,14 +42,13 @@ public class ServletFilter implements Filter{
 		HttpServletResponse res=(HttpServletResponse) response;
 		String uri = req.getRequestURI();
 		System.out.println(uri);
-		res.setHeader("Access-Control-Allow-Credentials","true");
-		//res.setHeader("Access-Control-Allow-Origin","http://192.168.0.114:8000");
+		/*res.setHeader("Access-Control-Allow-Credentials","true");
+		res.setHeader("Access-Control-Allow-Origin","http://192.168.0.114:8000");*/
 		//res.setHeader("Access-Control-Allow-Origin","http://192.168.0.242:8000");
 		 //这里填写你允许进行跨域的主机ip
 		res.setHeader("Access-Control-Allow-Origin", "*");
         //允许的访问方法
 		res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
-		
         //Access-Control-Max-Age 用于 CORS 相关配置的缓存
 		res.setHeader("Access-Control-Max-Age", "3600");
 		res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, type");
@@ -78,4 +77,5 @@ public class ServletFilter implements Filter{
 	}
 
 }
+
 
