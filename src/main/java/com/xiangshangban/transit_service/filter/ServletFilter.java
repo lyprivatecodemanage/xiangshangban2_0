@@ -62,7 +62,7 @@ public class ServletFilter implements Filter{
 			String checkUrl = "/api/"+mode+"/";
 			if(uri.contains(checkUrl)){
 				String sendurl = URLDecoder.decode(uri.replaceAll(checkUrl, ""),"UTF-8");
-				redirectUrl = "/redirectApi/sendRequest?url="+sendurl+"&mode="+mode;
+				redirectUrl = "/redirectApi/sendRequest?redirectUrl="+sendurl+"&redirectMode="+mode;
 				redirect = true;
 			}
 		}
@@ -79,4 +79,5 @@ public class ServletFilter implements Filter{
 	}
 
 }
+
 

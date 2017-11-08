@@ -21,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.xiangshangban.transit_service.bean.Company;
 import com.xiangshangban.transit_service.bean.Login;
 import com.xiangshangban.transit_service.bean.Uusers;
+import com.xiangshangban.transit_service.service.CompanyService;
 import com.xiangshangban.transit_service.service.LoginService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.FileMD5Util;
@@ -39,7 +41,8 @@ public class LoginController {
 	private LoginService loginService;
 	@Autowired
 	private UusersService uusersService;
-	
+	@Autowired
+	CompanyService companyService;
 	/**
 	 * @author 李业/获得clientId
 	 * @param type
@@ -81,29 +84,31 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping("/getQrcode")
-	public Map<String,Object> getQrcode(String type,HttpSession session){
+	public Map<String,Object> getQrcode(String type,String companyId,HttpSession session){
 		Map<String,Object> result = new HashMap<String,Object>();
 		try{
-			String sessionId = session.getId();
-			//产生二维码(UUID)
-			String qrcode = FormatUtil.createUuid();
-			RedisUtil redis = RedisUtil.getInstance();
-			//将二位码存入redis,设置有效时间300秒
-			redis.new Hash().hset("qrcode_"+qrcode, "qrcode", qrcode);
-			redis.expire("qrcode_"+qrcode, 300);
-			Login login = new Login();
-			login.setSessionId(sessionId);
-			login.setQrcode(qrcode);
-			login.setQrcodeStatus("0");
-			login.setId(FormatUtil.createUuid());
-			loginService.insertSelective(login);
+			String qrcode = "";
 			//登录
 			if(Integer.valueOf(type)==0){
-				qrcode="login="+qrcode;
+				String sessionId = session.getId();
+				//产生二维码(UUID)
+				qrcode = FormatUtil.createUuid();
+				RedisUtil redis = RedisUtil.getInstance();
+				//将二位码存入redis,设置有效时间300秒
+				redis.new Hash().hset("qrcode_"+qrcode, "qrcode", qrcode);
+				redis.expire("qrcode_"+qrcode, 300);
+				Login login = new Login();
+				login.setSessionId(sessionId);
+				login.setQrcode(qrcode);
+				login.setQrcodeStatus("0");
+				login.setId(FormatUtil.createUuid());
+				loginService.insertSelective(login);
+				qrcode="shjn:login="+qrcode;
 			}
 			//注册
 			if(Integer.valueOf(type)==1){
-				qrcode="invite="+qrcode;
+				Company company = companyService.selectByPrimaryKey(companyId);
+				qrcode="shjn:invite="+company.getCompany_no();
 			}
 			result.put("qrcode", qrcode);
 			result.put("message", "成功");

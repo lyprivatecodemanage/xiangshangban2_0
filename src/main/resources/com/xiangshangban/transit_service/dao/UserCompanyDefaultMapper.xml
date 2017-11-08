@@ -19,6 +19,9 @@
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="com.xiangshangban.transit_service.bean.UserCompanyDefault" >
 		delete from user_company
+		where user_id = #{userId,jdbcType=VARCHAR}
+		and company_id = #{companyId,jdbcType=VARCHAR}
+		and current_option = #{currentOption,jdbcType=VARCHAR}
 		where user_id = #{userId}
 		and company_id = #{companyId}
 		and current_option = #{currentOption}
@@ -26,7 +29,7 @@
 	<insert id="insert" parameterType="com.xiangshangban.transit_service.bean.UserCompanyDefault" >
 		insert into user_company (user_id, company_id, current_option
 		)
-		values (#{userId}, #{companyId}, #{currentOption}
+		values (#{userId,jdbcType=VARCHAR}, #{companyId,jdbcType=VARCHAR}, #{currentOption,jdbcType=VARCHAR}
 		)
 	</insert>
 	<insert id="insertSelective" parameterType="com.xiangshangban.transit_service.bean.UserCompanyDefault" >
@@ -44,13 +47,13 @@
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides="," >
 			<if test="userId != null" >
-				#{userId},
+				#{userId,jdbcType=VARCHAR},
 			</if>
 			<if test="companyId != null" >
-				#{companyId},
+				#{companyId,jdbcType=VARCHAR},
 			</if>
 			<if test="currentOption != null" >
-				#{currentOption},
+				#{currentOption,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>

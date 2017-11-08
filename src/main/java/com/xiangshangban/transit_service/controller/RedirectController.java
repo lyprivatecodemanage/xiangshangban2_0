@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.xiangshangban.transit_service.bean.Login;
 import com.xiangshangban.transit_service.bean.ReturnData;
 import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.service.LoginService;
