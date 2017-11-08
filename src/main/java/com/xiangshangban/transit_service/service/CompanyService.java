@@ -19,10 +19,10 @@ public interface CompanyService {
     int updateByPrimaryKey(Company record);
 
     //判断公司名是否重复(是否有这个公司)
-    int selectByCompany(String companyName);
+    int selectByCompany(String company_no);
 
     //根据公司名称获得公司信息
-    Company selectByCompanyName(String companyName);
+    Company selectByCompanyName(String company_no);
 
     //创建公司(填写公司名称，存入员工表编号关联)
     int insertSelective(Company record);
