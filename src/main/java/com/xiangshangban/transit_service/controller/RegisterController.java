@@ -11,6 +11,8 @@ import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.FormatUtil;
 import com.xiangshangban.transit_service.util.PinYin2Abbreviation;
 import com.xiangshangban.transit_service.util.RedisUtil;
+import com.xiangshangban.transit_service.util.RedisUtil.Hash;
+
 import org.jboss.logging.Logger;
 import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,11 +107,9 @@ public class RegisterController {
             //从redis中获取之前存入的验证码 判断是否还在有效期
             RedisUtil redis = RedisUtil.getInstance();
             String redisTemporaryPwd = redis.new Hash().hget("smsCode_"+phone, "smsCode");
-
-            redisTemporaryPwd = "6666";
-            
             if (redisTemporaryPwd!=null) {
                 if(redisTemporaryPwd.equals(temporaryPwd)){
+                	
                     //生成UUID作为用户编号
                     userId = FormatUtil.createUuid();
                     //获取系统时间作为用户创建时间
@@ -221,7 +221,10 @@ public class RegisterController {
                 userCompanyKey.setCurrentOption("1");
 
                 userCompanyService.insertSelective(userCompanyKey);
-
+                
+                map.put("companyId",companyId);
+                map.put("companyName",companyName);
+                map.put("user_name",userName);
                 map.put("returnCode", "3000");
                 map.put("message", "数据请求成功");
                 return map;
