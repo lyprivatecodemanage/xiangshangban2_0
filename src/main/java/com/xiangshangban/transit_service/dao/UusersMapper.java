@@ -23,12 +23,14 @@ public interface UusersMapper {
     
     int selectIdentityAuthentication(@Param("phone") String phone,@Param("userName") String userName,@Param("companyName") String companyName);
     
-    PersonalInformationVerification selectPersonalInformationVerification(@Param("phone")String phone,@Param("userName")String userName,@Param("postName")String postName);
+    List<PersonalInformationVerification> selectPersonalInformationVerification(@Param("phone")String phone,@Param("userName")String userName,@Param("postName")String postName);
     
     int updateByPrimaryKey(Uusers record);
     
     int updateSmsCode(@Param("phone")String phone,@Param("temporarypwd")String smsCode);
 
+    List<Uusers> selectListsByPhone(String phone);
+    
     Uusers selectCompanyByToken(String token);
 
     Uusers selectCompanyBySessionId(String sessionId);

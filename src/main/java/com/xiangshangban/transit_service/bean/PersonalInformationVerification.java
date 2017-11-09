@@ -3,8 +3,19 @@ package com.xiangshangban.transit_service.bean;
 public class PersonalInformationVerification {
 	private String userId;
 	private String userName;
+	private String postName;
 	private String companyId;
 	private String companyName;
+	
+	
+	
+	
+	public String getPostName() {
+		return postName;
+	}
+	public void setPostName(String postName) {
+		this.postName = postName;
+	}
 	public String getUserId() {
 		return userId;
 	}

@@ -87,10 +87,15 @@ public class UusersServiceImpl implements UusersService {
 		return uusersMapper.selectIdentityAuthentication(phone, userName, companyName);
 	}
 	@Override
-	public PersonalInformationVerification selectPersonalInformationVerification(String phone, String userName,
+	public List<PersonalInformationVerification> selectPersonalInformationVerification(String phone, String userName,
 			String postName) {
 		
 		return uusersMapper.selectPersonalInformationVerification(phone, userName, postName);
+	}
+	@Override
+	public List<Uusers> selectListsByPhone(String phone) {
+		// TODO Auto-generated method stub
+		return uusersMapper.selectListsByPhone(phone);
 	}
 
 

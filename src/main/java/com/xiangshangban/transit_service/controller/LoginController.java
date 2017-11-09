@@ -416,7 +416,7 @@ public class LoginController {
 						loginService.insertSelective(newLogin);
 					}
 					Uusers user = uusersService.selectCompanyBySessionId(sessionId);
-					result.put("companId", user.getCompanyId());
+					result.put("companyId",user.getCompanyId());
 				}
 				
 				UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(phone, smsCode);

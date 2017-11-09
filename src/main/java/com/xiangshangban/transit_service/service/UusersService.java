@@ -19,9 +19,11 @@ public interface UusersService {
 	  */
 	 Uusers selectByPhone(String phone);
 	 
+	 List<Uusers> selectListsByPhone(String phone);
+	 
 	 int selectIdentityAuthentication(String phone,String userName,String companyName);
 	 
-	 PersonalInformationVerification selectPersonalInformationVerification(String phone,String userName,String postName);
+	 List<PersonalInformationVerification> selectPersonalInformationVerification(String phone,String userName,String postName);
 	 
 	 int updateSmsCode(String Phone, String smsCode);
 	 

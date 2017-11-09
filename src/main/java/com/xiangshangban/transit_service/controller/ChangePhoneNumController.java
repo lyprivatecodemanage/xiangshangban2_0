@@ -3,6 +3,7 @@ package com.xiangshangban.transit_service.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -192,16 +193,19 @@ public class ChangePhoneNumController {
 
 	public Map<String, Object> personalInformationVerification(String oldPhone,String newPhone,String userName,String postName) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		
+		//生成一个随机验证码
+		int verificationCode =  (int)Math.floor(Math.random()*100000);
 		try {
-			PersonalInformationVerification  personalInformationVerification  =uusersService.selectPersonalInformationVerification(oldPhone, userName, postName);
-			if(personalInformationVerification==null){
-				result.put("message", "本人认证信息未通过");
-				result.put("returnCode", "4017");
+			List<PersonalInformationVerification>  personalInformationVerification  =uusersService.selectPersonalInformationVerification(oldPhone, userName, postName);
+			if(personalInformationVerification.size()>0){
+				result.put("personalInformationVerification", personalInformationVerification);
+				result.put("verificationCode", verificationCode);
+				result.put("message","本人认证信息通过");
+				result.put("returnCode","4016");
 				return result;
 			}
-			//生成一个随机验证码
-			int verificationCode =  (int)Math.floor(Math.random()*100000);
+			result.put("message", "本人认证信息未通过");
+			result.put("returnCode", "4017");
 			return result;
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
