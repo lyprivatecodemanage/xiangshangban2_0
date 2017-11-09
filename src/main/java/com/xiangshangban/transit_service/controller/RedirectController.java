@@ -9,6 +9,7 @@ import org.apache.http.entity.ContentType;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
@@ -36,7 +37,7 @@ public class RedirectController{
 	 * @param res
 	 * @return
 	 */
-	@RequestMapping("/sendRequest")
+	@RequestMapping(value="/sendRequest", produces = "application/json;charset=UTF-8", method=RequestMethod.POST)
     public String register(HttpServletRequest request) {
 		
 		//根据token获得当前用户id,公司id

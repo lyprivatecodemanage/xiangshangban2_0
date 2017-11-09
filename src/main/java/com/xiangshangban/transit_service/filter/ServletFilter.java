@@ -41,6 +41,8 @@ public class ServletFilter implements Filter{
 		HttpServletRequest req=(HttpServletRequest) request;
 		HttpServletResponse res=(HttpServletResponse) response;
 		String uri = req.getRequestURI();
+		int a = req.getLocalPort();
+		String address = req.getLocalAddr();
 		System.out.println(uri);
 		/*res.setHeader("Access-Control-Allow-Credentials","true");
 		res.setHeader("Access-Control-Allow-Origin","http://192.168.0.114:8000");*/
@@ -48,7 +50,9 @@ public class ServletFilter implements Filter{
 		res.setHeader("Access-Control-Allow-Origin","http://192.168.0.110:80");
 		res.setHeader("Access-Control-Allow-Origin","http://192.168.0.110:80");*/
 		 //这里填写你允许进行跨域的主机ip
-		//res.setHeader("Access-Control-Allow-Origin", "*");
+		res.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
+		//res.setHeader("Access-Control-Allow-Origin", "http://192.168.0.141:80");
+		res.setHeader("Access-Control-Allow-Credentials","true");
         //允许的访问方法
 		res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
         //Access-Control-Max-Age 用于 CORS 相关配置的缓存
@@ -68,6 +72,8 @@ public class ServletFilter implements Filter{
 		}
 		
 		if(redirect){
+			System.out.println(req.getSession().getId());
+			//String companyId = req.getParameter("companyId");
 			req.getRequestDispatcher(redirectUrl).forward(req, res);
 		}else{
 			chain.doFilter(req, res);
