@@ -364,7 +364,7 @@ public class LoginController {
 							login.setPhone(phone);
 							login.setEffectiveTime(effectiveTime);
 							login.setSessionId(sessionId);
-							loginService.updateByPrimaryKeySelective(login);
+							loginService.insertSelective(login);
 						}
 					}else{
 						//首次登录,或退出账号时
@@ -401,7 +401,7 @@ public class LoginController {
 						login.setPhone(phone);
 						login.setEffectiveTime(effectiveTime);
 						login.setSessionId(sessionId);
-						loginService.updateByPrimaryKeySelective(login);
+						loginService.insertSelective(login);
 					}else{
 						//loginService.selectByPhone(phone);
 						//首次登录,或退出账号时
@@ -415,6 +415,8 @@ public class LoginController {
 						newLogin.setToken(token);
 						loginService.insertSelective(newLogin);
 					}
+					Uusers user = uusersService.selectCompanyBySessionId(sessionId);
+					result.put("companId", user.getCompanyId());
 				}
 				
 				UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(phone, smsCode);
@@ -424,6 +426,7 @@ public class LoginController {
 				if(Integer.valueOf(type)==1){
 				result.put("token", token);
 				}
+				
 				result.put("message", "登录成功!");
 				result.put("returnCode", "3000");
 				return result;
