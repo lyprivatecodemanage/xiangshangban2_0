@@ -1,7 +1,11 @@
 package com.xiangshangban.transit_service.controller;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +23,7 @@ import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.service.LoginService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.HttpClientUtil;
+import com.xiangshangban.transit_service.util.RequestJSONUtil;
 
 /**
  * 请求转发用
@@ -72,6 +77,20 @@ public class RedirectController{
 			if(!entry.getKey().equals("redirectUrl") && !entry.getKey().equals("redirectMode")){
 				newParamMap.put(entry.getKey(), entry.getValue().length>1?entry.getValue():entry.getValue()[0]);
 			}
+		}
+		try {
+			String jsonStr = RequestJSONUtil.getRequestJsonString(request);
+			JSONObject jobj = JSON.parseObject(jsonStr);
+			Set<String> set = jobj.keySet();
+			Iterator iterator = set.iterator();
+			while(iterator.hasNext()){
+				String key = iterator.next().toString();
+				newParamMap.put(key,jobj.get(key));
+			}
+			System.out.println(newParamMap);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		//ContentType contentType = ContentType.create(req.getHeader("content-type").split(";")[0], "UTF-8");
 		String result = HttpClientUtil.sendRequet(sendurl, newParamMap, ContentType.APPLICATION_JSON, headers);//ContentType.APPLICATION_JSON);

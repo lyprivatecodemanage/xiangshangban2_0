@@ -41,14 +41,7 @@ public class ServletFilter implements Filter{
 		HttpServletRequest req=(HttpServletRequest) request;
 		HttpServletResponse res=(HttpServletResponse) response;
 		String uri = req.getRequestURI();
-		int a = req.getLocalPort();
-		String address = req.getLocalAddr();
-		System.out.println(uri);
-		/*res.setHeader("Access-Control-Allow-Credentials","true");
-		res.setHeader("Access-Control-Allow-Origin","http://192.168.0.114:8000");*/
-		/*res.setHeader("Access-Control-Allow-Origin","http://192.168.0.110:80");
-		res.setHeader("Access-Control-Allow-Origin","http://192.168.0.110:80");
-		res.setHeader("Access-Control-Allow-Origin","http://192.168.0.110:80");*/
+		//System.out.println(uri);
 		 //这里填写你允许进行跨域的主机ip
 		res.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
 		//res.setHeader("Access-Control-Allow-Origin", "http://192.168.0.141:80");
@@ -72,7 +65,7 @@ public class ServletFilter implements Filter{
 		}
 		
 		if(redirect){
-			System.out.println(req.getSession().getId());
+			//System.out.println("sessionId :"+req.getSession().getId());
 			//String companyId = req.getParameter("companyId");
 			req.getRequestDispatcher(redirectUrl).forward(req, res);
 		}else{
