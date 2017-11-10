@@ -54,7 +54,7 @@ public class ApiApplication
         ShiroFilterFactoryBean bean=new ShiroFilterFactoryBean();
         bean.setSecurityManager(manager);
         //配置登录的url和登录成功的url
-       /* bean.setLoginUrl("/loginController/loginUser");
+      /*  bean.setLoginUrl("/loginController/loginUser");
         bean.setSuccessUrl("/loginController/logOut");
         bean.setUnauthorizedUrl("/loginController/unAuthorizedUrl");*/
         //配置访问权限
@@ -66,16 +66,16 @@ public class ApiApplication
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);*/
         //配置访问权限
         LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<String,String>();
-       /* filterChainDefinitionMap.put("/jsp/login.jsp*", "anon"); //表示可以匿名访问
-        filterChainDefinitionMap.put("/loginUser", "anon"); 
-        filterChainDefinitionMap.put("/logout*","anon");
-        filterChainDefinitionMap.put("/jsp/error.jsp*","anon");
-        filterChainDefinitionMap.put("/jsp/index.jsp*","authc");
-        filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
+       /* filterChainDefinitionMap.put("/DepartmentController/findDepartmentTree", "perms[DepartmentController:findDepartmentTree]");
+        filterChainDefinitionMap.put("/DepartmentController/findByAllDepartment", "perms[DepartmentController:findByAllDepartment]");
+        filterChainDefinitionMap.put("/CompanyController/selectByCompany", "perms[CompanyController:selectByCompany]");
+        filterChainDefinitionMap.put("/registerController/registerUsers", "anon");
+        filterChainDefinitionMap.put("/loginController/sendSms", "anon");
+        filterChainDefinitionMap.put("/loginController/loginUser", "anon");*/
+       // filterChainDefinitionMap.put("/*.*", "anon");
+       /* filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
         filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
         filterChainDefinitionMap.put("/*.*", "authc");*/
-        filterChainDefinitionMap.put("/registerController/registerUsers", "anon");
-        filterChainDefinitionMap.put("/*.*", "anon");
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return bean;
     }

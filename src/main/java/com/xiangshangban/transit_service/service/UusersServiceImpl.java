@@ -94,8 +94,13 @@ public class UusersServiceImpl implements UusersService {
 	}
 	@Override
 	public List<Uusers> selectListsByPhone(String phone) {
-		// TODO Auto-generated method stub
+		
 		return uusersMapper.selectListsByPhone(phone);
+	}
+	@Override
+	public Uusers selectApprovalPerson(String companyId) {
+		
+		return uusersMapper.selectApprovalPerson(companyId);
 	}
 
 

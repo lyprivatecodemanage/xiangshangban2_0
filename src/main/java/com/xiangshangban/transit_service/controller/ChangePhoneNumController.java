@@ -1,10 +1,14 @@
 package com.xiangshangban.transit_service.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,6 +159,7 @@ public class ChangePhoneNumController {
 	 * @param companyName
 	 * @return
 	 */
+	@RequestMapping("/identityAuthentication")
 	public Map<String, Object> identityAuthentication(String phone, String userName, String companyName) {
 		Map<String, Object> result = new HashMap<String, Object>();
 
@@ -190,16 +195,37 @@ public class ChangePhoneNumController {
 			return result;
 		}
 	}
-
+	
+	@RequestMapping("/personalInformationVerification")
 	public Map<String, Object> personalInformationVerification(String oldPhone,String newPhone,String userName,String postName) {
 		Map<String, Object> result = new HashMap<String, Object>();
-		//生成一个随机验证码
-		int verificationCode =  (int)Math.floor(Math.random()*100000);
 		try {
-			List<PersonalInformationVerification>  personalInformationVerification  =uusersService.selectPersonalInformationVerification(oldPhone, userName, postName);
+			List<String> list = new ArrayList<String>();
+			List<PersonalInformationVerification>  personalInformationVerification  =uusersService.selectPersonalInformationVerification(newPhone, userName, postName);
 			if(personalInformationVerification.size()>0){
-				result.put("personalInformationVerification", personalInformationVerification);
-				result.put("verificationCode", verificationCode);
+				for(PersonalInformationVerification piv:personalInformationVerification){
+					if(userName.equals(piv.getUserName()) && postName.equals(piv.getPostName())){
+						//个人信息正确
+						//生成一个随机验证码
+						int verificationCode =  (int)Math.floor(Math.random()*100000);
+						result.put("verificationCode", verificationCode);
+						for(PersonalInformationVerification piv1:personalInformationVerification){
+							list.add(piv1.getCompanyId());
+						}
+						//去重
+						Set<String> set = new HashSet<String>(list);
+						Iterator<String> iterator = set.iterator();
+						int num=0;
+						while(iterator.hasNext()){
+							num+=1;
+							//认证人信息
+							Uusers user = uusersService.selectApprovalPerson(iterator.next());
+							result.put("company"+num, user);
+						}
+					}
+				}
+				result.put("newPhone",newPhone);
+				result.put("oldPhone",oldPhone);
 				result.put("message","本人认证信息通过");
 				result.put("returnCode","4016");
 				return result;
@@ -227,5 +253,35 @@ public class ChangePhoneNumController {
 			return result;
 		}
 	}
-
+	@RequestMapping("/submitInformation")
+	public Map<String,Object> submitInformation(String oldPhone,String newPhone,String UserId){
+		Map<String,Object> result = new HashMap<String,Object>();
+		
+		try{
+			
+			
+			
+		return result;
+	} catch (NumberFormatException e) {
+		e.printStackTrace();
+		logger.info(e);
+		result.put("returnCode", "3007");
+		result.put("message", "参数格式不正确");
+		return result;
+	} catch (NullPointerException e) {
+		e.printStackTrace();
+		logger.info(e);
+		result.put("returnCode", "3006");
+		result.put("message", "参数为null");
+		return result;
+	} catch (Exception e) {
+		e.printStackTrace();
+		logger.info(e);
+		result.put("returnCode", "3001");
+		result.put("message", "失败");
+		return result;
+	}
+	}
+	
+	
 }

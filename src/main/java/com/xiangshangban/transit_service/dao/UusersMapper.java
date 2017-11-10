@@ -21,6 +21,8 @@ public interface UusersMapper {
     
     Uusers selectByAccount(String account);
     
+    Uusers selectApprovalPerson(String companyId);
+    
     int selectIdentityAuthentication(@Param("phone") String phone,@Param("userName") String userName,@Param("companyName") String companyName);
     
     List<PersonalInformationVerification> selectPersonalInformationVerification(@Param("phone")String phone,@Param("userName")String userName,@Param("postName")String postName);

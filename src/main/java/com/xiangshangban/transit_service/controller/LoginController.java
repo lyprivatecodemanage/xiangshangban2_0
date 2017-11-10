@@ -358,6 +358,7 @@ public class LoginController {
 								//产生新的token
 								token = FileMD5Util.getMD5String(phone + now + salt);
 							}
+							login.setId(FormatUtil.createUuid());
 							login.setSalt(salt);
 							login.setToken(token);
 							login.setCreateTime(now);
@@ -395,6 +396,7 @@ public class LoginController {
 						}
 						//记录登录信息
 						token = FileMD5Util.getMD5String(phone + now + salt);
+						login.setId(FormatUtil.createUuid());
 						login.setSalt(salt);
 						login.setToken(token);
 						login.setCreateTime(now);

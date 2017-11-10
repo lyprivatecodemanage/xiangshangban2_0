@@ -41,17 +41,18 @@ public class ServletFilter implements Filter{
 		HttpServletRequest req=(HttpServletRequest) request;
 		HttpServletResponse res=(HttpServletResponse) response;
 		String uri = req.getRequestURI();
-		//System.out.println(uri);
+		System.out.println(uri);
 		 //这里填写你允许进行跨域的主机ip
 		res.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
 		//res.setHeader("Access-Control-Allow-Origin", "http://192.168.0.141:80");
 		res.setHeader("Access-Control-Allow-Credentials","true");
         //允许的访问方法
-		res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
+		//res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
         //Access-Control-Max-Age 用于 CORS 相关配置的缓存
 		res.setHeader("Access-Control-Max-Age", "3600");
-		res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, type");
-		
+		//res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, type");
+		res.setHeader("Access-Control-Allow-Methods", req.getMethod());
+		res.setHeader("Access-Control-Allow-Headers", req.getHeader("Access-Control-Request-Headers"));
 		String [] includeMode = HttpClientUtil.getIncludeMode();
 		String redirectUrl = "";
 		boolean redirect = false;

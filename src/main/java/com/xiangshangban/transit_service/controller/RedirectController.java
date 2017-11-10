@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +44,7 @@ public class RedirectController{
 	 * @param res
 	 * @return
 	 */
+	//@RequiresRoles(value={"admin","superAdmin"},logical=Logical.OR)
 	@RequestMapping(value="/sendRequest", produces = "application/json;charset=UTF-8", method=RequestMethod.POST)
     public String register(HttpServletRequest request) {
 		
@@ -81,6 +84,7 @@ public class RedirectController{
 		try {
 			String jsonStr = RequestJSONUtil.getRequestJsonString(request);
 			JSONObject jobj = JSON.parseObject(jsonStr);
+			if(jobj!=null){
 			Set<String> set = jobj.keySet();
 			Iterator iterator = set.iterator();
 			while(iterator.hasNext()){
@@ -88,6 +92,7 @@ public class RedirectController{
 				newParamMap.put(key,jobj.get(key));
 			}
 			System.out.println(newParamMap);
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

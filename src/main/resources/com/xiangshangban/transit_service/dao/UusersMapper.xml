@@ -2,28 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xiangshangban.transit_service.dao.UusersMapper">
 	<resultMap id="BaseResultMap" type="com.xiangshangban.transit_service.bean.Uusers">
-		<id column="userid"  property="userid" />
-		<result column="account"  property="account" />
-		<result column="userpwd"  property="userpwd" />
-		<result column="temporarypwd"  property="temporarypwd" />
-		<result column="salt"  property="salt" />
-		<result column="username"  property="username" />
-		<result column="phone"  property="phone" />
-		<result column="create_time"  property="createTime" />
+		<id column="userid" property="userid" />
+		<result column="account" property="account" />
+		<result column="userpwd" property="userpwd" />
+		<result column="temporarypwd" property="temporarypwd" />
+		<result column="salt" property="salt" />
+		<result column="username" property="username" />
+		<result column="phone" property="phone" />
+		<result column="create_time" property="createTime" />
 		<result column="last_login_time" jdbcType="DATE" property="lastLoginTime" />
-		<result column="status"  property="status" />
-		<result column="wechat_id"  property="wechatId" />
-		<result column="wechat_code"  property="wechatCode" />
-		<result column="wechat_name"  property="wecharName" />
+		<result column="status" property="status" />
+		<result column="wechat_id" property="wechatId" />
+		<result column="wechat_code" property="wechatCode" />
+		<result column="wechat_name" property="wecharName" />
 		<result column="company_id" property="companyId" />
 	</resultMap>
-	<resultMap type="com.xiangshangban.transit_service.bean.PersonalInformationVerification" id="PersonalInformationVerificationResultMap">
-		<result column="userid"  property="userId" />
-		<result column="username"  property="userName" />
-		<result column="company_id"  property="companyId" />
+	<resultMap
+		type="com.xiangshangban.transit_service.bean.PersonalInformationVerification"
+		id="PersonalInformationVerificationResultMap">
+		<result column="userid" property="userId" />
+		<result column="username" property="userName" />
+		<result column="post_name" property="postName" />
+		<result column="company_id" property="companyId" />
 		<result column="company_name" property="companyName" />
 	</resultMap>
-	
+
 	<sql id="Base_Column_List">
 		userid, account, userpwd, temporarypwd, salt, username,
 		phone, create_time, last_login_time, status, wechat_id, wechat_code,
@@ -43,13 +46,27 @@
 		and u.userid = uc.user_id and
 		uc.company_id = c.company_id
 	</select>
-	<select id="selectPersonalInformationVerification" parameterType="java.lang.String" resultMap="PersonalInformationVerificationResultMap">
-		select u.userid,u.username,c.company_id,c.company_name from
-		u_users u,user_company uc,company_ c,post_ p,u_users_roles ur where
-		u.phone = #{phone} and u.username = #{userName} and p.post_name = #{postName}
-		and p.company_id = c.company_id and u.userid = uc.user_id and
-		uc.company_id = c.company_id and u.userid = ur.userid and
-		ur.company_id = c.company_id
+	<select id="selectPersonalInformationVerification"
+		parameterType="java.lang.String" resultMap="PersonalInformationVerificationResultMap">
+		select
+		p.post_name,u.username,u.userid,c.company_id,c.company_name
+		from
+		u_users u,connect_emp_post_ cep,post_ p,company_ c where u.phone =
+		#{phone} and u.userid = cep.employee_id and cep.post_id =
+		p.post_id and
+		p.company_id = c.company_id
+	</select>
+	<select id="selectApprovalPerson" parameterType="java.lang.String"
+		resultMap="PersonalInformationVerificationResultMap">
+		select
+		u.userid,u.username,c.company_id,c.company_name
+		from
+		u_users_roles uur,u_roles r,u_users u,company_ c
+		where uur.company_id =
+		#{companyId} and r.rolename =
+		'admin' and uur.roleid = r.roleid and
+		u.userid = uur.userid
+		and c.company_id = #{companyId}
 	</select>
 	<select id="selectRoles" parameterType="java.lang.String"
 		resultType="java.lang.String">
@@ -79,7 +96,9 @@
 		from
 		u_users u,login_
 		l,user_company uc
-		where l.session_id = #{sessionId} and l.phone = u.phone and uc.user_id = u.userid and uc.current_option = '1'
+		where l.session_id = #{sessionId} and l.phone =
+		u.phone and uc.user_id = u.userid and uc.current_option = '1' order by
+		l.create_time desc limit 1 offset 0
 	</select>
 
 	<select id="selectByPrimaryKey" parameterType="java.lang.String"
