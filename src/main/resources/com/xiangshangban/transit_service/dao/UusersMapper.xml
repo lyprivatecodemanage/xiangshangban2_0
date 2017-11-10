@@ -122,13 +122,6 @@
 		from u_users
 		where status = '1' and phone = #{phone}
 	</select>
-	<select id="selectListsByPhone" parameterType="java.lang.String"
-		resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from u_users
-		where phone = #{phone}
-	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from
 		organization.u_users
