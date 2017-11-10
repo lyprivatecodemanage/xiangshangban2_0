@@ -80,17 +80,22 @@ public class RedirectController{
 		}
 		try {
 			String jsonStr = RequestJSONUtil.getRequestJsonString(request);
-			JSONObject jobj = JSON.parseObject(jsonStr);
-			Set<String> set = jobj.keySet();
-			Iterator iterator = set.iterator();
-			while(iterator.hasNext()){
-				String key = iterator.next().toString();
-				newParamMap.put(key,jobj.get(key));
+			if(StringUtils.isNotEmpty(jsonStr)){
+				JSONObject jobj = JSON.parseObject(jsonStr);
+				Set<String> set = jobj.keySet();
+				Iterator iterator = set.iterator();
+				while(iterator.hasNext()){
+					String key = iterator.next().toString();
+					newParamMap.put(key,jobj.get(key));
+				}
+				System.out.println(newParamMap);
 			}
-			System.out.println(newParamMap);
+			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ReturnData returnData = new ReturnData();
+			returnData.setReturnCode("3001");
+			returnData.setMessage("服务器错误");
+			return JSON.toJSONString(returnData);
 		}
 		//ContentType contentType = ContentType.create(req.getHeader("content-type").split(";")[0], "UTF-8");
 		String result = HttpClientUtil.sendRequet(sendurl, newParamMap, ContentType.APPLICATION_JSON, headers);//ContentType.APPLICATION_JSON);
