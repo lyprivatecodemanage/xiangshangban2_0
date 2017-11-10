@@ -55,7 +55,7 @@ public class RedirectController{
 			user = userService.selectCompanyByToken(token);
 		}
 		
-		if(StringUtils.isEmpty(user.getCompanyId()) || StringUtils.isEmpty(user.getUserid())){
+		if(user==null || StringUtils.isEmpty(user.getCompanyId()) || StringUtils.isEmpty(user.getUserid())){
 			ReturnData returnData = new ReturnData();
 			returnData.setReturnCode("3003");
 			returnData.setMessage("用户身份获取失败");
