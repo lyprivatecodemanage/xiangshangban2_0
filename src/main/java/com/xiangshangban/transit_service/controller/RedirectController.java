@@ -83,7 +83,7 @@ public class RedirectController {
 				newParamMap.put(entry.getKey(), entry.getValue().length > 1 ? entry.getValue() : entry.getValue()[0]);
 			}
 		}
-		contentType = request.getHeader("content-type");
+		String contentType = request.getHeader("content-type");
 		if (contentType.contains("application/json")) {
 			try {
 				String jsonStr = RequestJSONUtil.getRequestJsonString(request);
