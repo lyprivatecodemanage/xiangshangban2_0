@@ -78,24 +78,27 @@ public class RedirectController{
 				newParamMap.put(entry.getKey(), entry.getValue().length>1?entry.getValue():entry.getValue()[0]);
 			}
 		}
-		try {
-			String jsonStr = RequestJSONUtil.getRequestJsonString(request);
-			if(StringUtils.isNotEmpty(jsonStr)){
-				JSONObject jobj = JSON.parseObject(jsonStr);
-				Set<String> set = jobj.keySet();
-				Iterator iterator = set.iterator();
-				while(iterator.hasNext()){
-					String key = iterator.next().toString();
-					newParamMap.put(key,jobj.get(key));
+		String contentType = request.getHeader("content-type");
+		if(contentType.contains("application/json")){
+			try {
+				String jsonStr = RequestJSONUtil.getRequestJsonString(request);
+				if(StringUtils.isNotEmpty(jsonStr)){
+					JSONObject jobj = JSON.parseObject(jsonStr);
+					Set<String> set = jobj.keySet();
+					Iterator iterator = set.iterator();
+					while(iterator.hasNext()){
+						String key = iterator.next().toString();
+						newParamMap.put(key,jobj.get(key));
+					}
+					System.out.println(newParamMap);
 				}
-				System.out.println(newParamMap);
+				
+			} catch (IOException e) {
+				ReturnData returnData = new ReturnData();
+				returnData.setReturnCode("3001");
+				returnData.setMessage("服务器错误");
+				return JSON.toJSONString(returnData);
 			}
-			
-		} catch (IOException e) {
-			ReturnData returnData = new ReturnData();
-			returnData.setReturnCode("3001");
-			returnData.setMessage("服务器错误");
-			return JSON.toJSONString(returnData);
 		}
 		//ContentType contentType = ContentType.create(req.getHeader("content-type").split(";")[0], "UTF-8");
 		String result = HttpClientUtil.sendRequet(sendurl, newParamMap, ContentType.APPLICATION_JSON, headers);//ContentType.APPLICATION_JSON);
