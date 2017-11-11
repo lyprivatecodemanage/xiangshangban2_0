@@ -34,7 +34,7 @@ public class ClientController {
      * @return
      */
     @Transactional
-    @RequestMapping(value = "/createClient")
+    @RequestMapping(value = "/createClient",produces = "application/json;charset=utf-8",method = RequestMethod.GET)
     public Map<String,Object> createClient(String type,String imei,String model){
 
         Map<String,Object> map = new HashMap<String,Object>();

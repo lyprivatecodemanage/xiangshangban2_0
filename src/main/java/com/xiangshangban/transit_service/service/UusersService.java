@@ -46,9 +46,7 @@ public interface UusersService {
 
 	Uusers selectCompanyBySessionId(String sessionId);
 	
-<<<<<<< HEAD
 	Uusers selectById(String userId);
-=======
+	
 	Uusers selectApprovalPerson(String companyId);
->>>>>>> 33e319b207d4fc7a820735240e668566d62a7319
 }
