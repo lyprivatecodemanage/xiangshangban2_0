@@ -19,6 +19,8 @@ public interface LoginMapper {
     int updateByPrimaryKeySelective(Login record);
 
     int updateByPrimaryKey(Login record);
+    
+    int updateStatusByPrimaryKey(String id);
     /**
      * 根据token查询登录信息
      * @param token

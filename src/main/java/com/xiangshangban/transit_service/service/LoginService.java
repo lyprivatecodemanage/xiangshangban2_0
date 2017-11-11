@@ -36,5 +36,7 @@ public interface LoginService {
 	
 	int updateByPrimaryKeySelective(Login record);
 	
+	int updateStatusByPrimaryKey(String id);
+	
 	int deleteByPrimatyKey(String id);
 }
