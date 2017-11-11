@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.xiangshangban.transit_service.bean.PersonalInformationVerification;
 import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.dao.UusersMapper;
 @Service("usersService")
@@ -79,6 +80,27 @@ public class UusersServiceImpl implements UusersService {
 	public Uusers selectCompanyBySessionId(String sessionId) {
 		
 		return uusersMapper.selectCompanyBySessionId(sessionId);
+	}
+	@Override
+	public int selectIdentityAuthentication(String phone, String userName, String companyName) {
+		
+		return uusersMapper.selectIdentityAuthentication(phone, userName, companyName);
+	}
+	@Override
+	public List<PersonalInformationVerification> selectPersonalInformationVerification(String phone, String userName,
+			String postName) {
+		
+		return uusersMapper.selectPersonalInformationVerification(phone, userName, postName);
+	}
+	@Override
+	public List<Uusers> selectListsByPhone(String phone) {
+		
+		return uusersMapper.selectListsByPhone(phone);
+	}
+	@Override
+	public Uusers selectApprovalPerson(String companyId) {
+		
+		return uusersMapper.selectApprovalPerson(companyId);
 	}
 
 	public Uusers selectById(String userId){

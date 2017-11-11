@@ -311,6 +311,7 @@ public class LoginController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar calendar = Calendar.getInstance();
+		System.out.println(request.getSession().getId());
 		String type = request.getHeader("type");
 		String token = request.getHeader("ACCESS_TOKEN");
 		String UserAgent = request.getHeader("User-Agent");
@@ -358,13 +359,14 @@ public class LoginController {
 								//产生新的token
 								token = FileMD5Util.getMD5String(phone + now + salt);
 							}
+							login.setId(FormatUtil.createUuid());
 							login.setSalt(salt);
 							login.setToken(token);
 							login.setCreateTime(now);
 							login.setPhone(phone);
 							login.setEffectiveTime(effectiveTime);
 							login.setSessionId(sessionId);
-							loginService.updateByPrimaryKeySelective(login);
+							loginService.insertSelective(login);
 						}
 					}else{
 						//首次登录,或退出账号时
@@ -395,13 +397,14 @@ public class LoginController {
 						}
 						//记录登录信息
 						token = FileMD5Util.getMD5String(phone + now + salt);
+						login.setId(FormatUtil.createUuid());
 						login.setSalt(salt);
 						login.setToken(token);
 						login.setCreateTime(now);
 						login.setPhone(phone);
 						login.setEffectiveTime(effectiveTime);
 						login.setSessionId(sessionId);
-						loginService.updateByPrimaryKeySelective(login);
+						loginService.insertSelective(login);
 					}else{
 						//loginService.selectByPhone(phone);
 						//首次登录,或退出账号时
@@ -415,6 +418,8 @@ public class LoginController {
 						newLogin.setToken(token);
 						loginService.insertSelective(newLogin);
 					}
+					Uusers user = uusersService.selectCompanyBySessionId(sessionId);
+					result.put("companyId",user.getCompanyId());
 				}
 				
 				UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(phone, smsCode);
@@ -424,6 +429,7 @@ public class LoginController {
 				if(Integer.valueOf(type)==1){
 				result.put("token", token);
 				}
+				
 				result.put("message", "登录成功!");
 				result.put("returnCode", "3000");
 				return result;
@@ -491,12 +497,13 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping(value = "/sendSms")
-	public Map<String,Object> sendSms(String phone,HttpSession session) {
+	public Map<String,Object> sendSms(String phone,HttpServletRequest request,HttpSession session) {
 		Map<String,Object> result = new HashMap<String,Object>();
 		YtxSmsUtil sms = new YtxSmsUtil("LTAIcRopzlp5cbUd", "VnLMEEXQRukZQSP6bXM6hcNWPlphiP");
 		try {
 			Uusers user = uusersService.selectByPhone(phone);
 			String smsCode = sms.sendIdSms(phone);
+			System.out.println(request.getSession().getId());
 			//user不为null,说明是登录获取验证码
 			if(user!=null){
 				//更新数据库验证码记录,当做登录凭证
