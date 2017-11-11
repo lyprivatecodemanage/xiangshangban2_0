@@ -45,6 +45,10 @@ public interface UusersService {
 	Uusers selectCompanyByToken(String token);
 
 	Uusers selectCompanyBySessionId(String sessionId);
-	
+
 	ChangePhone selectApprovalPerson(String companyId);
+
+	Uusers selectById(String userId);
+	
+
 }

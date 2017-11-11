@@ -169,7 +169,7 @@ public class RegisterController {
                 company.setCompany_name(companyName);
                 company.setCompany_creat_time(sdf.format(date));
                 company.setCompany_approve("0");
-                company.setUser_name(userName);
+                company.setUser_name(phone);
                 //注册公司名称首字母缩写
                 String companyNameLo = "";
                 if (companyName.length() >= 4) {

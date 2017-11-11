@@ -103,5 +103,7 @@ public class UusersServiceImpl implements UusersService {
 		return uusersMapper.selectApprovalPerson(companyId);
 	}
 
-
+	public Uusers selectById(String userId){
+		return uusersMapper.selectById(userId);
+	}
 }

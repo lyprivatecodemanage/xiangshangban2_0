@@ -108,6 +108,14 @@
 		from organization.u_users
 		where status = '0' and userid = #{userid}
 	</select>
+	
+	<select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from organization.u_users
+		where userid = #{userid}
+	</select>
+	
 	<select id="selectByAccount" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select

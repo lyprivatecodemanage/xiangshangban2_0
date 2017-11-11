@@ -5,6 +5,7 @@ eclipse.preferences.version=1
 encoding//src/main/java=UTF-8
 encoding//src/main/resources=UTF-8
 encoding//src/main/resources/application.properties=UTF-8
+encoding//src/main/resources/properties/generatorConfig.xml=UTF-8
 encoding//src/main/resources/properties/oss.properties=UTF-8
 encoding//src/main/resources/properties/pathUrl.properties=UTF-8
 encoding//src/main/resources/properties/redis.properties=UTF-8

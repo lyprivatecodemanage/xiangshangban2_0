@@ -107,6 +107,7 @@ public class LoginController {
 			}
 			//注册
 			if(Integer.valueOf(type)==1){
+				//根据公司ID查询出公司编号 生成二维码
 				Company company = companyService.selectByPrimaryKey(companyId);
 				qrcode="shjn:invite="+company.getCompany_no();
 			}

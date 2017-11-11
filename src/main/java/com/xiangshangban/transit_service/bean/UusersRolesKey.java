@@ -1,31 +1,55 @@
 package com.xiangshangban.transit_service.bean;
 
 public class UusersRolesKey {
-    private String roleid;
+    private String roleId;
 
-    private String userid;
+    private String userId;
+    
+    private String companyId;
+    
+    private String historyUserIds;
+    
+    public String getRoleId() {
+		return roleId;
+	}
 
-    public String getRoleid() {
-        return roleid;
+	public void setRoleId(String roleId) {
+		this.roleId = roleId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+
+	public String gethistoryUserIds() {
+		return historyUserIds;
+	}
+
+	public void sethistoryUserIds(String historyUserIds) {
+		this.historyUserIds = historyUserIds;
+	}
+
+	public UusersRolesKey() {
     }
 
-    public void setRoleid(String roleid) {
-        this.roleid = roleid;
-    }
-
-    public String getUserid() {
-        return userid;
-    }
-
-    public void setUserid(String userid) {
-        this.userid = userid;
-    }
-
-    public UusersRolesKey() {
-    }
-
-    public UusersRolesKey(String roleid, String userid) {
-        this.roleid = roleid;
-        this.userid = userid;
-    }
+	public UusersRolesKey(String roleId, String userId, String companyId, String historyUserIds) {
+		super();
+		this.roleId = roleId;
+		this.userId = userId;
+		this.companyId = companyId;
+		this.historyUserIds = historyUserIds;
+	}
+	
 }

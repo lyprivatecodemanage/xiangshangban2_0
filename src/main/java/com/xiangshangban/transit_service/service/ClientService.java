@@ -12,4 +12,7 @@ public interface ClientService {
     int insertSelective(Client record);
 
     Client SelectById(String clientId);
+    
+    //根据imei查询是否存在clientId  
+    Client SelectByImei(String imei);
 }

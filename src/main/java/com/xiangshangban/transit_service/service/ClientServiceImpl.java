@@ -28,4 +28,10 @@ public class ClientServiceImpl implements ClientService {
     public Client SelectById(String clientId) {
         return clientMapper.SelectById(clientId);
     }
+
+	@Override
+	public Client SelectByImei(String imei) {
+		// TODO Auto-generated method stub
+		return clientMapper.SelectByImei(imei);
+	}
 }
