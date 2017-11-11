@@ -53,4 +53,12 @@
     from client_
     where client_id = #{clientId}
   </select>
+  
+  <select id="SelectByImei" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from client_
+    where imei = #{imei}
+  </select>
+  
 </mapper>

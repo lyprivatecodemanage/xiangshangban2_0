@@ -36,4 +36,6 @@ public interface UusersService {
 	Uusers selectCompanyByToken(String token);
 
 	Uusers selectCompanyBySessionId(String sessionId);
+	
+	Uusers selectById(String userId);
 }

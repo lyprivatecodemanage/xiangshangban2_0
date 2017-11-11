@@ -81,5 +81,7 @@ public class UusersServiceImpl implements UusersService {
 		return uusersMapper.selectCompanyBySessionId(sessionId);
 	}
 
-
+	public Uusers selectById(String userId){
+		return uusersMapper.selectById(userId);
+	}
 }

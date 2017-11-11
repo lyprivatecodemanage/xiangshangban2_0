@@ -4,18 +4,28 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 public class HttpClientUtil {
+	private static Logger logger = LoggerFactory  
+            .getLogger(HttpClientUtils.class); // 日志记录 
 	/**
 	* httpclient 模拟post 发送json请求  (ContentType=application/json)
 	* @param sendurl
@@ -36,6 +46,7 @@ public class HttpClientUtil {
 	public static String sendRequet(String sendurl, Object data, ContentType contentType, Map<String,String> headers) {
 		HttpPost post = new HttpPost(sendurl);
 		StringEntity myEntity = new StringEntity(JSON.toJSONString(data,false), contentType);// 构造请求数据
+		
 		myEntity.setContentEncoding("utf-8");
 		post.setEntity(myEntity);// 设置请求体
 		
@@ -98,4 +109,6 @@ public class HttpClientUtil {
 		}
 		return null;
 	}
+	
+
 }

@@ -10,4 +10,6 @@ public interface ClientMapper {
     int insertSelective(Client record);
 
     Client SelectById(String clientId);
+    
+    Client SelectByImei(String imei);
 }

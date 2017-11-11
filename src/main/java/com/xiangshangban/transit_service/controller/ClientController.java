@@ -2,6 +2,9 @@ package com.xiangshangban.transit_service.controller;
 
 import com.xiangshangban.transit_service.bean.Client;
 import com.xiangshangban.transit_service.service.ClientService;
+import com.xiangshangban.transit_service.util.FormatUtil;
+
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +25,7 @@ public class ClientController {
     @Autowired
     ClientService clientService;
 
+    Logger logger = Logger.getLogger(RegisterController.class);
     /***
      * 焦振/生成极光推送的clientId
      * @param type
@@ -34,11 +38,19 @@ public class ClientController {
     public Map<String,Object> createClient(String type,String imei,String model){
 
         Map<String,Object> map = new HashMap<String,Object>();
-
+        String clientId = "";
         try {
-            String clientId = UUID.randomUUID().toString();
-            Client client = new Client(clientId,type,imei,model);
-            clientService.insertSelective(client);
+        	//根据imei查询数据库是否存在clientId
+        	Client selectclient = clientService.SelectByImei(imei);
+        	
+        	//不存在则创建  存在则返回
+        	if(selectclient == null){
+        		clientId = FormatUtil.createUuid();
+                Client client = new Client(clientId,type,imei,model);
+                clientService.insertSelective(client);
+        	}else{
+        		clientId=selectclient.getClientId();
+        	}
 
             map.put("clientId",clientId);
             map.put("returnCode","3000");
@@ -46,6 +58,7 @@ public class ClientController {
             return map;
         }catch(Exception e){
             e.printStackTrace();
+            logger.info(e);
             map.put("returnCode","3001");
             map.put("message","服务器错误");
             return map;
