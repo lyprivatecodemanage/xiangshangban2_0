@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.xiangshangban.transit_service.bean.Company;
 import com.xiangshangban.transit_service.bean.Login;
 import com.xiangshangban.transit_service.bean.Uusers;
+import com.xiangshangban.transit_service.exception.CustomException;
 import com.xiangshangban.transit_service.service.CompanyService;
 import com.xiangshangban.transit_service.service.LoginService;
 import com.xiangshangban.transit_service.service.UusersService;
@@ -584,5 +587,47 @@ public class LoginController {
 		logger.info("url :"+url+"message : 没有权限");
 		return result;
 	}
+	
+/*	@RequestMapping(value = "/unAuthenticationInfo")
+	public Map<String, Object> unAuthenticationInfo(HttpServletRequest request) {
+		Map<String, Object> result = new HashMap<String,Object>();
+		// 如果登录失败从request中获取认证异常信息，shiroLoginFailure就是shiro异常类的全限定名  
+        // 根据shiro返回的异常类路径判断，抛出指定异常信息  
+		try{
+        String exceptionClassName = (String) request.getAttribute("shiroLoginFailure");  
+        if (exceptionClassName != null) {  
+            if (UnknownAccountException.class.getName().equals(exceptionClassName)) {  
+                throw new CustomException("用户名不存在");  
+            } else if (IncorrectCredentialsException.class.getName().equals(exceptionClassName)) {  
+                  
+                throw new CustomException("用户名/密码不正确");  
+            }else if("randomCodeError".equals(exceptionClassName)){  
+                throw new CustomException("验证码错误 ");  
+            }else {  
+                throw new Exception();// 最终在异常处理器生成未知错误  
+            }  
+        }  
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e);
+		}
+        // 此方法不处理登陆成功（认证成功），shiro认证成功会自动跳转到上一个请求路径  
+        // 登陆失败还到login页面  
+		result.put("message", "请登录");
+		result.put("returnCode", "4000");
+		String url = request.getRequestURI();
+		logger.info("url :"+url+"message : 没有登录认证");
+		return result;
+	}
+	
+	//系统首页
+		@RequestMapping("/first")
+		public Map<String,Object> first()throws Exception{
+			Map<String,Object> result = new HashMap<String,Object>();
+			
+			result.put("message", "登录成功!");
+			result.put("returnCode", "3000");
+			return result;
+		}*/
 }
 

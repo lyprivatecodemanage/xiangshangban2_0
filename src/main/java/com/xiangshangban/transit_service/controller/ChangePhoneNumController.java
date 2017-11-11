@@ -93,7 +93,7 @@ public class ChangePhoneNumController {
 	 * @author 李业/更改手机号:判断新手机号是否注册以及是否活跃
 	 * @param phone
 	 * @return
-	 */
+	 *//*
 	@RequestMapping("/changePhoneTask")
 	public Map<String, Object> changePhoneTask(String phone) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -147,7 +147,7 @@ public class ChangePhoneNumController {
 			return result;
 		}
 	}
-
+*/
 	/**
 	 * @author 李业/不活跃号码判断是否在保护期
 	 * @param phone
@@ -171,23 +171,42 @@ public class ChangePhoneNumController {
 				result.put("returnCode", "4002");
 				return result;
 			}
-			Login login = loginService.selectOneByPhone(phone);
-			Date lastLoginTime = sdf.parse(login.getCreateTime());
-			Date nowTime = new Date();
-			Long lastTime = lastLoginTime.getTime();
-			Long firstTime = nowTime.getTime();
-			Long dayNum = (firstTime - lastTime) / (1000 * 60 * 60 * 24);
-			// 判断手机号是否在保护期内
-			if (dayNum < 180) {
-				// 在保护期
-				result.put("message", "该手机号当前处于保护期状态,请继续填写身份信息认证以完成申请...");
-				result.put("returnCode", "4012");
+			Uusers user = uusersService.selectByPhone(phone);
+			// 系统中是否有新手机号
+			// 否
+			if (user == null) {
+				result.put("message", "未注册");
+				result.put("returnCode", "4004");
 				return result;
-			} else {
-				// 不在保护期
-				result.put("message", "该手机号不处于保护期");
-				result.put("returnCode", "4013");
-				return result;
+			}else {
+				// 查看是否活跃
+				Login login = loginService.selectOneByPhone(phone);
+				Date lastLoginTime = sdf.parse(login.getCreateTime());
+				Date nowTime = new Date();
+				Long lastTime = lastLoginTime.getTime();
+				Long firstTime = nowTime.getTime();
+				Long dayNum = (firstTime - lastTime) / (1000 * 60 * 60 * 24);
+				// 判断用户是否活跃
+				if (dayNum < 90) {
+					// 活跃
+					result.put("message", "当前手机处于活跃状态,不可被重新注册");
+					result.put("returnCode", "4010");
+					return result;
+				} else {
+					// 不活跃
+					// 判断手机号是否在保护期内
+					if (dayNum < 180) {
+						// 在保护期
+						result.put("message", "该手机号当前处于保护期状态,请继续填写身份信息认证以完成申请...");
+						result.put("returnCode", "4012");
+						return result;
+					} else {
+						// 不在保护期
+						result.put("message", "该手机号不处于保护期");
+						result.put("returnCode", "4013");
+						return result;
+					}
+				}
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
