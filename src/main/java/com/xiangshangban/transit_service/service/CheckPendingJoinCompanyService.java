@@ -9,4 +9,10 @@ public interface CheckPendingJoinCompanyService {
     int insertSelective(CheckPendingJoinCompany record);
 
     CheckPendingJoinCompany selectByPrimaryKey(String userid);
+    
+    int updateByPrimaryKeySelective(CheckPendingJoinCompany record);
+
+    int updateByPrimaryKey(CheckPendingJoinCompany record);
+    
+    int deleteById(String userId);
 }

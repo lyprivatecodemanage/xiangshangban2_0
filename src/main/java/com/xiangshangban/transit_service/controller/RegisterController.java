@@ -46,44 +46,6 @@ public class RegisterController {
     @Autowired
     UserCompanyService userCompanyService;
 
-//    /***
-//     * 焦振/发送验证码
-//     * @param phone
-//     * @return
-//     */
-//    @RequestMapping(value = "/temporaryPwd",method = RequestMethod.POST,produces = "application/text;charset=utf-8")
-//    public Map<String,Object> temporaryPwd(String phone){
-//        Map<String,Object> map = new HashMap<String,Object>();
-//        try {
-//            //创建初始化短信接口对象
-//            YtxSmsUtil yts = new YtxSmsUtil("LTAIcRopzlp5cbUd","VnLMEEXQRukZQSP6bXM6hcNWPlphiP");
-//            //给接受的手机号码发送验证短信 并返回验证码
-//            String temporaryPwd = yts.sendIdSms(phone);
-//
-//            //将验证码存入redis缓存中
-//            RedisUtil redis = RedisUtil.getInstance();
-//            redis.new Hash().hset("u_users"+phone, "temporaryPwd", temporaryPwd);
-//            //设置缓存有效时间
-//            redis.expire("u_users"+phone, 180);
-//
-//            System.out.println("=========>  已发送验证短信");
-//            map.put("temporaryPwd",temporaryPwd);
-//            map.put("returnCode","1000");
-//            map.put("message","信息发送成功");
-//            return map;
-//       }catch(ClientException c){
-//            c.printStackTrace();
-//            map.put("returnCode","1001");
-//            map.put("message","信息发送失败");
-//            return map;
-//       }catch(Exception e){
-//           e.printStackTrace();
-//            map.put("returnCode","1002");
-//            map.put("message","错误");
-//            return map;
-//        }
-//    }
-
     /***
      * 焦振/进行用户注册
      *      公司注册
@@ -103,12 +65,19 @@ public class RegisterController {
         String companyId = "";
         //用户编号
         String userId = "";
+        
+        if(null==type||type.equals(null)||type.equals("")){
+        	map.put("returnCode", "4018");
+            map.put("message", "参数不完整");
+            return map;
+        }
+        
         try {
             //从redis中获取之前存入的验证码 判断是否还在有效期
             RedisUtil redis = RedisUtil.getInstance();
             String redisTemporaryPwd = redis.new Hash().hget("smsCode_"+phone, "smsCode");
-            if (redisTemporaryPwd!=null) {
-                if(redisTemporaryPwd.equals(temporaryPwd)){
+            if (temporaryPwd.equals(redisTemporaryPwd)) {
+                if(redisTemporaryPwd!=null){
                 	
                     //生成UUID作为用户编号
                     userId = FormatUtil.createUuid();
@@ -125,13 +94,13 @@ public class RegisterController {
 
                     uusersService.insertSelective(uUsers);
                 }else{
-                    map.put("returnCode", "4002");
-                    map.put("message", "验证码错误");
+                    map.put("returnCode", "4001");
+                    map.put("message", "验证码失效");
                     return map;
                 }
             } else {
-                map.put("returnCode", "4001");
-                map.put("message", "验证码失效");
+                map.put("returnCode", "4002");
+                map.put("message", "验证码错误");
                 return map;
             }
         } catch (Exception e) {
@@ -170,6 +139,7 @@ public class RegisterController {
                 company.setCompany_creat_time(sdf.format(date));
                 company.setCompany_approve("0");
                 company.setUser_name(phone);
+                company.setCompany_personal_name(userName);
                 //注册公司名称首字母缩写
                 String companyNameLo = "";
                 if (companyName.length() >= 4) {
@@ -219,8 +189,9 @@ public class RegisterController {
                 userCompanyKey.setCompanyId(companyId);
                 userCompanyKey.setUserId(userId);
                 userCompanyKey.setCurrentOption("1");
-
                 userCompanyService.insertSelective(userCompanyKey);
+                
+                
                 
                 map.put("companyId",companyId);
                 map.put("companyName",companyName);
@@ -247,20 +218,66 @@ public class RegisterController {
                 if (count > 0) {
                     //根据输入公司编号获的公司的实体
                     Company company = companyService.selectByCompanyName(company_no);
-                    //加入公司  新增待审核记录
+                    //加入公司  新增待审核表记录
                     CheckPendingJoinCompany checkPendingJoinCompany = new CheckPendingJoinCompany();
                     checkPendingJoinCompany.setUserid(userId);
                     checkPendingJoinCompany.setCompanyid(company.getCompany_id());
                     checkPendingJoinCompany.setStatus("0");
                     checkPendingJoinCompanyService.insertSelective(checkPendingJoinCompany);
+                   
+                    //审核通过
+                    if(1==1){
+	                    try{
+		                    //待审核通过后  修改待审核表中的状态 
+		                    CheckPendingJoinCompany cpjc = new CheckPendingJoinCompany();
+		                    cpjc.setUserid(userId);
+		                    cpjc.setStatus("1");
+		                    checkPendingJoinCompanyService.updateByPrimaryKeySelective(cpjc);
+	                    }catch(Exception e){
+	                    	e.printStackTrace();
+	                    	logger.info(e);
+	                    	uusersService.deleteByPrimaryKey(userId);
+	                    	checkPendingJoinCompanyService.deleteById(userId);
+	                    	map.put("returnCode", "3001");
+	                        map.put("message", "服务器错误");
+	                        return map;
+	                    }
+	                    
+	                    try{
+		                    //待审核通过后   将加入的公司编号信息存入用户与公司关联表中
+		                    UserCompanyDefault userCompanyKey = new UserCompanyDefault();
+		                    userCompanyKey.setCompanyId(company.getCompany_id());
+		                    userCompanyKey.setUserId(userId);
+		                    userCompanyKey.setCurrentOption("1");
+		                    userCompanyService.insertSelective(userCompanyKey);
+	                    }catch(Exception e){
+	                    	e.printStackTrace();
+	                    	logger.info(e);
+	                    	uusersService.deleteByPrimaryKey(userId);
+	                    	checkPendingJoinCompanyService.deleteById(userId);
+	                    	map.put("returnCode", "3001");
+	                        map.put("message", "服务器错误");
+	                        return map;
+	                    }
+	                    
+	                    try {
+	                    	//审核通过修改用户表中状态
+	                        Uusers u = new Uusers();
+	                        u.setUserid(userId);
+	                        u.setStatus(u.status_1);
+	                        uusersService.updateByPrimaryKeySelective(u);
+						} catch (Exception e) {
+							e.printStackTrace();
+	                    	logger.info(e);
+	                    	uusersService.deleteByPrimaryKey(userId);
+	                    	checkPendingJoinCompanyService.deleteById(userId);
+	                    	userCompanyService.deleteByPrimaryKey(new UserCompanyDefault(userId,company.getCompany_id(),null));
+	                    	map.put("returnCode", "3001");
+	                        map.put("message", "服务器错误");
+	                        return map;
+						}
+                    }
                     
-                    //待审核通过后  修改待审核表中的状态 并将用户表的用户状态修改为可用
-//                    //待审核通过后   将加入的公司编号信息存入用户与公司关联表中
-//                    UserCompanyDefault userCompanyKey = new UserCompanyDefault();
-//                    userCompanyKey.setCompanyId(company.getCompany_id());
-//                    userCompanyKey.setUserId(userId);
-//                    userCompanyKey.setCurrentOption("1");
-                    //审核
                     map.put("companyId",company.getCompany_id());
                     map.put("companyName",company.getCompany_name());
                     map.put("user_name",company.getUser_name());

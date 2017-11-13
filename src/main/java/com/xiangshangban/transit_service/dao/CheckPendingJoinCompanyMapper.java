@@ -16,4 +16,6 @@ public interface CheckPendingJoinCompanyMapper {
     int updateByPrimaryKeySelective(CheckPendingJoinCompany record);
 
     int updateByPrimaryKey(CheckPendingJoinCompany record);
+    
+    int deleteById(String userId);
 }

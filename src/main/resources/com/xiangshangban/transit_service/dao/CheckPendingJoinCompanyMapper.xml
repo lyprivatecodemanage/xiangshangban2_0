@@ -70,4 +70,10 @@
       status = #{status,jdbcType=VARCHAR}
     where userid = #{userid,jdbcType=VARCHAR}
   </update>
+  
+  <delete id="deleteById">
+  	delete from check_pending_joincompany
+  	where userid = #(userId,jdbcType=VARCHAR);
+  </delete>
+
 </mapper>
