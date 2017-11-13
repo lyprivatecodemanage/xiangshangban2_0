@@ -11,10 +11,12 @@
 		<result column="session_id" jdbcType="VARCHAR" property="sessionId" />
 		<result column="qrcode" jdbcType="VARCHAR" property="qrcode" />
 		<result column="qrcode_status" jdbcType="VARCHAR" property="qrcodeStatus" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="client_id" jdbcType="VARCHAR" property="clientId" />
 	</resultMap>
 	<sql id="Base_Column_List">
 		id, phone, token, salt, create_time, effective_time, session_id, qrcode,
-		qrcode_status
+		qrcode_status, status, client_id
 	</sql>
 	<select id="selectByPrimaryKey" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
@@ -29,7 +31,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from login_
-		where token = #{token} order by create_time desc limit 1 offset 0
+		where status = '1' and token = #{token} order by create_time desc limit 1 offset 0
 	</select>
 	<select id="selectByQrcode" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
@@ -103,6 +105,12 @@
 			<if test="qrcodeStatus != null">
 				qrcode_status,
 			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="clientId != null">
+				client_id,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -132,9 +140,20 @@
 			<if test="qrcodeStatus != null">
 				#{qrcodeStatus},
 			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="clientId != null">
+				#{clientId},
+			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="com.xiangshangban.transit_service.bean.Login">
+	<update id="updateStatusByPrimaryKey" parameterType="com.xiangshangban.transit_service.bean.Login">
+		update login_
+		set status = '0'
+		where id=#{id}
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="java.lang.String">
 		update login_
 		<set>
 			<if test="phone != null">
@@ -161,6 +180,12 @@
 			<if test="qrcodeStatus != null">
 				qrcode_Status = #{qrcodeStatus},
 			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="clientId != null">
+				client_id = #{clientId},
+			</if>
 		</set>
 		where id = #{id}
 	</update>
@@ -174,6 +199,8 @@
 		session_id = #{sessionId},
 		qrcode = #{qrcode},
 		qrcode_status = #{qrcodeStatus}
+		status = #{status},
+		client_id = #{clientId}
 		where id = #{id}
 	</update>
 

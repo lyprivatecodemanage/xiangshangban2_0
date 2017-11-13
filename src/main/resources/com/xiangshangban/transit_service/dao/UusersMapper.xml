@@ -18,8 +18,8 @@
 		<result column="company_id" property="companyId" />
 	</resultMap>
 	<resultMap
-		type="com.xiangshangban.transit_service.bean.PersonalInformationVerification"
-		id="PersonalInformationVerificationResultMap">
+		type="com.xiangshangban.transit_service.bean.ChangePhone"
+		id="ChangePhoneResultMap">
 		<result column="userid" property="userId" />
 		<result column="username" property="userName" />
 		<result column="post_name" property="postName" />
@@ -47,7 +47,7 @@
 		uc.company_id = c.company_id
 	</select>
 	<select id="selectPersonalInformationVerification"
-		parameterType="java.lang.String" resultMap="PersonalInformationVerificationResultMap">
+		parameterType="java.lang.String" resultMap="ChangePhoneResultMap">
 		select
 		p.post_name,u.username,u.userid,c.company_id,c.company_name
 		from
@@ -57,7 +57,7 @@
 		p.company_id = c.company_id
 	</select>
 	<select id="selectApprovalPerson" parameterType="java.lang.String"
-		resultMap="PersonalInformationVerificationResultMap">
+		resultMap="ChangePhoneResultMap">
 		select
 		u.userid,u.username,c.company_id,c.company_name
 		from

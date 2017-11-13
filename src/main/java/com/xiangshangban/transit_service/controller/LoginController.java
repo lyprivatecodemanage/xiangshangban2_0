@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.xiangshangban.transit_service.bean.Company;
 import com.xiangshangban.transit_service.bean.Login;
 import com.xiangshangban.transit_service.bean.Uusers;
+import com.xiangshangban.transit_service.exception.CustomException;
 import com.xiangshangban.transit_service.service.CompanyService;
 import com.xiangshangban.transit_service.service.LoginService;
 import com.xiangshangban.transit_service.service.UusersService;
@@ -314,9 +317,11 @@ public class LoginController {
 		System.out.println(request.getSession().getId());
 		String type = request.getHeader("type");
 		String token = request.getHeader("ACCESS_TOKEN");
+		String clientId = request.getHeader("clientId");
 		String UserAgent = request.getHeader("User-Agent");
 		RedisUtil redis = RedisUtil.getInstance();
 		String redisSmsCode ="";
+		String id = "";
 		if(phone != null && !"".equals(phone)){
 		 redisSmsCode= redis.new Hash().hget("smsCode_"+phone, "smsCode");
 		 if(redisSmsCode==null){
@@ -343,11 +348,25 @@ public class LoginController {
 					if (token != null) {
 						// 已登录则根据token查用户的信息
 						Login login = loginService.selectByToken(token);
+						
+						// 验证设备
+						if(!clientId.equals(login.getClientId())){
+							result.put("message", "设备已更换,请重新登录");
+							result.put("returnCode", "");
+							return result;
+						}
+						//验证token是否是最新的
+						/*if(login==null){
+							result.put("", "");
+						}*/
+						
+						
 						// 判断token对应的用户信息是否存在,以及token是否过期
 						if (login != null) {
+							id=login.getId();
 							Date createTime = sdf.parse(login.getCreateTime());
 							calendar.setTime(date);
-							calendar.add(calendar.DATE, Integer.valueOf(login.getEffectiveTime()));
+							calendar.add(calendar.DATE, Integer.parseInt(login.getEffectiveTime()));
 							String TabPhone = login.getPhone();
 							Uusers user = uusersService.selectByPhone(TabPhone);
 							if (user != null) {
@@ -366,7 +385,10 @@ public class LoginController {
 							login.setPhone(phone);
 							login.setEffectiveTime(effectiveTime);
 							login.setSessionId(sessionId);
+							newLogin.setStatus("1");
+							newLogin.setClientId(clientId);
 							loginService.insertSelective(login);
+							
 						}
 					}else{
 						//首次登录,或退出账号时
@@ -378,6 +400,8 @@ public class LoginController {
 						newLogin.setEffectiveTime(effectiveTime);
 						newLogin.setSessionId(sessionId);
 						newLogin.setToken(token);
+						newLogin.setStatus("1");
+						newLogin.setClientId(clientId);
 						loginService.insertSelective(newLogin);
 					}
 				}
@@ -388,6 +412,7 @@ public class LoginController {
 					//判断连接是否存在
 					//存在
 					if(login!=null) {
+						id=login.getId();
 						String TabPhone = login.getPhone();
 						Uusers user = uusersService.selectByPhone(TabPhone);
 						//获取用户手机号和smsCode
@@ -396,32 +421,42 @@ public class LoginController {
 							smsCode = user.getTemporarypwd();
 						}
 						//记录登录信息
-						token = FileMD5Util.getMD5String(phone + now + salt);
+						//token = FileMD5Util.getMD5String(phone + now + salt);
 						login.setId(FormatUtil.createUuid());
 						login.setSalt(salt);
-						login.setToken(token);
+						//login.setToken(token);
 						login.setCreateTime(now);
 						login.setPhone(phone);
 						login.setEffectiveTime(effectiveTime);
 						login.setSessionId(sessionId);
+						newLogin.setStatus("1");
+						newLogin.setClientId("web");
 						loginService.insertSelective(login);
 					}else{
-						//loginService.selectByPhone(phone);
 						//首次登录,或退出账号时
-						token = FileMD5Util.getMD5String(phone + now + salt);
+						//token = FileMD5Util.getMD5String(phone + now + salt);
 						newLogin.setCreateTime(now);
 						newLogin.setSalt(salt);
 						newLogin.setPhone(phone);
 						newLogin.setId(FormatUtil.createUuid());
 						newLogin.setEffectiveTime(effectiveTime);
 						newLogin.setSessionId(sessionId);
-						newLogin.setToken(token);
+						//newLogin.setToken(token);
+						newLogin.setStatus("1");
+						newLogin.setClientId("web");
 						loginService.insertSelective(newLogin);
 					}
 					Uusers user = uusersService.selectCompanyBySessionId(sessionId);
 					result.put("companyId",user.getCompanyId());
 				}
-				
+				if(id!=null && !"".equals(id)){
+				int i = loginService.updateStatusByPrimaryKey(id);
+				if(i<=0){
+					result.put("message", "token替换失败");
+					result.put("returnCode", "");
+					return result;
+				}
+				}
 				UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(phone, smsCode);
 				Subject subject = SecurityUtils.getSubject();
 				usernamePasswordToken.setRememberMe(true);
@@ -552,5 +587,47 @@ public class LoginController {
 		logger.info("url :"+url+"message : 没有权限");
 		return result;
 	}
+	
+/*	@RequestMapping(value = "/unAuthenticationInfo")
+	public Map<String, Object> unAuthenticationInfo(HttpServletRequest request) {
+		Map<String, Object> result = new HashMap<String,Object>();
+		// 如果登录失败从request中获取认证异常信息，shiroLoginFailure就是shiro异常类的全限定名  
+        // 根据shiro返回的异常类路径判断，抛出指定异常信息  
+		try{
+        String exceptionClassName = (String) request.getAttribute("shiroLoginFailure");  
+        if (exceptionClassName != null) {  
+            if (UnknownAccountException.class.getName().equals(exceptionClassName)) {  
+                throw new CustomException("用户名不存在");  
+            } else if (IncorrectCredentialsException.class.getName().equals(exceptionClassName)) {  
+                  
+                throw new CustomException("用户名/密码不正确");  
+            }else if("randomCodeError".equals(exceptionClassName)){  
+                throw new CustomException("验证码错误 ");  
+            }else {  
+                throw new Exception();// 最终在异常处理器生成未知错误  
+            }  
+        }  
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.info(e);
+		}
+        // 此方法不处理登陆成功（认证成功），shiro认证成功会自动跳转到上一个请求路径  
+        // 登陆失败还到login页面  
+		result.put("message", "请登录");
+		result.put("returnCode", "4000");
+		String url = request.getRequestURI();
+		logger.info("url :"+url+"message : 没有登录认证");
+		return result;
+	}
+	
+	//系统首页
+		@RequestMapping("/first")
+		public Map<String,Object> first()throws Exception{
+			Map<String,Object> result = new HashMap<String,Object>();
+			
+			result.put("message", "登录成功!");
+			result.put("returnCode", "3000");
+			return result;
+		}*/
 }
 

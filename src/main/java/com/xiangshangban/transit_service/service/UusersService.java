@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.xiangshangban.transit_service.bean.PersonalInformationVerification;
+import com.xiangshangban.transit_service.bean.ChangePhone;
 import com.xiangshangban.transit_service.bean.Uusers;
 
 public interface UusersService {
@@ -23,7 +23,7 @@ public interface UusersService {
 	 
 	 int selectIdentityAuthentication(String phone,String userName,String companyName);
 	 
-	 List<PersonalInformationVerification> selectPersonalInformationVerification(String phone,String userName,String postName);
+	 List<ChangePhone> selectPersonalInformationVerification(String phone,String userName,String postName);
 	 
 	 int updateSmsCode(String Phone, String smsCode);
 	 
@@ -45,8 +45,10 @@ public interface UusersService {
 	Uusers selectCompanyByToken(String token);
 
 	Uusers selectCompanyBySessionId(String sessionId);
-	
+
+	ChangePhone selectApprovalPerson(String companyId);
+
 	Uusers selectById(String userId);
 	
-	Uusers selectApprovalPerson(String companyId);
+
 }
