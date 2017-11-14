@@ -191,8 +191,6 @@ public class RegisterController {
                 userCompanyKey.setCurrentOption("1");
                 userCompanyService.insertSelective(userCompanyKey);
                 
-                
-                
                 map.put("companyId",companyId);
                 map.put("companyName",companyName);
                 map.put("user_name",userName);
@@ -285,6 +283,7 @@ public class RegisterController {
                     map.put("message", "数据请求成功");
                     return map;
                 } else {
+                	uusersService.deleteByPrimaryKey(userId);
                     map.put("returnCode", "4006");
                     map.put("message", "加入公司不存在");
                     return map;

@@ -386,4 +386,13 @@ public class ChangePhoneNumController {
 		}
 	}
 
+	@RequestMapping("mationInfo")
+	public Map<String,Object> mationInfo(){
+		Map<String,Object> map = new HashMap<>();
+		
+		
+		
+		return map;
+	}
+	
 }
