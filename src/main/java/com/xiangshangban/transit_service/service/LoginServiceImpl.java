@@ -82,4 +82,10 @@ public class LoginServiceImpl implements LoginService {
 		return loginMapper.deleteByPrimaryKey(id);
 	}
 
+	@Override
+	public int updateStatusByPrimaryKey(String id) {
+		// TODO Auto-generated method stub
+		return loginMapper.updateStatusByPrimaryKey(id);
+	}
+
 }

@@ -11,13 +11,13 @@
     client_id, type, imei, model
   </sql>
   <insert id="insert" parameterType="com.xiangshangban.transit_service.bean.Client">
-    insert into client_ (client_id, type, imei, 
+    insert into organization.client_ (client_id, type, imei, 
       model)
     values (#{clientId,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{imei,jdbcType=VARCHAR}, 
       #{model,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.xiangshangban.transit_service.bean.Client">
-    insert into client_
+    insert into organization.client_
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="clientId != null">
         client_id,
@@ -50,7 +50,15 @@
   <select id="SelectById" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
-    from client_
-    where client_id = #{clientId}
+    from organization.client_
+    where client_id = #{clientId,jdbcType=VARCHAR}
   </select>
+  
+  <select id="SelectByImei" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from organization.client_
+    where imei = #{imei,jdbcType=VARCHAR}
+  </select>
+  
 </mapper>

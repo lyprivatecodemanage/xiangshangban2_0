@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by mian on 2017/10/31.
  */
-@Service("CompanyService")
+@Service("companyService")
 public class CompanyServiceImpl implements CompanyService {
 
     @Autowired

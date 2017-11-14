@@ -10,9 +10,27 @@ public class Login {
 	private String sessionId;//sessionid
 	private String qrcode;//二维码
 	private String qrcodeStatus;//二维码扫描状态
+	private String status;//token状态:'0':不可用,'1'可用
+	private String clientId;//设备编号
 	
 	
 	
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	public String getQrcode() {
 		return qrcode;
 	}

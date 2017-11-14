@@ -1,9 +1,13 @@
 package com.xiangshangban.transit_service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+
+import javax.servlet.Filter;
 
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -22,6 +26,7 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
+import com.xiangshangban.transit_service.filter.CustomFormAuthenticationFilter;
 import com.xiangshangban.transit_service.filter.ServletFilter;
 import com.xiangshangban.transit_service.realm.MyRealm;
 import com.xiangshangban.transit_service.shiro.CredentialsMatcher;
@@ -55,30 +60,34 @@ public class ApiApplication
         bean.setSecurityManager(manager);
         //配置登录的url和登录成功的url
        /* bean.setLoginUrl("/loginController/loginUser");
-        bean.setSuccessUrl("/loginController/logOut");
-        bean.setUnauthorizedUrl("/loginController/unAuthorizedUrl");*/
-        //配置访问权限
-       /* LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<String,String>();
-        filterChainDefinitionMap.put("/loginUser", "anon");
-        filterChainDefinitionMap.put("/*", "roles");//表示需要认证才可以访问
-        filterChainDefinitionMap.put("/**", "roles");//表示需要认证才可以访问
-        filterChainDefinitionMap.put("/*.*", "roles");
-        bean.setFilterChainDefinitionMap(filterChainDefinitionMap);*/
+        bean.setUnauthorizedUrl("/loginController/unAuthorizedUrl");
+        CustomFormAuthenticationFilter formAuthenticationFilter = new CustomFormAuthenticationFilter();
+    	formAuthenticationFilter.setUsernameParam("phone");
+    	formAuthenticationFilter.setUsernameParam("smsCode");
+        Map<String,Filter> map = new HashMap<String,Filter>();
+        map.put("authc", formAuthenticationFilter);
+        bean.setFilters(map);*/
         //配置访问权限
         LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<String,String>();
-       /* filterChainDefinitionMap.put("/jsp/login.jsp*", "anon"); //表示可以匿名访问
-        filterChainDefinitionMap.put("/loginUser", "anon"); 
-        filterChainDefinitionMap.put("/logout*","anon");
-        filterChainDefinitionMap.put("/jsp/error.jsp*","anon");
-        filterChainDefinitionMap.put("/jsp/index.jsp*","authc");
-        filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
-        filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
-        filterChainDefinitionMap.put("/*.*", "authc");*/
-        filterChainDefinitionMap.put("/registerController/registerUsers", "anon");
-        filterChainDefinitionMap.put("/*.*", "anon");
+        //filterChainDefinitionMap.put("/DepartmentController/findDepartmentTree", "perms[DepartmentController:findDepartmentTree]");
+        //filterChainDefinitionMap.put("/DepartmentController/findByAllDepartment", "perms[DepartmentController:findByAllDepartment]");
+        //filterChainDefinitionMap.put("/CompanyController/selectByCompany", "perms[CompanyController:selectByCompany]");
+        //filterChainDefinitionMap.put("/registerController/registerUsers", "anon");
+        ///filterChainDefinitionMap.put("/loginController/sendSms", "anon");
+        //filterChainDefinitionMap.put("/loginController/loginUser", "anon");
+        //filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
+        ///filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
+        //filterChainDefinitionMap.put("/*.*", "authc");
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return bean;
     }
+   /* @Bean(name="formAuthenticationFilter")
+    public CustomFormAuthenticationFilter customFormAuthenticationFilter(){
+    	CustomFormAuthenticationFilter formAuthenticationFilter = new CustomFormAuthenticationFilter();
+    	formAuthenticationFilter.setUsernameParam("phone");
+    	formAuthenticationFilter.setUsernameParam("smsCode");
+    	return formAuthenticationFilter;
+    }*/
     //配置核心安全事务管理器
     @Bean(name="securityManager")
     public SecurityManager securityManager(@Qualifier("authRealm") MyRealm myRealm) {

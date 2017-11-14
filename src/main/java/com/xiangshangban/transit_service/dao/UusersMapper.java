@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.xiangshangban.transit_service.bean.PersonalInformationVerification;
+import com.xiangshangban.transit_service.bean.ChangePhone;
 import com.xiangshangban.transit_service.bean.Uusers;
 @Mapper
 public interface UusersMapper {
@@ -21,9 +21,11 @@ public interface UusersMapper {
     
     Uusers selectByAccount(String account);
     
+    ChangePhone selectApprovalPerson(String companyId);
+    
     int selectIdentityAuthentication(@Param("phone") String phone,@Param("userName") String userName,@Param("companyName") String companyName);
     
-    List<PersonalInformationVerification> selectPersonalInformationVerification(@Param("phone")String phone,@Param("userName")String userName,@Param("postName")String postName);
+    List<ChangePhone> selectPersonalInformationVerification(@Param("phone")String phone,@Param("userName")String userName,@Param("postName")String postName);
     
     int updateByPrimaryKey(Uusers record);
     
@@ -43,4 +45,6 @@ public interface UusersMapper {
 
     //注册用户（生成UUID为主键、存入手机号、姓名、盐值、以及默认为‘不可用’的初始状态）
     int insertSelective(Uusers record);
+    
+    Uusers selectById(String userId);
 }

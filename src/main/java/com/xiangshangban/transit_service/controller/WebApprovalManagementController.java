@@ -103,7 +103,7 @@ public class WebApprovalManagementController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			String sendurl =PropertiesUtils.pathUrl("commitCustomTemplateUrl");
-			String returnJsonString = HttpClientUtil.sendRequet(sendurl, jsonString);
+			String returnJsonString = HttpClientUtil.sendRequet(sendurl,jsonString);
 			result.put("returnCode", "3000");
 			result.put("message", "成功");
 			return result;
