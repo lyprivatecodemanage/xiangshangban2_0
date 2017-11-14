@@ -50,8 +50,9 @@ public class ServletFilter implements Filter{
 		res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
         //Access-Control-Max-Age 用于 CORS 相关配置的缓存
 		res.setHeader("Access-Control-Max-Age", "3600");
-		res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, type");
-		
+		//Content-Disposition文件下载时设置文件名
+		res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Content-Disposition, type");
+		//res.setHeader("Content-Disposition", "attachment;filename="+java.net.URLEncoder.encode("报表.xls","UTF-8"));
 		String [] includeMode = HttpClientUtil.getIncludeMode();
 		String redirectUrl = "";
 		boolean redirect = false;
@@ -59,7 +60,12 @@ public class ServletFilter implements Filter{
 			String checkUrl = "/api/"+mode+"/";
 			if(uri.contains(checkUrl)){
 				String sendurl = URLDecoder.decode(uri.replaceAll(checkUrl, ""),"UTF-8");
-				redirectUrl = "/redirectApi/sendRequest?redirectUrl="+sendurl+"&redirectMode="+mode;
+				if(uri.contains("/export/")){
+					redirectUrl = "/redirectApi/exportRequest?redirectUrl="+sendurl+"&redirectMode="+mode;
+				}else{
+					redirectUrl = "/redirectApi/sendRequest?redirectUrl="+sendurl+"&redirectMode="+mode;
+				}
+				
 				redirect = true;
 			}
 		}
