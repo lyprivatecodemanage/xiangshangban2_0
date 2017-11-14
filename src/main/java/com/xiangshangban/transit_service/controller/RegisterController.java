@@ -66,9 +66,9 @@ public class RegisterController {
         //用户编号
         String userId = "";
         
-        if(null==type||type.equals(null)||type.equals("")){
-        	map.put("returnCode", "4018");
-            map.put("message", "参数不完整");
+        if(null==type||type.equals("")){
+        	map.put("returnCode", "3006");
+            map.put("message", "参数为空");
             return map;
         }
         
@@ -144,7 +144,7 @@ public class RegisterController {
                 String companyNameLo = "";
                 if (companyName.length() >= 4) {
                     //根据公司名称生成前四位字母小写
-                    companyNameLo = new PinYin2Abbreviation().cn2py(companyName).substring(0, 4);
+                    companyNameLo = new PinYin2Abbreviation().cn2py(companyName).substring(0,4);
                 } else {
                     companyNameLo = new PinYin2Abbreviation().cn2py(companyName);
                 }
