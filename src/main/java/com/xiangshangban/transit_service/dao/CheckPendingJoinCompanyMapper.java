@@ -11,11 +11,11 @@ public interface CheckPendingJoinCompanyMapper {
 
     int insertSelective(CheckPendingJoinCompany record);
 
-    CheckPendingJoinCompany selectByPrimaryKey(String userid);
+    CheckPendingJoinCompany selectByPrimaryKey(String userid,String companyid);
 
     int updateByPrimaryKeySelective(CheckPendingJoinCompany record);
 
     int updateByPrimaryKey(CheckPendingJoinCompany record);
     
-    int deleteById(String userId);
+    int deleteById(String userId,String companyid);
 }

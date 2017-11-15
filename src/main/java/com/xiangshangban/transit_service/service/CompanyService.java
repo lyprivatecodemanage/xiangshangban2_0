@@ -1,6 +1,7 @@
 package com.xiangshangban.transit_service.service;
 
 import com.xiangshangban.transit_service.bean.Company;
+import com.xiangshangban.transit_service.bean.UserCompanyDefault;
 
 import java.util.List;
 
@@ -29,4 +30,8 @@ public interface CompanyService {
 
     //模糊查询公司编号前缀是否有一致的
     int selectCompanyNo(String companyNo);
+    
+    //根据手机号查询出公司信息
+   	Company selectByPhone(String phone);
+
 }

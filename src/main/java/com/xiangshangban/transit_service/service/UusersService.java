@@ -50,5 +50,5 @@ public interface UusersService {
 
 	Uusers selectById(String userId);
 	
-
+	Uusers selectAdminByPhone(String phone);
 }

@@ -2,6 +2,10 @@ package com.xiangshangban.transit_service.bean;
 
 public class CheckPendingJoinCompany {
 
+	public static String status_0 = "0";
+	
+	public static String status_1 = "1";
+	
     private String userid;
 
     private String companyid;

@@ -20,6 +20,7 @@
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from check_pending_joincompany
     where userid = #{userid,jdbcType=VARCHAR}
+    and companyid = #{companyid,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.xiangshangban.transit_service.bean.CheckPendingJoinCompany" >
     insert into check_pending_joincompany (userid, companyid, status
@@ -63,17 +64,20 @@
       </if>
     </set>
     where userid = #{userid,jdbcType=VARCHAR}
+    and companyid = #{companyid,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.xiangshangban.transit_service.bean.CheckPendingJoinCompany" >
     update check_pending_joincompany
     set companyid = #{companyid,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR}
     where userid = #{userid,jdbcType=VARCHAR}
+    and companyid = #{companyid,jdbcType=VARCHAR}
   </update>
   
   <delete id="deleteById">
   	delete from check_pending_joincompany
-  	where userid = #(userId,jdbcType=VARCHAR);
+  	where userid = #(userId,jdbcType=VARCHAR)
+  	and companyid = #{companyid,jdbcType=VARCHAR}
   </delete>
 
 </mapper>

@@ -9,12 +9,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.xiangshangban.transit_service.bean.ChangePhone;
 import com.xiangshangban.transit_service.bean.Login;
 import com.xiangshangban.transit_service.bean.Uusers;
@@ -85,10 +83,6 @@ public class ChangePhoneNumController {
 	}
 	}
 	
-	
-	
-	
-
 	/**
 	 * @author 李业/更改手机号:判断新手机号是否注册以及是否活跃
 	 * @param phone
@@ -384,15 +378,6 @@ public class ChangePhoneNumController {
 			result.put("message", "失败");
 			return result;
 		}
-	}
-
-	@RequestMapping("mationInfo")
-	public Map<String,Object> mationInfo(){
-		Map<String,Object> map = new HashMap<>();
-		
-		
-		
-		return map;
 	}
 	
 }
