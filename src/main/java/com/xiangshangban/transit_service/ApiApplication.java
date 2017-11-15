@@ -13,7 +13,9 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -58,46 +60,40 @@ public class ApiApplication
     public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager) {
         ShiroFilterFactoryBean bean=new ShiroFilterFactoryBean();
         bean.setSecurityManager(manager);
-        //配置登录的url和登录成功的url
-       /* bean.setLoginUrl("/loginController/loginUser");
+        //配置登录的url
+        bean.setLoginUrl("/loginController/loginUser");
         bean.setUnauthorizedUrl("/loginController/unAuthorizedUrl");
         CustomFormAuthenticationFilter formAuthenticationFilter = new CustomFormAuthenticationFilter();
     	formAuthenticationFilter.setUsernameParam("phone");
-    	formAuthenticationFilter.setUsernameParam("smsCode");
+    	formAuthenticationFilter.setPasswordParam("smsCode");
         Map<String,Filter> map = new HashMap<String,Filter>();
         map.put("authc", formAuthenticationFilter);
-        bean.setFilters(map);*/
+        bean.setFilters(map);
         //配置访问权限
         LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<String,String>();
-        //filterChainDefinitionMap.put("/DepartmentController/findDepartmentTree", "perms[DepartmentController:findDepartmentTree]");
-        //filterChainDefinitionMap.put("/DepartmentController/findByAllDepartment", "perms[DepartmentController:findByAllDepartment]");
-        //filterChainDefinitionMap.put("/CompanyController/selectByCompany", "perms[CompanyController:selectByCompany]");
-        //filterChainDefinitionMap.put("/registerController/registerUsers", "anon");
-        ///filterChainDefinitionMap.put("/loginController/sendSms", "anon");
+        filterChainDefinitionMap.put("/loginController/sendSms", "anon");
+        filterChainDefinitionMap.put("/loginController/logOut", "logout");
         //filterChainDefinitionMap.put("/loginController/loginUser", "anon");
         //filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
-        ///filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
+        filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
         //filterChainDefinitionMap.put("/*.*", "authc");
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return bean;
     }
-   /* @Bean(name="formAuthenticationFilter")
-    public CustomFormAuthenticationFilter customFormAuthenticationFilter(){
-    	CustomFormAuthenticationFilter formAuthenticationFilter = new CustomFormAuthenticationFilter();
-    	formAuthenticationFilter.setUsernameParam("phone");
-    	formAuthenticationFilter.setUsernameParam("smsCode");
-    	return formAuthenticationFilter;
-    }*/
     //配置核心安全事务管理器
     @Bean(name="securityManager")
-    public SecurityManager securityManager(@Qualifier("authRealm") MyRealm myRealm) {
+    public SecurityManager securityManager(@Qualifier("myRealm") MyRealm myRealm) {
         System.err.println("--------------shiro已经加载----------------");
         DefaultWebSecurityManager manager=new DefaultWebSecurityManager();
         manager.setRealm(myRealm);
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        sessionManager.setGlobalSessionTimeout(3600000);
+        sessionManager.setDeleteInvalidSessions(true);
+        manager.setSessionManager(sessionManager);
         return manager;
     }
     //配置自定义的权限登录器
-    @Bean(name="authRealm")
+    @Bean(name="myRealm")
     public MyRealm authRealm(@Qualifier("credentialsMatcher") CredentialsMatcher matcher) {
     	MyRealm myRealm=new MyRealm();
     	myRealm.setCredentialsMatcher(matcher);

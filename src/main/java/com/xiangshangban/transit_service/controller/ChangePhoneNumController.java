@@ -385,5 +385,76 @@ public class ChangePhoneNumController {
 			return result;
 		}
 	}
-
+	
+	public Map<String,Object> getApprovalList(String userId,String companyId){
+		Map<String,Object> result = new HashMap<String,Object>();
+		try{
+			List<ChangePhone> list = changePhoneService.selectListByApprovalPersonId(userId, companyId);
+			result.put("list", list);
+			result.put("message", "成功");
+			result.put("returnCode", "3000");
+			return result;
+	} catch (NumberFormatException e) {
+		e.printStackTrace();
+		logger.info(e);
+		result.put("returnCode", "3007");
+		result.put("message", "参数格式不正确");
+		return result;
+	} catch (NullPointerException e) {
+		e.printStackTrace();
+		logger.info(e);
+		result.put("returnCode", "3006");
+		result.put("message", "参数为null");
+		return result;
+	} catch (Exception e) {
+		e.printStackTrace();
+		logger.info(e);
+		result.put("returnCode", "3001");
+		result.put("message", "失败");
+		return result;
+	}
+	}
+	
+	public Map<String,Object> startApproval(String id,String verificationCode){
+		Map<String,Object> result = new HashMap<String,Object>();
+		try{
+			ChangePhone changePhone = changePhoneService.selectByPramaryKey(id);
+			if(!verificationCode.equals(changePhone.getVerificationCode())){
+				result.put("message", "认证码错误");
+				result.put("returnCode", "");
+				return result;
+			}
+			int i = changePhoneService.updateVerificationStatus(id);
+			if(i<=0){
+				result.put("message", "失败");
+				result.put("returnCode", "3001");
+				return result;
+			}
+			result.put("message", "成功");
+			result.put("returnCode", "3000");
+			return result;
+	} catch (NumberFormatException e) {
+		e.printStackTrace();
+		logger.info(e);
+		result.put("returnCode", "3007");
+		result.put("message", "参数格式不正确");
+		return result;
+	} catch (NullPointerException e) {
+		e.printStackTrace();
+		logger.info(e);
+		result.put("returnCode", "3006");
+		result.put("message", "参数为null");
+		return result;
+	} catch (Exception e) {
+		e.printStackTrace();
+		logger.info(e);
+		result.put("returnCode", "3001");
+		result.put("message", "失败");
+		return result;
+	}
+	}
+	
+	
+	
+	
 }

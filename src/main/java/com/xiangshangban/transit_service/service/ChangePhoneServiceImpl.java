@@ -1,5 +1,7 @@
 package com.xiangshangban.transit_service.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +20,21 @@ public class ChangePhoneServiceImpl implements ChangePhoneService {
 	}
 
 	@Override
-	public ChangePhone selectOneByApprovalPersonId(String approvalPersonId) {
+	public ChangePhone selectByPramaryKey(String approvalPersonId) {
 		
-		return changePhoneMapper.selectOneByApprovalPersonId(approvalPersonId);
+		return changePhoneMapper.selectByPramaryKey(approvalPersonId);
+	}
+
+	@Override
+	public List<ChangePhone> selectListByApprovalPersonId(String approvalPersonId, String companyId) {
+		// TODO Auto-generated method stub
+		return changePhoneMapper.selectListByApprovalPersonId(approvalPersonId, companyId);
+	}
+
+	@Override
+	public int updateVerificationStatus(String id) {
+		// TODO Auto-generated method stub
+		return changePhoneMapper.updateVerificationStatus(id);
 	}
 
 }
