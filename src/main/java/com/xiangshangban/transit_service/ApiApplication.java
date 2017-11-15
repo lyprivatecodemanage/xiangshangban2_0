@@ -72,6 +72,7 @@ public class ApiApplication
         //配置访问权限
         LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<String,String>();
         filterChainDefinitionMap.put("/loginController/sendSms", "anon");
+        filterChainDefinitionMap.put("/registerController/*", "anon");
         filterChainDefinitionMap.put("/loginController/logOut", "logout");
         //filterChainDefinitionMap.put("/loginController/loginUser", "anon");
         //filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问

@@ -380,8 +380,6 @@ public class ChangePhoneNumController {
 		}
 	}
 	
-<<<<<<< HEAD
-=======
 	public Map<String,Object> getApprovalList(String userId,String companyId){
 		Map<String,Object> result = new HashMap<String,Object>();
 		try{
@@ -449,9 +447,4 @@ public class ChangePhoneNumController {
 		return result;
 	}
 	}
-	
-	
-	
-	
->>>>>>> c783b9f085054923410732a2e0cfeb7e5027bdde
 }
