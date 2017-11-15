@@ -24,4 +24,22 @@ public class CheckPendingJoinCompanyServiceImpl implements CheckPendingJoinCompa
     public CheckPendingJoinCompany selectByPrimaryKey(String userid) {
         return checkPendingJoinCompanyMapper.selectByPrimaryKey(userid);
     }
+
+	@Override
+	public int updateByPrimaryKeySelective(CheckPendingJoinCompany record) {
+		// TODO Auto-generated method stub
+		return checkPendingJoinCompanyMapper.updateByPrimaryKeySelective(record);
+	}
+
+	@Override
+	public int updateByPrimaryKey(CheckPendingJoinCompany record) {
+		// TODO Auto-generated method stub
+		return checkPendingJoinCompanyMapper.updateByPrimaryKey(record);
+	}
+
+	@Override
+	public int deleteById(String userId) {
+		// TODO Auto-generated method stub
+		return checkPendingJoinCompanyMapper.deleteById(userId);
+	}
 }

@@ -21,10 +21,6 @@
 		delete from user_company
 		where user_id = #{userId,jdbcType=VARCHAR}
 		and company_id = #{companyId,jdbcType=VARCHAR}
-		and current_option = #{currentOption,jdbcType=VARCHAR}
-		where user_id = #{userId}
-		and company_id = #{companyId}
-		and current_option = #{currentOption}
 	</delete>
 	<insert id="insert" parameterType="com.xiangshangban.transit_service.bean.UserCompanyDefault" >
 		insert into user_company (user_id, company_id, current_option

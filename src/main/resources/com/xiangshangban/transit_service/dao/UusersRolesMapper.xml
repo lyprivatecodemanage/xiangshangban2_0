@@ -7,6 +7,11 @@
     <result column="company_id" jdbcType="VARCHAR" property="companyId" />
     <result column="history_user_ids" jdbcType="VARCHAR" property="historyUserIds" />
   </resultMap>
+  <resultMap id="JurisdictionMap" type="com.xiangshangban.transit_service.bean.Upermission">
+  	<id column="permissionid" jdbcType="VARCHAR" property="permissionid" />
+    <result column="permissionurl" jdbcType="VARCHAR" property="permissionurl" />
+    <result column="permissiondescribe" jdbcType="VARCHAR" property="permissiondescribe" />
+  </resultMap>
   <sql id="BaseList">
   	roleid,userid,company_id,history_user_ids
   </sql>
@@ -54,9 +59,27 @@
   <select id="SelectAdministrator" resultMap="BaseResultMap">
   	select
   	<include refid="BaseList"></include>
-  	from u_users_roles
+  	from organization.u_users_roles
   	where roleid = 'a3b69966-befa-11e7-a869-00e04c682380'
   	and company_id = #{companyId,jdbcType=VARCHAR}
+  </select>
+  
+  <update id="updateAdministrator">
+  	update organization.u_users_roles
+  	set userid = #{userId,jdbcType=VARCHAR},history_user_ids = #{historyUserIds,jdbcType=VARCHAR}
+  	where userid = #{newUserId,jdbcType=VARCHAR}
+  	and company_id = #{companyId,jdbcType=VARCHAR}
+  	and roleid = 'a3b69966-befa-11e7-a869-00e04c682380'
+  </update>
+  
+  <select id="SelectUserIdByPermission" parameterType="java.lang.String" resultMap="JurisdictionMap">
+	select * from u_permission
+	where permissionid in
+	(select permissionid from u_roles_permission
+	where roleid = 
+	(SELECT roleid FROM "organization".u_users_roles
+	where userid = #{userId,jdbcType=VARCHAR}
+	and company_id = #{companyId,jdbcType=VARCHAR}))
   </select>
   
 </mapper>
