@@ -242,20 +242,25 @@ public class RegisterController {
                     //根据输入公司编号获的公司的实体
                     Company company = companyService.selectByCompanyName(company_no);
                     
+                    Date joinDate = new Date();
+                    
 	                //加入公司  新增待审核表记录
 	                CheckPendingJoinCompany checkPendingJoinCompany = new CheckPendingJoinCompany();
 	                checkPendingJoinCompany.setUserid(userId);
 	                checkPendingJoinCompany.setCompanyid(company.getCompany_id());
 	                checkPendingJoinCompany.setStatus(checkPendingJoinCompany.status_0);
+	                checkPendingJoinCompany.setApplyTime(sdf.format(joinDate));
 	                checkPendingJoinCompanyService.insertSelective(checkPendingJoinCompany);
                     
                     //审核通过
                     if(1==1){
 	                    try{
+	                    	Date upDate = new Date();
 		                    //待审核通过后  修改待审核表中的状态 
 		                    CheckPendingJoinCompany cpjc = new CheckPendingJoinCompany();
 		                    cpjc.setUserid(userId);
 		                    cpjc.setCompanyid(company.getCompany_id());
+		                    cpjc.setApplyTime(sdf.format(upDate));
 		                    cpjc.setStatus(CheckPendingJoinCompany.status_1);
 		                    checkPendingJoinCompanyService.updateByPrimaryKeySelective(cpjc);
 	                    }catch(Exception e){

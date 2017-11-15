@@ -11,11 +11,14 @@ public class CheckPendingJoinCompany {
     private String companyid;
 
     private String status;
+    
+    private String applyTime;
 
-    public CheckPendingJoinCompany(String userid, String companyid, String status) {
+    public CheckPendingJoinCompany(String userid, String companyid, String status,String applyTime) {
         this.userid = userid;
         this.companyid = companyid;
         this.status = status;
+        this.applyTime = applyTime;
     }
 
     public CheckPendingJoinCompany() {
@@ -45,4 +48,13 @@ public class CheckPendingJoinCompany {
     public void setStatus(String status) {
         this.status = status == null ? null : status.trim();
     }
+
+	public String getApplyTime() {
+		return applyTime;
+	}
+
+	public void setApplyTime(String applyTime) {
+		this.applyTime = applyTime;
+	}
+    
 }
