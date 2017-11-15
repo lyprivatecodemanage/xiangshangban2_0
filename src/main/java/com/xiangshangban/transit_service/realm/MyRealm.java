@@ -51,7 +51,7 @@ public class MyRealm extends AuthorizingRealm {
 		// token用户输入
 		// 第一步从token中取出身份信息
 		String userCode = token.getPrincipal().toString();
-		System.out.println(token.toString());
+		System.out.println("=================>"+token.toString());
 		//第二部:根据用户输入的userCode从数据库查询
 		//....
 		//根据从数据库查询到密码

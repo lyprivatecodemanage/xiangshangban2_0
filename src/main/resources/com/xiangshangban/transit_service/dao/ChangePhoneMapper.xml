@@ -24,12 +24,25 @@
 		verification_code, create_time, verification_status
 	</sql>
 
-	<select id="selectOneByApprovalPersonId" parameterType="java.lang.String" resultMap="BaseResultMap">
+	<select id="selectByPramaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select 
 		<include refid="Base_Column_List"/>
 		from change_phone
-		wherer approval_phone_id = #{approvalPhoneId} and verification_status = '0'
+		wherer id=#{id}
 	</select>
+	
+	<select id="selectListByApprovalPersonId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List"/>
+		from change_phone
+		wherer approval_phone_id = #{approvalPhoneId} and verification_status = '0' and company_id = #{companyId}
+	</select>
+	
+	<update id="updateVerificationStatus" parameterType="java.lang.String">
+		update change_phone 
+		set verification_status = '1'
+		where id = #{id}
+	</update>
 	
 	<insert id="insertActiviti" parameterType="com.xiangshangban.transit_service.bean.ChangePhone">
 		insert into change_phone

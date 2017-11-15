@@ -14,7 +14,24 @@ public class Login {
 	private String clientId;//设备编号
 	
 	
-	
+	public Login(){
+		
+	}
+	public Login(String id, String phone, String token, String salt, String createTime, String effectiveTime,
+			String sessionId, String qrcode, String qrcodeStatus, String status, String clientId) {
+		this.id = id;
+		this.phone = phone;
+		this.token = token;
+		this.salt = salt;
+		this.createTime = createTime;
+		this.effectiveTime = effectiveTime;
+		this.sessionId = sessionId;
+		this.qrcode = qrcode;
+		this.qrcodeStatus = qrcodeStatus;
+		this.status = status;
+		this.clientId = clientId;
+	}
+
 	public String getClientId() {
 		return clientId;
 	}
