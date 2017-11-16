@@ -120,7 +120,7 @@ public class RegisterController {
         if (type.equals("0")) {
             try {
                 //根据前台提供注册公司名称查询是否已被注册
-                int count = companyService.selectByCompany(companyName);
+                int count = companyService.selectCompanyName(companyName);
                 if (count > 0) {
                 	uusersService.deleteByPrimaryKey(userId);
                     map.put("returnCode", "4019");

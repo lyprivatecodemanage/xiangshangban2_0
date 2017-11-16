@@ -433,6 +433,10 @@
     select count(company_id) from organization.company_ where company_no = #{company_no,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectCompanyName" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(company_id) from organization.company_ where company_name = #{selectCompanyName,jdbcType=VARCHAR}
+  </select>
+
   <select id="selectCompanyNo" resultType="java.lang.Integer">
     select count(company_id)
     from organization.company_

@@ -19,6 +19,9 @@ public interface CompanyService {
 
     int updateByPrimaryKey(Company record);
 
+    //根绝公司名称判断公司是否重复
+    int selectCompanyName(String companyName);
+    
     //判断公司名是否重复(是否有这个公司)
     int selectByCompany(String company_no);
 
