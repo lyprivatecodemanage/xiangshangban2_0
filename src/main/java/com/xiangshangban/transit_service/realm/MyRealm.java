@@ -31,6 +31,8 @@ public class MyRealm extends AuthorizingRealm {
 		    //Uusers user = usersService.selectByPhone(token.getPrimaryPrincipal().toString());
 		    //获取角色
 		    //按角色分配权限
+		    Uusers uusers  = (Uusers)token.getPrimaryPrincipal();
+		    
 		    List<String> list = usersService.selectRoles(token.getPrimaryPrincipal().toString());
 		   for(int i =0;i<list.size();i++){
 			   authorizationInfo.addRole(list.get(i).toString());
@@ -56,6 +58,10 @@ public class MyRealm extends AuthorizingRealm {
 		//....
 		//根据从数据库查询到密码
 		Uusers user = usersService.selectByPhone(userCode);
+		
+		if(user == null){
+			return null;
+		}
 		//String password = user.getUserpwd();
 		String password = user.getTemporarypwd();
 		//String password = "111111";

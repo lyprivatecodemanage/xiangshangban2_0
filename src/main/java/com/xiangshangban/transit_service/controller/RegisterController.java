@@ -66,7 +66,7 @@ public class RegisterController {
     public Map<String, Object> registerUsers(String phone,String temporaryPwd,String userName,String companyName,String company_no,String type) {
 
         Map<String, Object> map = new HashMap<String, Object>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //全局 公司ID值
         String companyId = "";
         //用户编号
@@ -118,21 +118,23 @@ public class RegisterController {
         }
 
         if (type.equals("0")) {
-//            try {
-//                //根据前台提供注册公司名称查询是否已被注册
-//                int count = companyService.selectByCompany(companyName);
-//                if (count > 0) {
-//                    map.put("returnCode", "4007");
-//                    map.put("message", "公司名称已被注册");
-//                    return map;
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                logger.info(e);
-//                map.put("returnCode", "3001");
-//                map.put("message", "服务器错误");
-//                return map;
-//            }
+            try {
+                //根据前台提供注册公司名称查询是否已被注册
+                int count = companyService.selectByCompany(companyName);
+                if (count > 0) {
+                	uusersService.deleteByPrimaryKey(userId);
+                    map.put("returnCode", "4019");
+                    map.put("message", "公司名称已被注册");
+                    return map;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.info(e);
+                uusersService.deleteByPrimaryKey(userId);
+                map.put("returnCode", "3001");
+                map.put("message", "服务器错误");
+                return map;
+            }
             try {
                 //生成公司编号
                 companyId = FormatUtil.createUuid();
@@ -195,7 +197,7 @@ public class RegisterController {
 	                UserCompanyDefault userCompanyKey = new UserCompanyDefault();
 	                userCompanyKey.setCompanyId(companyId);
 	                userCompanyKey.setUserId(userId);
-	                userCompanyKey.setCurrentOption("1");
+	                userCompanyKey.setCurrentOption(userCompanyKey.status_1);
 	                userCompanyService.insertSelective(userCompanyKey);
                 }catch(Exception e){
                 	e.printStackTrace();

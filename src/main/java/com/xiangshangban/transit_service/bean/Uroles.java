@@ -12,6 +12,8 @@ public class Uroles {
 
     private String rolename;
 
+    private String description;
+    
     private List<Upermission>	permissionList;
     
     public List<Upermission> getPermissionList() {
@@ -37,6 +39,14 @@ public class Uroles {
     public void setRolename(String rolename) {
         this.rolename = rolename;
     }
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public Uroles() {
 		super();
