@@ -16,4 +16,5 @@ public interface UserCompanyDefaultMapper {
 	int insert(UserCompanyDefault record);
 
 	int insertSelective(UserCompanyDefault record);
+	
 }

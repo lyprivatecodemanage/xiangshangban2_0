@@ -444,4 +444,13 @@
     <include refid="Base_Column_List" />
     from organization.company_ where company_no = #{company_no,jdbcType=VARCHAR}
   </select>
+  
+  <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+	select com.* from company_ com 
+	join user_company uc 
+	on uc.company_id = com.company_id 
+	join u_users uu 
+	on uc.user_id = uu.userid 
+	where phone = #{phone,jdbcType=VARCHAR}
+  </select>
 </mapper>

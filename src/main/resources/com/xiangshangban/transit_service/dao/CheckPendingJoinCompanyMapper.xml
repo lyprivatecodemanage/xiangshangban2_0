@@ -6,10 +6,11 @@
       <idArg column="userid" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="companyid" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="status" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="applyTime" jdbcType="VARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List" >
-    userid, companyid, status
+    userid, companyid, status ,apply_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -20,11 +21,12 @@
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from check_pending_joincompany
     where userid = #{userid,jdbcType=VARCHAR}
+    and companyid = #{companyid,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.xiangshangban.transit_service.bean.CheckPendingJoinCompany" >
-    insert into check_pending_joincompany (userid, companyid, status
+    insert into check_pending_joincompany (userid, companyid, status,apply_time
       )
-    values (#{userid,jdbcType=VARCHAR}, #{companyid,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}
+    values (#{userid,jdbcType=VARCHAR}, #{companyid,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},#{applyTime,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.xiangshangban.transit_service.bean.CheckPendingJoinCompany" >
@@ -39,6 +41,9 @@
       <if test="status != null" >
         status,
       </if>
+      <if test="applyTime != null">
+      	apply_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="userid != null" >
@@ -50,30 +55,36 @@
       <if test="status != null" >
         #{status,jdbcType=VARCHAR},
       </if>
+      <if test="applyTime != null">
+      	#{applyTime,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.xiangshangban.transit_service.bean.CheckPendingJoinCompany" >
     update check_pending_joincompany
     <set >
-      <if test="companyid != null" >
-        companyid = #{companyid,jdbcType=VARCHAR},
+      <if test="applyTime != null" >
+        apply_time = #{applyTime,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
         status = #{status,jdbcType=VARCHAR},
       </if>
     </set>
     where userid = #{userid,jdbcType=VARCHAR}
+    and companyid = #{companyid,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.xiangshangban.transit_service.bean.CheckPendingJoinCompany" >
     update check_pending_joincompany
-    set companyid = #{companyid,jdbcType=VARCHAR},
+    set apply_time = #{applyTime,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR}
     where userid = #{userid,jdbcType=VARCHAR}
+    and companyid = #{companyid,jdbcType=VARCHAR}
   </update>
   
   <delete id="deleteById">
   	delete from check_pending_joincompany
-  	where userid = #(userId,jdbcType=VARCHAR);
+  	where userid = #(userId,jdbcType=VARCHAR)
+  	and companyid = #{companyid,jdbcType=VARCHAR}
   </delete>
 
 </mapper>

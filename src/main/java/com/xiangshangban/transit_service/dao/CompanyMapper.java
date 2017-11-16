@@ -27,4 +27,7 @@ public interface CompanyMapper {
 
     //模糊查询公司编号前缀是否有一致的
     int selectCompanyNo(String companyNo);
+    
+    //根据手机号查询出公司信息
+	Company selectByPhone(String phone);
 }

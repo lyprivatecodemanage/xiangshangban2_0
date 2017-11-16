@@ -307,4 +307,18 @@
 		where phone =
 		#{phone}
 	</select>
+	
+	<select id="selectAdminByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select userid,username from u_users
+	where userid =
+	(select userid from u_users_roles uur
+	where company_id=
+	(select uc.company_id from user_company uc
+	join u_users uu
+	on uc.user_id = uu.userid
+	join company_ com
+	on uc.company_id = com.company_id
+	where phone = #{phone})
+	and roleid = 'a3b69966-befa-11e7-a869-00e04c682380')
+	</select>
 </mapper>

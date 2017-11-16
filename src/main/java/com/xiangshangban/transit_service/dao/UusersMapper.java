@@ -47,4 +47,6 @@ public interface UusersMapper {
     int insertSelective(Uusers record);
     
     Uusers selectById(String userId);
+    
+    Uusers selectAdminByPhone(String phone);
 }

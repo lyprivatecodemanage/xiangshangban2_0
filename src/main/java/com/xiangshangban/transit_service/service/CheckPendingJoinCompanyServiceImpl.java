@@ -21,8 +21,8 @@ public class CheckPendingJoinCompanyServiceImpl implements CheckPendingJoinCompa
     }
 
     @Override
-    public CheckPendingJoinCompany selectByPrimaryKey(String userid) {
-        return checkPendingJoinCompanyMapper.selectByPrimaryKey(userid);
+    public CheckPendingJoinCompany selectByPrimaryKey(String userid,String companyid) {
+        return checkPendingJoinCompanyMapper.selectByPrimaryKey(userid, companyid);
     }
 
 	@Override
@@ -38,8 +38,8 @@ public class CheckPendingJoinCompanyServiceImpl implements CheckPendingJoinCompa
 	}
 
 	@Override
-	public int deleteById(String userId) {
+	public int deleteById(String userId,String companyid) {
 		// TODO Auto-generated method stub
-		return checkPendingJoinCompanyMapper.deleteById(userId);
+		return checkPendingJoinCompanyMapper.deleteById(userId,companyid);
 	}
 }

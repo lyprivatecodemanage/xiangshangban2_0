@@ -2,11 +2,14 @@ package com.xiangshangban.transit_service.controller;
 
 import com.xiangshangban.transit_service.bean.CheckPendingJoinCompany;
 import com.xiangshangban.transit_service.bean.Company;
+import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.UserCompanyDefault;
 import com.xiangshangban.transit_service.bean.Uusers;
+import com.xiangshangban.transit_service.bean.UusersRolesKey;
 import com.xiangshangban.transit_service.service.CheckPendingJoinCompanyService;
 import com.xiangshangban.transit_service.service.CompanyService;
 import com.xiangshangban.transit_service.service.UserCompanyService;
+import com.xiangshangban.transit_service.service.UusersRolesService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.FormatUtil;
 import com.xiangshangban.transit_service.util.PinYin2Abbreviation;
@@ -46,6 +49,8 @@ public class RegisterController {
     @Autowired
     UserCompanyService userCompanyService;
 
+    @Autowired
+    UusersRolesService uusersRolesService;
     /***
      * 焦振/进行用户注册
      *      公司注册
@@ -55,18 +60,19 @@ public class RegisterController {
      * @param type
      * @return
      */
+    
     @Transactional
     @RequestMapping(value = "/registerUsers", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     public Map<String, Object> registerUsers(String phone,String temporaryPwd,String userName,String companyName,String company_no,String type) {
 
         Map<String, Object> map = new HashMap<String, Object>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //全局 公司ID值
         String companyId = "";
         //用户编号
         String userId = "";
         
-        if(null==type||type.equals("")){
+        if(null==type||"".equals(type)){
         	map.put("returnCode", "3006");
             map.put("message", "参数为空");
             return map;
@@ -91,7 +97,7 @@ public class RegisterController {
                     uUsers.setUsername(userName);
                     uUsers.setCreateTime(sdf.format(date));
                     uUsers.setStatus(Uusers.status_0);
-
+                    
                     uusersService.insertSelective(uUsers);
                 }else{
                     map.put("returnCode", "4001");
@@ -112,21 +118,23 @@ public class RegisterController {
         }
 
         if (type.equals("0")) {
-//            try {
-//                //根据前台提供注册公司名称查询是否已被注册
-//                int count = companyService.selectByCompany(companyName);
-//                if (count > 0) {
-//                    map.put("returnCode", "4007");
-//                    map.put("message", "公司名称已被注册");
-//                    return map;
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                logger.info(e);
-//                map.put("returnCode", "3001");
-//                map.put("message", "服务器错误");
-//                return map;
-//            }
+            try {
+                //根据前台提供注册公司名称查询是否已被注册
+                int count = companyService.selectByCompany(companyName);
+                if (count > 0) {
+                	uusersService.deleteByPrimaryKey(userId);
+                    map.put("returnCode", "4019");
+                    map.put("message", "公司名称已被注册");
+                    return map;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.info(e);
+                uusersService.deleteByPrimaryKey(userId);
+                map.put("returnCode", "3001");
+                map.put("message", "服务器错误");
+                return map;
+            }
             try {
                 //生成公司编号
                 companyId = FormatUtil.createUuid();
@@ -184,14 +192,30 @@ public class RegisterController {
                     uusersService.deleteByPrimaryKey(userId);
                 }
 
-                //将新创建的公司编号信息存入用户与公司关联表中
-                UserCompanyDefault userCompanyKey = new UserCompanyDefault();
-                userCompanyKey.setCompanyId(companyId);
-                userCompanyKey.setUserId(userId);
-                userCompanyKey.setCurrentOption("1");
-                userCompanyService.insertSelective(userCompanyKey);
+                try{
+	                //将新创建的公司编号信息存入用户与公司关联表中
+	                UserCompanyDefault userCompanyKey = new UserCompanyDefault();
+	                userCompanyKey.setCompanyId(companyId);
+	                userCompanyKey.setUserId(userId);
+	                userCompanyKey.setCurrentOption(userCompanyKey.status_1);
+	                userCompanyService.insertSelective(userCompanyKey);
+                }catch(Exception e){
+                	e.printStackTrace();
+                	logger.info(e);
+                	uusersService.deleteByPrimaryKey(userId);
+                    companyService.deleteByPrimaryKey(companyId);
+                    map.put("returnCode", "3001");
+                    map.put("message", "服务器错误");
+                    return map;
+                }
                 
+                //赋予创建公司用户角色
+                UusersRolesKey urk = new UusersRolesKey();
+                urk.setUserId(userId);
+                urk.setRoleId(new Uroles().admin_role);
+                urk.setCompanyId(companyId);
                 
+                uusersRolesService.insertSelective(urk);
                 
                 map.put("companyId",companyId);
                 map.put("companyName",companyName);
@@ -203,6 +227,7 @@ public class RegisterController {
                 e.printStackTrace();
                 logger.info(e);
                 //异常删除用户公司信息
+                userCompanyService.deleteByPrimaryKey(new UserCompanyDefault(userId, companyId));
                 uusersService.deleteByPrimaryKey(userId);
                 companyService.deleteByPrimaryKey(companyId);
                 map.put("returnCode", "3001");
@@ -218,26 +243,33 @@ public class RegisterController {
                 if (count > 0) {
                     //根据输入公司编号获的公司的实体
                     Company company = companyService.selectByCompanyName(company_no);
-                    //加入公司  新增待审核表记录
-                    CheckPendingJoinCompany checkPendingJoinCompany = new CheckPendingJoinCompany();
-                    checkPendingJoinCompany.setUserid(userId);
-                    checkPendingJoinCompany.setCompanyid(company.getCompany_id());
-                    checkPendingJoinCompany.setStatus("0");
-                    checkPendingJoinCompanyService.insertSelective(checkPendingJoinCompany);
-                   
+                    
+                    Date joinDate = new Date();
+                    
+	                //加入公司  新增待审核表记录
+	                CheckPendingJoinCompany checkPendingJoinCompany = new CheckPendingJoinCompany();
+	                checkPendingJoinCompany.setUserid(userId);
+	                checkPendingJoinCompany.setCompanyid(company.getCompany_id());
+	                checkPendingJoinCompany.setStatus(checkPendingJoinCompany.status_0);
+	                checkPendingJoinCompany.setApplyTime(sdf.format(joinDate));
+	                checkPendingJoinCompanyService.insertSelective(checkPendingJoinCompany);
+                    
                     //审核通过
                     if(1==1){
 	                    try{
+	                    	Date upDate = new Date();
 		                    //待审核通过后  修改待审核表中的状态 
 		                    CheckPendingJoinCompany cpjc = new CheckPendingJoinCompany();
 		                    cpjc.setUserid(userId);
-		                    cpjc.setStatus("1");
+		                    cpjc.setCompanyid(company.getCompany_id());
+		                    cpjc.setApplyTime(sdf.format(upDate));
+		                    cpjc.setStatus(CheckPendingJoinCompany.status_1);
 		                    checkPendingJoinCompanyService.updateByPrimaryKeySelective(cpjc);
 	                    }catch(Exception e){
 	                    	e.printStackTrace();
 	                    	logger.info(e);
 	                    	uusersService.deleteByPrimaryKey(userId);
-	                    	checkPendingJoinCompanyService.deleteById(userId);
+	                    	checkPendingJoinCompanyService.deleteById(userId,company.getCompany_id());
 	                    	map.put("returnCode", "3001");
 	                        map.put("message", "服务器错误");
 	                        return map;
@@ -248,13 +280,13 @@ public class RegisterController {
 		                    UserCompanyDefault userCompanyKey = new UserCompanyDefault();
 		                    userCompanyKey.setCompanyId(company.getCompany_id());
 		                    userCompanyKey.setUserId(userId);
-		                    userCompanyKey.setCurrentOption("1");
+		                    userCompanyKey.setCurrentOption(userCompanyKey.status_1);
 		                    userCompanyService.insertSelective(userCompanyKey);
 	                    }catch(Exception e){
 	                    	e.printStackTrace();
 	                    	logger.info(e);
 	                    	uusersService.deleteByPrimaryKey(userId);
-	                    	checkPendingJoinCompanyService.deleteById(userId);
+	                    	checkPendingJoinCompanyService.deleteById(userId,company.getCompany_id());
 	                    	map.put("returnCode", "3001");
 	                        map.put("message", "服务器错误");
 	                        return map;
@@ -270,7 +302,26 @@ public class RegisterController {
 							e.printStackTrace();
 	                    	logger.info(e);
 	                    	uusersService.deleteByPrimaryKey(userId);
-	                    	checkPendingJoinCompanyService.deleteById(userId);
+	                    	checkPendingJoinCompanyService.deleteById(userId,company.getCompany_id());
+	                    	userCompanyService.deleteByPrimaryKey(new UserCompanyDefault(userId,company.getCompany_id(),null));
+	                    	map.put("returnCode", "3001");
+	                        map.put("message", "服务器错误");
+	                        return map;
+						}
+	                    
+	                    try {
+	                    	//赋予加入公司用户角色
+	                        UusersRolesKey urk = new UusersRolesKey();
+	                        urk.setUserId(userId);
+	                        urk.setRoleId(new Uroles().user_role);
+	                        urk.setCompanyId(company.getCompany_id());
+	                        
+	                        uusersRolesService.insertSelective(urk);
+						} catch (Exception e) {
+							e.printStackTrace();
+	                    	logger.info(e);
+	                    	uusersService.deleteByPrimaryKey(userId);
+	                    	checkPendingJoinCompanyService.deleteById(userId,company.getCompany_id());
 	                    	userCompanyService.deleteByPrimaryKey(new UserCompanyDefault(userId,company.getCompany_id(),null));
 	                    	map.put("returnCode", "3001");
 	                        map.put("message", "服务器错误");
@@ -285,6 +336,7 @@ public class RegisterController {
                     map.put("message", "数据请求成功");
                     return map;
                 } else {
+                	uusersService.deleteByPrimaryKey(userId);
                     map.put("returnCode", "4006");
                     map.put("message", "加入公司不存在");
                     return map;
@@ -292,6 +344,7 @@ public class RegisterController {
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.info(e);
+                uusersService.deleteByPrimaryKey(userId);
                 map.put("returnCode", "3001");
                 map.put("message", "服务器错误");
                 return map;

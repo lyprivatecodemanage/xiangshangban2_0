@@ -23,8 +23,6 @@ public class Uusers {
     private String wechatCode;
     private String wechatName;
     private List<Uroles> UrolesList;
-    
-    
 
     public Uusers() {
 	}
@@ -47,7 +45,6 @@ public class Uusers {
 		this.wechatName = wechatName;
 		UrolesList = urolesList;
 	}
-	
 	
 	public String getCompanyId() {
 		return companyId;

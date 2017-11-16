@@ -1,6 +1,7 @@
 package com.xiangshangban.transit_service.service;
 
 import com.xiangshangban.transit_service.bean.Company;
+import com.xiangshangban.transit_service.bean.UserCompanyDefault;
 import com.xiangshangban.transit_service.dao.CompanyMapper;
 import com.xiangshangban.transit_service.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,4 +62,12 @@ public class CompanyServiceImpl implements CompanyService {
     public int selectCompanyNo(String companyNo) {
         return companyMapper.selectCompanyNo(companyNo);
     }
+
+	@Override
+	public Company selectByPhone(String phone) {
+		// TODO Auto-generated method stub
+		return companyMapper.selectByPhone(phone);
+	}
+
+	
 }
