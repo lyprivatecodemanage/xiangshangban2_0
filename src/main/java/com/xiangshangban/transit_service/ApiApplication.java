@@ -9,12 +9,13 @@ import java.util.Properties;
 
 import javax.servlet.Filter;
 
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
-import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -62,7 +63,7 @@ public class ApiApplication
         bean.setSecurityManager(manager);
         //配置登录的url
         bean.setLoginUrl("/loginController/loginUser");
-        bean.setUnauthorizedUrl("/loginController/unAuthorizedUrl");
+        //bean.setUnauthorizedUrl("/loginController/unAuthorizedUrl");
         CustomFormAuthenticationFilter formAuthenticationFilter = new CustomFormAuthenticationFilter();
     	formAuthenticationFilter.setUsernameParam("phone");
     	formAuthenticationFilter.setPasswordParam("smsCode");
@@ -72,8 +73,9 @@ public class ApiApplication
         //配置访问权限
         LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<String,String>();
         filterChainDefinitionMap.put("/loginController/sendSms", "anon");
+        filterChainDefinitionMap.put("/registerController/*", "anon");
         filterChainDefinitionMap.put("/loginController/logOut", "logout");
-        //filterChainDefinitionMap.put("/loginController/loginUser", "anon");
+        //filterChainDefinitionMap.put("/CompanyController/selectByCompany", "perms[admin:companyController:selectByCompany]");
         //filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
         filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
         //filterChainDefinitionMap.put("/*.*", "authc");
@@ -86,10 +88,19 @@ public class ApiApplication
         System.err.println("--------------shiro已经加载----------------");
         DefaultWebSecurityManager manager=new DefaultWebSecurityManager();
         manager.setRealm(myRealm);
+        SimpleCookie sessionIdCookie  = new SimpleCookie();
+        sessionIdCookie.setHttpOnly(true);
+        sessionIdCookie.setMaxAge(-1);;
+        sessionIdCookie.setName("JSID");
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         sessionManager.setGlobalSessionTimeout(3600000);
         sessionManager.setDeleteInvalidSessions(true);
+        sessionManager.setSessionIdCookie(sessionIdCookie);
+        sessionManager.setSessionIdCookieEnabled(true);
         manager.setSessionManager(sessionManager);
+        EhCacheManager ehCacheManager = new EhCacheManager();
+        ehCacheManager.setCacheManagerConfigFile("classpath:shiro-ehcache.xml");
+        manager.setCacheManager(ehCacheManager);
         return manager;
     }
     //配置自定义的权限登录器
@@ -104,6 +115,7 @@ public class ApiApplication
     public CredentialsMatcher credentialsMatcher() {
         return new CredentialsMatcher();
     }
+    
     @Bean
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor(){
         return new LifecycleBeanPostProcessor();
