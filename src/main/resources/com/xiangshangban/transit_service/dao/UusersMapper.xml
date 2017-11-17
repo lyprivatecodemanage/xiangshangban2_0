@@ -17,6 +17,11 @@
 		<result column="wechat_name" property="wecharName" />
 		<result column="company_id" property="companyId" />
 	</resultMap>
+	<resultMap id="BaseRoleMap" type="com.xiangshangban.transit_service.bean.Uroles">
+		<id column="roleid" property="roleid"/>
+		<result column="rolename" property="rolename"/>
+		<result column="description" property="description"/>
+	</resultMap>
 	<resultMap
 		type="com.xiangshangban.transit_service.bean.ChangePhone"
 		id="ChangePhoneResultMap">
@@ -26,7 +31,9 @@
 		<result column="company_id" property="companyId" />
 		<result column="company_name" property="companyName" />
 	</resultMap>
-
+	<sql id="Base_roles">
+		roleid,rolename,description
+	</sql>
 	<sql id="Base_Column_List">
 		userid, account, userpwd, temporarypwd, salt, username,
 		phone, create_time, last_login_time, status, wechat_id, wechat_code,
@@ -69,8 +76,9 @@
 		and c.company_id = #{companyId}
 	</select>
 	<select id="selectRoles" parameterType="java.lang.String"
-		resultType="java.lang.String">
-		select rolename
+		resultMap="BaseRoleMap">
+		select 
+		<include refid="Base_roles" />
 		from organization.u_roles
 		where roleid in (
 		select roleid

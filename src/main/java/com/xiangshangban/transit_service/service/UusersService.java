@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.xiangshangban.transit_service.bean.ChangePhone;
+import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.Uusers;
 
 public interface UusersService {
@@ -27,7 +28,7 @@ public interface UusersService {
 	 
 	 int updateSmsCode(String Phone, String smsCode);
 	 
-	 List<String> selectRoles(String phone);
+	 List<Uroles> selectRoles(String phone);
 	 
 	 int deleteByPrimaryKey(String userid);
 

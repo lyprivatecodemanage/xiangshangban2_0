@@ -12,8 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -27,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.xiangshangban.transit_service.bean.Company;
 import com.xiangshangban.transit_service.bean.Login;
+import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.Uusers;
-import com.xiangshangban.transit_service.exception.CustomException;
 import com.xiangshangban.transit_service.service.CompanyService;
 import com.xiangshangban.transit_service.service.LoginService;
 import com.xiangshangban.transit_service.service.UusersService;
@@ -153,11 +151,11 @@ public class LoginController {
 				Login appLogin = loginService.selectByToken(token);
 				// Uusers user =
 				// uusersService.selectByPhone(appLogin.getPhone());
-				List<String> listRole = uusersService.selectRoles(appLogin.getPhone());
+				List<Uroles> listRole = uusersService.selectRoles(appLogin.getPhone());
 				// 判断是否是企业管理员,'0':不是,'1':是
 				int i = 0;
-				for (String role : listRole) {
-					if ("admin".equals(role)) {
+				for (Uroles role : listRole) {
+					if ("admin".equals(role.getRolename())) {
 						i = i + 1;
 					}
 				}

@@ -68,4 +68,12 @@
       permissiondescribe = #{permissiondescribe,jdbcType=VARCHAR}
     where permissionid = #{permissionid,jdbcType=VARCHAR}
   </update>
+  <select id="selectByRoleId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"/>
+  	from u_permission
+	where permissionid in
+	(select permissionid from u_roles_permission
+	where roleid = 'a3b69966-befa-11e7-a869-00e04c682380')
+  </select>
 </mapper>

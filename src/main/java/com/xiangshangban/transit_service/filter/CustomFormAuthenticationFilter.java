@@ -33,12 +33,12 @@ import com.xiangshangban.transit_service.util.RedisUtil;
  * 
  */
 public class CustomFormAuthenticationFilter extends FormAuthenticationFilter {
+	
 	//原FormAuthenticationFilter的认证方法
 	@Override
 	protected boolean onAccessDenied(ServletRequest req,
 			ServletResponse res) throws Exception {
 		return super.onAccessDenied(req, res);
 	}
-
 		
 }

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.xiangshangban.transit_service.bean.ChangePhone;
+import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.Uusers;
 @Mapper
 public interface UusersMapper {
@@ -17,7 +18,7 @@ public interface UusersMapper {
     
     Uusers selectByPhone(String phone);
     
-    List<String> selectRoles(String phone);
+    List<Uroles> selectRoles(String phone);
     
     Uusers selectByAccount(String account);
     

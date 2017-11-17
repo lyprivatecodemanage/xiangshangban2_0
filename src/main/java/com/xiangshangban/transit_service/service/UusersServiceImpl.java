@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xiangshangban.transit_service.bean.ChangePhone;
+import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.dao.UusersMapper;
 @Service("usersService")
@@ -62,7 +63,7 @@ public class UusersServiceImpl implements UusersService {
 	}
 	
 	@Override
-	public List<String> selectRoles(String phone) {
+	public List<Uroles> selectRoles(String phone) {
 		// TODO Auto-generated method stub
 		return uusersMapper.selectRoles(phone);
 	}
