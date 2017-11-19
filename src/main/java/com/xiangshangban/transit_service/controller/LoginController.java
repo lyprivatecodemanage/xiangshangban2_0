@@ -33,6 +33,7 @@ import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.FileMD5Util;
 import com.xiangshangban.transit_service.util.FormatUtil;
 import com.xiangshangban.transit_service.util.RedisUtil;
+import com.xiangshangban.transit_service.util.SessionUtil;
 import com.xiangshangban.transit_service.util.YtxSmsUtil;
 
 @RestController
@@ -45,29 +46,7 @@ public class LoginController {
 	private UusersService uusersService;
 	@Autowired
 	CompanyService companyService;
-	/**
-	 * @author 李业/获得clientId
-	 * @param type
-	 * @param imei
-	 * @param model
-	 * @return
-	 *//*
-		 * @RequiresRoles(value={"admin","superAdmin"},logical=Logical.OR)
-		 * 
-		 * @RequestMapping("/getClientId") public Map<String, Object>
-		 * getClientId(String type,String imei,String model){ Map<String,
-		 * Object> result = new HashMap<String,Object>(); try{ String clientId =
-		 * FileMD5Util.getMD5String(type+imei+model); result.put("clientId",
-		 * clientId); result.put("message", "成功"); result.put("returnCode",
-		 * "3000"); return result; } catch (NumberFormatException e) {
-		 * e.printStackTrace(); result.put("returnCode", "3007");
-		 * result.put("message", "参数格式不正确"); return result; } catch
-		 * (NullPointerException e) { e.printStackTrace();
-		 * result.put("returnCode", "3001"); result.put("message", "参数为null");
-		 * return result; } catch (Exception e) { e.printStackTrace();
-		 * result.put("returnCode", "3006"); result.put("message", "失败"); return
-		 * result; } }
-		 */
+	
 
 	/**
 	 * @author 李业/获取二维码
@@ -333,7 +312,7 @@ public class LoginController {
 		}
 		try {
 			String salt = FileMD5Util.GetSalt();
-			String sessionId = session.getId();
+			String sessionId = request.getSession().getId();
 			String effectiveTime = "1";
 			Date date = new Date();
 			String now = sdf.format(date);
@@ -376,7 +355,6 @@ public class LoginController {
 						login = new Login(FormatUtil.createUuid(), phone, token, salt, now, effectiveTime, sessionId,
 								null, null, "1", clientId);
 						loginService.insertSelective(login);
-
 					}
 				} else {
 					// 首次登录,或退出账号时
@@ -388,11 +366,11 @@ public class LoginController {
 			}
 			// web
 			if (type != null && Integer.valueOf(type) == 0) {
-				sessionId = session.getId();
-				Login login = loginService.selectBySessionId(sessionId);
+				/*sessionId = session.getId();
+				Login login = loginService.selectBySessionId(sessionId);*/
 				// 判断连接是否存在
 				// 存在
-				if (login != null) {
+				/*if (login != null) {
 					id = login.getId();
 					String tabPhone = login.getPhone();
 					if (StringUtils.isEmpty(tabPhone)) {
@@ -410,12 +388,13 @@ public class LoginController {
 					login = new Login(FormatUtil.createUuid(), phone, null, salt, now, effectiveTime, sessionId, null,
 							null, "1", "web");
 					loginService.insertSelective(login);
-				} else {
+				} else {*/
 					// 首次登录,或退出账号时
+				//SessionUtil.reGenerateSessionId(request);
 					newLogin = new Login(FormatUtil.createUuid(), phone, null, salt, now, effectiveTime, sessionId,
 							null, null, "1", "web");
 					loginService.insertSelective(newLogin);
-				}
+				//}
 				Uusers user = uusersService.selectCompanyBySessionId(sessionId);
 				result.put("companyId", user.getCompanyId());
 			}

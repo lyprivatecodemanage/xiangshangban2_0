@@ -15,18 +15,18 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.xiangshangban.transit_service.service.LoginService;
 import com.xiangshangban.transit_service.service.UusersService;
+=======
+>>>>>>> fcbad0c389c8688c29385b35bee09f6a6d077c0a
 import com.xiangshangban.transit_service.util.HttpClientUtil;
 
 @WebFilter(filterName="ServletFilter",urlPatterns="/*")
 public class ServletFilter implements Filter{
-	@Autowired
-	private LoginService loginService;
-	@Autowired
-	private UusersService usersService;
+
 	public static void uploadFile(byte[] file, String filePath, String fileName) throws Exception { 
         File targetFile = new File(filePath);  
         if(!targetFile.exists()){    
@@ -50,12 +50,17 @@ public class ServletFilter implements Filter{
 		HttpServletResponse res=(HttpServletResponse) response;
 		String uri = req.getRequestURI();
 		System.out.println(uri);
+<<<<<<< HEAD
 		// 这里填写你允许进行跨域的主机ip
+=======
+		res.setContentType("textml;charset=UTF-8");
+		 //这里填写你允许进行跨域的主机ip
+>>>>>>> fcbad0c389c8688c29385b35bee09f6a6d077c0a
 		res.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
-		//res.setHeader("Access-Control-Allow-Origin", "http://192.168.0.141:80");
 		res.setHeader("Access-Control-Allow-Credentials","true");
 		// 允许的访问方法
 		res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
+<<<<<<< HEAD
 		// Access-Control-Max-Age 用于 CORS 相关配置的缓存
 		res.setHeader("Access-Control-Max-Age", "3600");
 		// Content-Disposition文件下载时设置文件名
@@ -63,6 +68,16 @@ public class ServletFilter implements Filter{
 		// res.setHeader("Content-Disposition",
 		// "attachment;filename="+java.net.URLEncoder.encode("报表.xls","UTF-8"));
 		res.setHeader("Access-Control-Allow-Methods", req.getMethod());
+=======
+		/*res.setHeader("Access-Control-Allow-Methods", req.getMethod());*/
+        //Access-Control-Max-Age 用于 CORS 相关配置的缓存
+		res.setHeader("Access-Control-Max-Age", "3600");
+		//Content-Disposition文件下载时设置文件名
+		res.setHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, type");
+		res.setHeader("XDomainRequestAllowed","1");
+		//res.setHeader("Content-Disposition", "attachment;filename="+java.net.URLEncoder.encode("报表.xls","UTF-8"));
+		//res.setHeader("Access-Control-Allow-Methods", req.getMethod());
+>>>>>>> fcbad0c389c8688c29385b35bee09f6a6d077c0a
 		String [] includeMode = HttpClientUtil.getIncludeMode();
 		String redirectUrl = "";
 		boolean redirect = false;
@@ -85,6 +100,7 @@ public class ServletFilter implements Filter{
 			//String companyId = req.getParameter("companyId");
 			req.getRequestDispatcher(redirectUrl).forward(req, res);
 		}else{
+			System.out.println("=======================>"+req.getSession().getId());
 			chain.doFilter(req, res);
 			System.out.println("嘻嘻嘻");
 		}

@@ -55,6 +55,7 @@ public class RedirectController {
 		Uusers user = new Uusers();
 		if (StringUtils.isEmpty(token)) {
 			String sessionId = request.getSession().getId();
+			System.out.println("redirectController : "+sessionId);
 			user = userService.selectCompanyBySessionId(sessionId);
 		} else {
 			user = userService.selectCompanyByToken(token);
