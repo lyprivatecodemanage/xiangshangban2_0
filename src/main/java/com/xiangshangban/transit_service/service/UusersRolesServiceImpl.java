@@ -36,7 +36,7 @@ public class UusersRolesServiceImpl implements UusersRolesService {
 	@Override
 	public UusersRolesKey SelectAdministrator(String companyId) {
 		// TODO Auto-generated method stub
-		return uusersRolesMapper.SelectAdministrator( companyId);
+		return uusersRolesMapper.SelectAdministrator(companyId);
 	}
 
 	@Override

@@ -515,7 +515,6 @@ public class LoginController {
 		try {
 			Uusers user = uusersService.selectByPhone(phone);
 			String smsCode = sms.sendIdSms(phone);
-			System.out.println(request.getSession().getId());
 			// user不为null,说明是登录获取验证码
 			if (user != null) {
 				// 更新数据库验证码记录,当做登录凭证

@@ -2,6 +2,7 @@ package com.xiangshangban.transit_service.realm;
 
 import java.util.List;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -18,24 +19,25 @@ import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.service.UpermissionService;
 import com.xiangshangban.transit_service.service.UusersService;
 
+
 public class MyRealm extends AuthorizingRealm {
 	@Autowired
 	private UusersService usersService;
 
 	@Autowired
 	private UpermissionService upermissionService;
-	//
-	// public void clearAuthz() {
-	// this.clearCachedAuthorizationInfo(SecurityUtils.getSubject().getPrincipals());
-	// }
+
+	// 对权先进行清空处理
+	public void clearAuthz() {
+		this.clearCachedAuthorizationInfo(SecurityUtils.getSubject().getPrincipals());
+	}
 
 	// 授权
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection token) {
+		// 在 controller 的方法上使用 @RequiresPermissions(“访问地址”) 注解方式可对方法进行 权限效验
 		System.err.println("<---------------权限配置  MyShiroRealm.doGetAuthorizationInfo()---------------->");
-
-		Uusers uusers = (Uusers) token.getPrimaryPrincipal();
-
+		String uusers = (String) token.getPrimaryPrincipal();
 		if (uusers != null) {
 			SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 			// 根据用户信息查询出用户的角色
@@ -52,7 +54,6 @@ public class MyRealm extends AuthorizingRealm {
 			}
 			return authorizationInfo;
 		}
-
 		return null;
 	}
 

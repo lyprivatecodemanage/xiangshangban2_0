@@ -39,6 +39,7 @@ import com.xiangshangban.transit_service.shiro.CredentialsMatcher;
 @EnableAutoConfiguration(exclude = { MultipartAutoConfiguration.class })
 @SpringBootApplication
 public class ApiApplication {
+
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
 	}
@@ -69,6 +70,7 @@ public class ApiApplication {
 		bean.setFilters(map);
 		// 配置访问权限
 		LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
+
 		filterChainDefinitionMap.put("/loginController/sendSms", "anon");
 		filterChainDefinitionMap.put("/registerController/*", "anon");
 		filterChainDefinitionMap.put("/loginController/logOut", "logout");

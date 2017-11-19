@@ -4,12 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -18,9 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.springframework.web.context.support.XmlWebApplicationContext;
 
 import com.xiangshangban.transit_service.service.LoginService;
 import com.xiangshangban.transit_service.service.UusersService;
@@ -55,17 +50,18 @@ public class ServletFilter implements Filter{
 		HttpServletResponse res=(HttpServletResponse) response;
 		String uri = req.getRequestURI();
 		System.out.println(uri);
-		 //这里填写你允许进行跨域的主机ip
+		// 这里填写你允许进行跨域的主机ip
 		res.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
 		//res.setHeader("Access-Control-Allow-Origin", "http://192.168.0.141:80");
 		res.setHeader("Access-Control-Allow-Credentials","true");
-        //允许的访问方法
+		// 允许的访问方法
 		res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
-        //Access-Control-Max-Age 用于 CORS 相关配置的缓存
+		// Access-Control-Max-Age 用于 CORS 相关配置的缓存
 		res.setHeader("Access-Control-Max-Age", "3600");
-		//Content-Disposition文件下载时设置文件名
+		// Content-Disposition文件下载时设置文件名
 		res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Access-Control-Request-Headers, Content-Type, Accept, Content-Disposition, type");
-		//res.setHeader("Content-Disposition", "attachment;filename="+java.net.URLEncoder.encode("报表.xls","UTF-8"));
+		// res.setHeader("Content-Disposition",
+		// "attachment;filename="+java.net.URLEncoder.encode("报表.xls","UTF-8"));
 		res.setHeader("Access-Control-Allow-Methods", req.getMethod());
 		String [] includeMode = HttpClientUtil.getIncludeMode();
 		String redirectUrl = "";
