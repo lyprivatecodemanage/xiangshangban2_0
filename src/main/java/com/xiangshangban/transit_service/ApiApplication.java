@@ -22,6 +22,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.MultipartAutoConfiguration;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -38,6 +39,7 @@ import com.xiangshangban.transit_service.shiro.CredentialsMatcher;
  */
 @EnableAutoConfiguration(exclude = { MultipartAutoConfiguration.class })
 @SpringBootApplication
+@ServletComponentScan
 public class ApiApplication {
 
 	public static void main(String[] args) {

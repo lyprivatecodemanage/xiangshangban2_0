@@ -60,7 +60,7 @@
   	select
   	<include refid="BaseList"></include>
   	from organization.u_users_roles
-  	where roleid = 'a3b69966-befa-11e7-a869-00e04c682380'
+  	where roleid = '56b814c2ea7e4f679ee505036f5b030a'
   	and company_id = #{companyId,jdbcType=VARCHAR}
   </select>
   
@@ -69,7 +69,7 @@
   	set userid = #{userId,jdbcType=VARCHAR},history_user_ids = #{historyUserIds,jdbcType=VARCHAR}
   	where userid = #{newUserId,jdbcType=VARCHAR}
   	and company_id = #{companyId,jdbcType=VARCHAR}
-  	and roleid = 'a3b69966-befa-11e7-a869-00e04c682380'
+  	and roleid = '56b814c2ea7e4f679ee505036f5b030a'
   </update>
   
   <select id="SelectUserIdByPermission" parameterType="java.lang.String" resultMap="JurisdictionMap">
