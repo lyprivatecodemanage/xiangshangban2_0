@@ -1,5 +1,7 @@
 package com.xiangshangban.transit_service.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.xiangshangban.transit_service.bean.Upermission;
@@ -16,4 +18,6 @@ public interface UpermissionMapper {
     int updateByPrimaryKeySelective(Upermission record);
 
     int updateByPrimaryKey(Upermission record);
+    
+    List<Upermission> selectByRoleId(String roleId);
 }

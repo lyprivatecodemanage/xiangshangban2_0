@@ -41,7 +41,7 @@ import com.xiangshangban.transit_service.shiro.CredentialsMatcher;
  * Hello world!
  *
  */
-@EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = { MultipartAutoConfiguration.class })
 @SpringBootApplication
 @EnableTransactionManagement
 @ServletComponentScan

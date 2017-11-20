@@ -16,10 +16,13 @@ public interface CompanyMapper {
 
     int updateByPrimaryKey(Company record);
     
-    //判断公司名是否重复(是否有这个公司)
+    //根绝公司名称判断公司是否重复
+    int selectCompanyName(String companyName);
+    
+    //根据公司编号判断公司名是否重复(是否有这个公司)
     int selectByCompany(String company_no);
 
-    //根据公司名称获得公司信息
+    //根据公司编号获得公司信息
     Company selectByCompanyName(String company_no);
 
     //创建公司(填写公司名称，存入员工表编号关联)

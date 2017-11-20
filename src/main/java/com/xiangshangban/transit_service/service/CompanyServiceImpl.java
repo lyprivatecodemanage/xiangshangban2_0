@@ -69,5 +69,11 @@ public class CompanyServiceImpl implements CompanyService {
 		return companyMapper.selectByPhone(phone);
 	}
 
+	@Override
+	public int selectCompanyName(String companyName) {
+		// TODO Auto-generated method stub
+		return companyMapper.selectCompanyName(companyName);
+	}
+
 	
 }

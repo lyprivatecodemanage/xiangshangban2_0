@@ -6,13 +6,20 @@ import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 
 /**
  * 
- * <p>Title: CustomFormAuthenticationFilter</p>
- * <p>Description:自定义FormAuthenticationFilter，认证之前实现 验证码校验 </p>
- * <p>Company: www.itcast.com</p> 
+ * <p>
+ * Title: CustomFormAuthenticationFilter
+ * </p>
+ * <p>
+ * Description:自定义FormAuthenticationFilter，认证之前实现 验证码校验
+ * </p>
+ * <p>
+ * Company: www.itcast.com
+ * </p>
  * 
  */
 public class CustomFormAuthenticationFilter extends FormAuthenticationFilter {
-	//原FormAuthenticationFilter的认证方法
+	
+	// 原FormAuthenticationFilter的认证方法
 	@Override
 	protected boolean onAccessDenied(ServletRequest request,
 			ServletResponse response) throws Exception {
