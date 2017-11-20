@@ -240,7 +240,7 @@ public class ChangePhoneNumController {
 			if (i > 0) {
 				// 正确
 				result.put("message", "处于保护期,提出修改认证信息通过");
-				result.put("returnCode", "4014");
+				result.put("returnCode", "3000");
 				return result;
 			}
 			result.put("message", "处于保护期,提出修改认证信息未通过");
@@ -309,7 +309,7 @@ public class ChangePhoneNumController {
 				result.put("newPhone", newPhone);
 				result.put("oldPhone", oldPhone);
 				result.put("message", "本人认证信息通过");
-				result.put("returnCode", "4016");
+				result.put("returnCode", "3000");
 				return result;
 			}
 			result.put("message", "本人认证信息未通过");

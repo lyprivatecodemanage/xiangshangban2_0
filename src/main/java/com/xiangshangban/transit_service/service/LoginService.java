@@ -36,7 +36,13 @@ public interface LoginService {
 	
 	int updateByPrimaryKeySelective(Login record);
 	
-	int updateStatusByPrimaryKey(String id);
+	int updateStatusByPhone(String phone);
 	
 	int deleteByPrimatyKey(String id);
+	
+	Login selectByTokenAndClientId(String token, String clientId);
+	
+	int updateStatusBySessionId(String sessionId);
+	
+	int updateStatusById(String id);
 }

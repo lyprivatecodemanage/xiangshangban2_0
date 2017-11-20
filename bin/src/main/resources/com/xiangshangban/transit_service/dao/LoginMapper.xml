@@ -44,7 +44,14 @@
     select 
     <include refid="Base_Column_List" />
     from login_
-    where session_id = #{sessionId} 
+    where session_id = #{sessionId} and status = '1'
+  </select>
+  
+  <select id="selectByTokenAndClientId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"/>
+  	from login_
+  	where status = '1' and token = #{token} and clientId = #{clientId}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
