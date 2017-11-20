@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.xiangshangban.transit_service.bean.Upermission;
+import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.UusersRolesKey;
 @Mapper
 public interface UusersRolesMapper {
@@ -26,4 +27,6 @@ public interface UusersRolesMapper {
 	// 根据用户ID查询权限url地址
     List<Upermission> SelectUserIdByPermission(@Param("userId")String userId,@Param("companyId")String companyId);
     
+	// 根据用户编号 和 公司编号 查询出角色信息
+	Uroles SelectRoleByUserId(@Param("userId") String userId, @Param("companyId") String companyId);
 }

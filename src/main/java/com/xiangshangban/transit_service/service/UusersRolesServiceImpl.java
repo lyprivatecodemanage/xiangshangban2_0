@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xiangshangban.transit_service.bean.Upermission;
+import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.UusersRolesKey;
 import com.xiangshangban.transit_service.dao.UusersRolesMapper;
 
@@ -50,6 +51,12 @@ public class UusersRolesServiceImpl implements UusersRolesService {
 	public List<Upermission> SelectUserIdByPermission(String userId,String companyId) {
 		// TODO Auto-generated method stub
 		return uusersRolesMapper.SelectUserIdByPermission(userId,companyId);
+	}
+
+	@Override
+	public Uroles SelectRoleByUserId(String userId, String companyId) {
+		// TODO Auto-generated method stub
+		return uusersRolesMapper.SelectRoleByUserId(userId, companyId);
 	}
 
 }

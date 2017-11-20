@@ -302,7 +302,10 @@ public class LoginController {
 				result.put("returnCode", "4004");
 				return result;
 			}
-			id = loginRecord.getId();
+			if (!StringUtils.isEmpty(loginRecord)) {
+				id = loginRecord.getId();
+
+			}
 			// 初始化redis
 			RedisUtil redis = RedisUtil.getInstance();
 			// 从redis取出短信验证码
