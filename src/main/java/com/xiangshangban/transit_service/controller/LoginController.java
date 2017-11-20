@@ -304,6 +304,7 @@ public class LoginController {
 			}
 			if(!StringUtils.isEmpty(loginRecord)){
 				id = loginRecord.getId();
+
 			}
 			// 初始化redis
 			RedisUtil redis = RedisUtil.getInstance();

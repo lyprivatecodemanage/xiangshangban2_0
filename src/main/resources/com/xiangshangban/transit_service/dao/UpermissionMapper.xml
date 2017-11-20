@@ -74,6 +74,6 @@
   	from u_permission
 	where permissionid in
 	(select permissionid from u_roles_permission
-	where roleid = 'a3b69966-befa-11e7-a869-00e04c682380')
+	where roleid = #{roleId,jdbcType=VARCHAR})
   </select>
 </mapper>

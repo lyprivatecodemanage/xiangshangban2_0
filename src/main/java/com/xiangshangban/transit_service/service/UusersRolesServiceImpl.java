@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xiangshangban.transit_service.bean.Upermission;
+import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.UusersRolesKey;
 import com.xiangshangban.transit_service.dao.UusersRolesMapper;
 
@@ -34,21 +35,28 @@ public class UusersRolesServiceImpl implements UusersRolesService {
 	}
 
 	@Override
-	public UusersRolesKey SelectAdministrator(String companyId) {
+	public UusersRolesKey SelectAdministrator(String companyId, String roleId) {
 		// TODO Auto-generated method stub
-		return uusersRolesMapper.SelectAdministrator(companyId);
+		return uusersRolesMapper.SelectAdministrator(companyId, roleId);
 	}
 
 	@Override
-	public int updateAdministrator(String userId, String newUserId, String companyId,String historyUserIds) {
+	public int updateAdministrator(String userId, String newUserId, String companyId, String historyUserIds,
+			String roleId) {
 		// TODO Auto-generated method stub
-		return uusersRolesMapper.updateAdministrator(userId, newUserId, companyId,historyUserIds);
+		return uusersRolesMapper.updateAdministrator(userId, newUserId, companyId, historyUserIds, roleId);
 	}
 
 	@Override
 	public List<Upermission> SelectUserIdByPermission(String userId,String companyId) {
 		// TODO Auto-generated method stub
 		return uusersRolesMapper.SelectUserIdByPermission(userId,companyId);
+	}
+
+	@Override
+	public Uroles SelectRoleByUserId(String userId, String companyId) {
+		// TODO Auto-generated method stub
+		return uusersRolesMapper.SelectRoleByUserId(userId, companyId);
 	}
 
 }

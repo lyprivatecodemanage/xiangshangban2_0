@@ -3,6 +3,7 @@ package com.xiangshangban.transit_service.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.xiangshangban.transit_service.bean.Upermission;
 @Mapper
@@ -19,5 +20,5 @@ public interface UpermissionMapper {
 
     int updateByPrimaryKey(Upermission record);
     
-    List<Upermission> selectByRoleId(String roleId);
+	List<Upermission> selectByRoleId(@Param("roleId") String roleId);
 }

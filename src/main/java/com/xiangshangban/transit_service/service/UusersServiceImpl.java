@@ -108,8 +108,8 @@ public class UusersServiceImpl implements UusersService {
 		return uusersMapper.selectById(userId);
 	}
 	@Override
-	public Uusers selectAdminByPhone(String phone) {
+	public Uusers selectAdminByPhone(String phone, String roleId) {
 		// TODO Auto-generated method stub
-		return uusersMapper.selectAdminByPhone(phone);
+		return uusersMapper.selectAdminByPhone(phone, roleId);
 	}
 }

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.xiangshangban.transit_service.bean.Upermission;
+import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.UusersRolesKey;
 @Mapper
 public interface UusersRolesMapper {
@@ -16,12 +17,16 @@ public interface UusersRolesMapper {
     int insertSelective(UusersRolesKey record);
     
 	// 查看当前管理员及历史管理员
-	UusersRolesKey SelectAdministrator(@Param("companyId") String companyId);
+	UusersRolesKey SelectAdministrator(@Param("companyId") String companyId, @Param("roleId") String roleId);
     
 	// 修改管理员
-    int updateAdministrator(@Param("userId")String userId,@Param("newUserId")String newUserId,@Param("companyId")String companyId,@Param("historyUserIds")String historyUserIds);
+	int updateAdministrator(@Param("userId") String userId, @Param("newUserId") String newUserId,
+			@Param("companyId") String companyId, @Param("historyUserIds") String historyUserIds,
+			@Param("roleId") String roleId);
 
 	// 根据用户ID查询权限url地址
     List<Upermission> SelectUserIdByPermission(@Param("userId")String userId,@Param("companyId")String companyId);
     
+	// 根据用户编号 和 公司编号 查询出角色信息
+	Uroles SelectRoleByUserId(@Param("userId") String userId, @Param("companyId") String companyId);
 }
