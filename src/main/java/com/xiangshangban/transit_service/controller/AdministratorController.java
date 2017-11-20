@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.bean.UusersRolesKey;
 import com.xiangshangban.transit_service.service.UusersRolesService;
@@ -47,7 +48,7 @@ public class AdministratorController {
 		try{
 			// 拿到请求头中的companyId查询公司管理员
 			String companyId = request.getHeader("companyId");
-			UusersRolesKey uusersRolesKey = uusersRolesService.SelectAdministrator(companyId);
+			UusersRolesKey uusersRolesKey = uusersRolesService.SelectAdministrator(companyId, new Uroles().admin_role);
 			// 结果为空时代表该公司暂未有管理员
 			if(null == uusersRolesKey){
 				map.put("returnCode","3000");
@@ -194,7 +195,7 @@ public class AdministratorController {
 		try {
 			// 获取原来管理员数据的信息
 			String companyId = request.getHeader("companyId");
-			UusersRolesKey uusersRolesKey = uusersRolesService.SelectAdministrator(companyId);
+			UusersRolesKey uusersRolesKey = uusersRolesService.SelectAdministrator(companyId, new Uroles().admin_role);
 			
 			// 将原来的管理员添加为历史管理员
 			String huids = uusersRolesKey.gethistoryUserIds();
@@ -202,7 +203,8 @@ public class AdministratorController {
 				historyUserIds = huids.substring(huids.indexOf(",")+1)+","+uusersRolesKey.getUserId();
 			}
 			// 更换新管理员
-			uusersRolesService.updateAdministrator(uusersRolesKey.getUserId(),newUserId, companyId,historyUserIds);
+			uusersRolesService.updateAdministrator(uusersRolesKey.getUserId(), newUserId, companyId, historyUserIds,
+					new Uroles().admin_role);
 			
 			map.put("returnCode", "3000");
 			map.put("message", "数据请求成功");

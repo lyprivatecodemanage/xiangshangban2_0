@@ -60,16 +60,16 @@
   	select
   	<include refid="BaseList"></include>
   	from organization.u_users_roles
-  	where roleid = '56b814c2ea7e4f679ee505036f5b030a'
+  	where roleid = #{roleId,jdbcType=VARCHAR}
   	and company_id = #{companyId,jdbcType=VARCHAR}
   </select>
   
   <update id="updateAdministrator">
   	update organization.u_users_roles
-  	set userid = #{userId,jdbcType=VARCHAR},history_user_ids = #{historyUserIds,jdbcType=VARCHAR}
-  	where userid = #{newUserId,jdbcType=VARCHAR}
+  	set userid = #{newUserId,jdbcType=VARCHAR},history_user_ids = #{historyUserIds,jdbcType=VARCHAR}
+  	where userid = #{userId,jdbcType=VARCHAR}
   	and company_id = #{companyId,jdbcType=VARCHAR}
-  	and roleid = '56b814c2ea7e4f679ee505036f5b030a'
+  	and roleid = #{roleId,jdbcType=VARCHAR}
   </update>
   
   <select id="SelectUserIdByPermission" parameterType="java.lang.String" resultMap="JurisdictionMap">

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.http.entity.ContentType;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.xiangshangban.transit_service.bean.CheckPendingJoinCompany;
 import com.xiangshangban.transit_service.bean.Company;
 import com.xiangshangban.transit_service.bean.Uroles;
@@ -27,7 +24,6 @@ import com.xiangshangban.transit_service.service.UserCompanyService;
 import com.xiangshangban.transit_service.service.UusersRolesService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.FormatUtil;
-import com.xiangshangban.transit_service.util.HttpClientUtil;
 import com.xiangshangban.transit_service.util.PinYin2Abbreviation;
 import com.xiangshangban.transit_service.util.RedisUtil;
 
@@ -219,30 +215,36 @@ public class RegisterController {
 				uusersRolesService.insertSelective(urk);
 
 				// 将用户信息打包数据做员工信息新增
-                Map<String,String> userMap = new HashMap<>();
-                userMap.put("employeeName", userName);
-				userMap.put("loginName", phone);
-                
-                String url = "http://192.168.0.242:8093/organization/EmployeeController/insertEmployee";
-    			String str = HttpClientUtil.sendRequet(url,"{}",ContentType.APPLICATION_JSON, userMap);
-    			JSONObject jobj = JSON.parseObject(str);
-                
-				if ("3000".equals(jobj.get("returnCode"))) {
+				// Map<String,String> userMap = new HashMap<>();
+				// userMap.put("employeeName", userName);
+				// userMap.put("loginName", phone);
+				//
+				// Map<String, String> headMap = new HashMap<>();
+				// headMap.put("companyId", companyId);
+				//
+				// String url =
+				// "http://192.168.0.126:8093/organization/EmployeeController/insertEmployee";
+				// String str = HttpClientUtil.sendRequet(url, userMap,
+				// ContentType.APPLICATION_JSON, headMap);
+				// JSONObject jobj = JSON.parseObject(str);
+				//
+				// if ("3000".equals(jobj.get("returnCode"))) {
 					map.put("companyId", companyId);
 					map.put("companyName", companyName);
 					map.put("user_name", userName);
 					map.put("returnCode", "3000");
-					map.put("message", "数据请求成功");
+				map.put("message", "数据请求成功");
 					return map;
-				} else {
-					uusersService.deleteByPrimaryKey(userId);
-					companyService.deleteByPrimaryKey(companyId);
-					userCompanyService.deleteByPrimaryKey(new UserCompanyDefault(userId, companyId));
-					uusersRolesService.deleteByPrimaryKey(urk);
-					map.put("returnCode", "3001");
-					map.put("message", "服务器错误");
-					return map;
-				}
+				// } else {
+				// uusersService.deleteByPrimaryKey(userId);
+				// companyService.deleteByPrimaryKey(companyId);
+				// userCompanyService.deleteByPrimaryKey(new
+				// UserCompanyDefault(userId, companyId));
+				// uusersRolesService.deleteByPrimaryKey(urk);
+				// map.put("returnCode", "3001");
+				// map.put("message", "服务器错误");
+				// return map;
+				// }
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.info(e);
@@ -346,31 +348,34 @@ public class RegisterController {
 	                        return map;
 						}
 
-						// 将用户信息打包数据做员工信息新增
-						Map<String, String> userMap = new HashMap<>();
-						userMap.put("employeeName", userName);
-						userMap.put("userName", phone);
-
-						String url = "http://192.168.0.242:8093/organization/EmployeeController/insertEmployee";
-						String str = HttpClientUtil.sendRequet(url, "{}", ContentType.APPLICATION_JSON, userMap);
-						JSONObject jobj = JSON.parseObject(str);
-
-						if ("3000".equals(jobj.get("returnCode"))) {
+						// // 将用户信息打包数据做员工信息新增
+						// Map<String, String> userMap = new HashMap<>();
+						// userMap.put("employeeName", userName);
+						// userMap.put("userName", phone);
+						//
+						// String url =
+						// "http://192.168.0.242:8093/organization/EmployeeController/insertEmployee";
+						// String str = HttpClientUtil.sendRequet(url, "{}",
+						// ContentType.APPLICATION_JSON, userMap);
+						// JSONObject jobj = JSON.parseObject(str);
+						//
+						// if ("3000".equals(jobj.get("returnCode"))) {
 							map.put("companyId", company.getCompany_id());
 							map.put("companyName", company.getCompany_name());
 							map.put("user_name", company.getUser_name());
 							map.put("returnCode", "3000");
-							map.put("message", "数据请求成功");
+						map.put("message", "数据请求成功");
 							return map;
-						} else {
-							uusersService.deleteByPrimaryKey(userId);
-	                    	checkPendingJoinCompanyService.deleteById(userId,company.getCompany_id());
-	                    	userCompanyService.deleteByPrimaryKey(new UserCompanyDefault(userId,company.getCompany_id(),null));
-	                    	uusersRolesService.deleteByPrimaryKey(urk);
-	                    	map.put("returnCode", "3001");
-							map.put("message", "服务器错误");
-	                        return map;
-						}
+						// } else {
+						// uusersService.deleteByPrimaryKey(userId);
+						// checkPendingJoinCompanyService.deleteById(userId,company.getCompany_id());
+						// userCompanyService.deleteByPrimaryKey(new
+						// UserCompanyDefault(userId,company.getCompany_id(),null));
+						// uusersRolesService.deleteByPrimaryKey(urk);
+						// map.put("returnCode", "3001");
+						// map.put("message", "服务器错误");
+						// return map;
+						// }
                     }
                 } else {
                 	uusersService.deleteByPrimaryKey(userId);

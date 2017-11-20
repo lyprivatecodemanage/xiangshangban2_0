@@ -327,6 +327,6 @@
 	join company_ com
 	on uc.company_id = com.company_id
 	where phone = #{phone})
-	and roleid = '56b814c2ea7e4f679ee505036f5b030a')
+	and roleid = #{roleId})
 	</select>
 </mapper>
