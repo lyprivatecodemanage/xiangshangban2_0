@@ -81,7 +81,9 @@ public class ServletFilter implements Filter {
 				if ("0".equals(type)) {
 					Object phone = req.getSession().getAttribute("phone");
 					if (StringUtils.isEmpty(phone)) {
-						//System.out.println("首次登录");
+						/*if(!uri.contains("/")){
+							
+						}*/
 					} else {
 						UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone.toString());
 						if (uniqueLogin != null) {

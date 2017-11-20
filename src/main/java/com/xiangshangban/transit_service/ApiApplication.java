@@ -67,7 +67,7 @@ public class ApiApplication
 	    return new EmbeddedServletContainerCustomizer() { 
 		    @Override 
 		    public void customize(ConfigurableEmbeddedServletContainer container) { 
-		    container.setSessionTimeout(3);//单位为S 
+		    container.setSessionTimeout(1800);//单位为S 
 		    } 
 	    }; 
     } 
