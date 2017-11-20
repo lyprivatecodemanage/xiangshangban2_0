@@ -36,6 +36,7 @@
       <arg column="company_personal_name" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="user_name" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="company_no" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="company_type" javaType="java.lang.String" jdbcType="VARCHAR" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List">
@@ -45,7 +46,7 @@
     business_registration_number, uniform_credit_code, type_enterprise, taxpayer_registration_number, 
     industry_type, begin_business_time, end_business_time, dateof_approval, registration_authority, 
     registered_address, company_creat_time, company_area, company_code, company_logo, 
-    company_approve, company_personal_name, user_name, company_no
+    company_approve, company_personal_name, user_name, company_no,company_type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -70,7 +71,7 @@
       registered_address, company_creat_time, 
       company_area, company_code, company_logo, 
       company_approve, company_personal_name, 
-      user_name, company_no)
+      user_name, company_no,company_type)
     values (#{company_id,jdbcType=VARCHAR}, #{company_name,jdbcType=VARCHAR}, #{company_english_name,jdbcType=VARCHAR}, 
       #{company_abbreviation_name,jdbcType=VARCHAR}, #{company_address_detail,jdbcType=VARCHAR}, 
       #{company_phone,jdbcType=VARCHAR}, #{company_email,jdbcType=VARCHAR}, #{company_postalcode,jdbcType=VARCHAR}, 
@@ -83,7 +84,7 @@
       #{registered_address,jdbcType=VARCHAR}, #{company_creat_time,jdbcType=VARCHAR}, 
       #{company_area,jdbcType=VARCHAR}, #{company_code,jdbcType=VARCHAR}, #{company_logo,jdbcType=VARCHAR}, 
       #{company_approve,jdbcType=VARCHAR}, #{company_personal_name,jdbcType=VARCHAR}, 
-      #{user_name,jdbcType=VARCHAR}, #{company_no,jdbcType=VARCHAR})
+      #{user_name,jdbcType=VARCHAR}, #{company_no,jdbcType=VARCHAR}),#{company_type,jdbcType=VARCHAR}
   </insert>
   <insert id="insertSelective" parameterType="com.xiangshangban.transit_service.bean.Company">
     insert into organization.company_
@@ -187,6 +188,9 @@
       <if test="company_no != null">
         company_no,
       </if>
+      <if test="company_type != null">
+      	company_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="company_id != null">
@@ -287,6 +291,9 @@
       </if>
       <if test="company_no != null">
         #{company_no,jdbcType=VARCHAR},
+      </if>
+      <if test="company_type != null">
+      	#{company_type,jdbcType=VARCHAR}
       </if>
     </trim>
   </insert>
@@ -389,6 +396,9 @@
       <if test="company_no != null">
         company_no = #{company_no,jdbcType=VARCHAR},
       </if>
+      <if test="company_type != null">
+      	company_type = #{company_type,jdbcType=VARCHAR}
+      </if>
     </set>
     where company_id = #{company_id,jdbcType=VARCHAR}
   </update>
@@ -426,6 +436,7 @@
       company_personal_name = #{company_personal_name,jdbcType=VARCHAR},
       user_name = #{user_name,jdbcType=VARCHAR},
       company_no = #{company_no,jdbcType=VARCHAR}
+      company_type = #{company_type,jdbcType=VARCHAR}
     where company_id = #{company_id,jdbcType=VARCHAR}
   </update>
 
