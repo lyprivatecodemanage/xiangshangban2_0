@@ -67,7 +67,18 @@ public class Company {
 
     private String company_no;
 
-    public Company(String company_id, String company_name, String company_english_name, String company_abbreviation_name, String company_address_detail, String company_phone, String company_email, String company_postalcode, String company_business_license, String juridical_person, String brought_accoun, String registered_capital, String join_date, String company_state, String registration_number, String business_registration_number, String uniform_credit_code, String type_enterprise, String taxpayer_registration_number, String industry_type, String begin_business_time, String end_business_time, String dateof_approval, String registration_authority, String registered_address, String company_creat_time, String company_area, String company_code, String company_logo, String company_approve, String company_personal_name, String user_name, String company_no) {
+	private String company_type;
+
+	public Company(String company_id, String company_name, String company_english_name,
+			String company_abbreviation_name, String company_address_detail, String company_phone, String company_email,
+			String company_postalcode, String company_business_license, String juridical_person, String brought_accoun,
+			String registered_capital, String join_date, String company_state, String registration_number,
+			String business_registration_number, String uniform_credit_code, String type_enterprise,
+			String taxpayer_registration_number, String industry_type, String begin_business_time,
+			String end_business_time, String dateof_approval, String registration_authority, String registered_address,
+			String company_creat_time, String company_area, String company_code, String company_logo,
+			String company_approve, String company_personal_name, String user_name, String company_no,
+			String company_type) {
         this.company_id = company_id;
         this.company_name = company_name;
         this.company_english_name = company_english_name;
@@ -101,6 +112,7 @@ public class Company {
         this.company_personal_name = company_personal_name;
         this.user_name = user_name;
         this.company_no = company_no;
+		this.company_type = company_type;
     }
 
     public Company() {
@@ -370,4 +382,13 @@ public class Company {
     public void setCompany_no(String company_no) {
         this.company_no = company_no == null ? null : company_no.trim();
     }
+
+	public String getCompany_type() {
+		return company_type;
+	}
+
+	public void setCompany_type(String company_type) {
+		this.company_type = company_type;
+	}
+
 }

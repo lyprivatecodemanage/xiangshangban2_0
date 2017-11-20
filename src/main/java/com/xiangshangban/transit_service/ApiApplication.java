@@ -14,7 +14,6 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -88,10 +87,6 @@ public class ApiApplication {
 		System.err.println("--------------shiro已经加载----------------");
 		DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
 		manager.setRealm(myRealm);
-		DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-		sessionManager.setGlobalSessionTimeout(3600000);
-		sessionManager.setDeleteInvalidSessions(true);
-		manager.setSessionManager(sessionManager);
 		return manager;
 	}
 

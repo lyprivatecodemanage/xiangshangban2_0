@@ -146,6 +146,7 @@ public class RegisterController {
                 company.setCompany_approve("0");
                 company.setUser_name(phone);
                 company.setCompany_personal_name(userName);
+				company.setCompany_type("0");
 				// 注册公司名称首字母缩写
                 String companyNameLo = "";
                 if (companyName.length() >= 4) {
