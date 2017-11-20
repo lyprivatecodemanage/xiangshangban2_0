@@ -302,7 +302,7 @@ public class LoginController {
 				result.put("returnCode", "4004");
 				return result;
 			}
-			if (!StringUtils.isEmpty(loginRecord)) {
+			if(!StringUtils.isEmpty(loginRecord)){
 				id = loginRecord.getId();
 
 			}
