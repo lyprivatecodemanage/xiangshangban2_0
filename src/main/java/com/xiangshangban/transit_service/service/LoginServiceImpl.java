@@ -78,14 +78,32 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public int deleteByPrimatyKey(String id) {
-		// TODO Auto-generated method stub
+	
 		return loginMapper.deleteByPrimaryKey(id);
 	}
 
 	@Override
-	public int updateStatusByPrimaryKey(String id) {
+	public int updateStatusByPhone(String phone) {
+		
+		return loginMapper.updateStatusByPhone(phone);
+	}
+
+	@Override
+	public Login selectByTokenAndClientId(String token, String clientId) {
+		
+		return loginMapper.selectByTokenAndClientId(token, clientId);
+	}
+
+	@Override
+	public int updateStatusBySessionId(String sessionId) {
 		// TODO Auto-generated method stub
-		return loginMapper.updateStatusByPrimaryKey(id);
+		return loginMapper.updateStatusBySessionId(sessionId);
+	}
+
+	@Override
+	public int updateStatusById(String id) {
+		// TODO Auto-generated method stub
+		return loginMapper.updateStatusById(id);
 	}
 
 }

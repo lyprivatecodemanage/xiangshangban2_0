@@ -8,12 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
@@ -23,32 +22,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xiangshangban.transit_service.bean.Company;
 import com.xiangshangban.transit_service.bean.Login;
+import com.xiangshangban.transit_service.bean.UniqueLogin;
 import com.xiangshangban.transit_service.bean.Uusers;
-import com.xiangshangban.transit_service.exception.CustomException;
 import com.xiangshangban.transit_service.service.CompanyService;
 import com.xiangshangban.transit_service.service.LoginService;
+import com.xiangshangban.transit_service.service.UniqueLoginService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.FileMD5Util;
 import com.xiangshangban.transit_service.util.FormatUtil;
 import com.xiangshangban.transit_service.util.RedisUtil;
-import com.xiangshangban.transit_service.util.SessionUtil;
 import com.xiangshangban.transit_service.util.YtxSmsUtil;
 
 @RestController
 @RequestMapping("/loginController")
 public class LoginController {
-	Logger logger = Logger.getLogger(LoginController.class);
+	private static final Logger logger = Logger.getLogger(LoginController.class);
 	@Autowired
 	private LoginService loginService;
 	@Autowired
 	private UusersService uusersService;
 	@Autowired
 	CompanyService companyService;
-	
+	@Autowired
+	private UniqueLoginService uniqueLoginService;
 
 	/**
 	 * @author 李业/获取二维码
@@ -278,13 +279,14 @@ public class LoginController {
 	 * @return
 	 */
 	@Transactional
-	@RequestMapping(value = "/loginUser")
+	@RequestMapping(value = "/loginUser", method = RequestMethod.POST)
 	public Map<String, Object> loginUser(String phone, String smsCode, HttpSession session,
 			HttpServletRequest request) {
+		System.out.println("logingUser:\t"+request.getSession().getId());
+		System.out.println("logingUser:\t"+session.getId());
 		Map<String, Object> result = new HashMap<String, Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar calendar = Calendar.getInstance();
-		// System.out.println(request.getSession().getId());
 		// 获取请求参数
 		String type = request.getHeader("type");
 		String token = request.getHeader("ACCESS_TOKEN");
@@ -293,11 +295,13 @@ public class LoginController {
 		if (phone != null && !"".equals(phone)) {
 			// 判断手机号是否注册
 			Uusers user = uusersService.selectByPhone(phone);
+			Login loginRecord = loginService.selectOneByPhone(phone);
 			if (user == null) {
 				result.put("message", "手机号不存在,请注册");
 				result.put("returnCode", "4004");
 				return result;
 			}
+			id = loginRecord.getId();
 			// 初始化redis
 			RedisUtil redis = RedisUtil.getInstance();
 			// 从redis取出短信验证码
@@ -334,17 +338,16 @@ public class LoginController {
 					}
 					// 判断token对应的用户信息是否存在,以及token是否过期
 					if (!StringUtils.isEmpty(login)) {
-						id = login.getId();
 						Date createTime = sdf.parse(login.getCreateTime());
 						calendar.setTime(date);
 						calendar.add(calendar.DATE, Integer.parseInt(login.getEffectiveTime()));
-						String tabPhone = login.getPhone();
-						if (StringUtils.isEmpty(tabPhone)) {
+						phone = login.getPhone();
+						if (StringUtils.isEmpty(phone)) {
 							result.put("message", "非法登录!");
 							result.put("returnCode", "");
 							return result;
 						}
-						Uusers user = uusersService.selectByPhone(tabPhone);
+						Uusers user = uusersService.selectByPhone(phone);
 						if (!StringUtils.isEmpty(user)) {
 							phone = user.getPhone();
 							smsCode = user.getTemporarypwd();
@@ -357,6 +360,8 @@ public class LoginController {
 						login = new Login(FormatUtil.createUuid(), phone, token, salt, now, effectiveTime, sessionId,
 								null, null, "1", clientId);
 						loginService.insertSelective(login);
+						uniqueLoginService.deleteByPhone(phone);
+						uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,"",token,clientId,"1",now));
 					}
 				} else {
 					// 首次登录,或退出账号时
@@ -364,44 +369,30 @@ public class LoginController {
 					newLogin = new Login(FormatUtil.createUuid(), phone, token, salt, now, effectiveTime, sessionId,
 							null, null, "1", clientId);
 					loginService.insertSelective(newLogin);
+					
+					UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone);
+					if(!StringUtils.isEmpty(uniqueLogin)){
+						uniqueLoginService.deleteByPhone(phone);
+					}
+					uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,"",token,clientId,"1",now));
+					
 				}
 			}
 			// web
 			if (type != null && Integer.valueOf(type) == 0) {
-				/*sessionId = session.getId();
-				Login login = loginService.selectBySessionId(sessionId);*/
-				// 判断连接是否存在
-				// 存在
-				/*if (login != null) {
-					id = login.getId();
-					String tabPhone = login.getPhone();
-					if (StringUtils.isEmpty(tabPhone)) {
-						result.put("message", "非法登录!");
-						result.put("returnCode", "");
-						return result;
-					}
-					Uusers user = uusersService.selectByPhone(tabPhone);
-					// 获取用户手机号和smsCode
-					if (user != null) {
-						phone = user.getPhone();
-						smsCode = user.getTemporarypwd();
-					}
-					// 记录登录信息
-					login = new Login(FormatUtil.createUuid(), phone, null, salt, now, effectiveTime, sessionId, null,
-							null, "1", "web");
-					loginService.insertSelective(login);
-				} else {*/
-					// 首次登录,或退出账号时
-				//SessionUtil.reGenerateSessionId(request);
-					newLogin = new Login(FormatUtil.createUuid(), phone, null, salt, now, effectiveTime, sessionId,
-							null, null, "1", "web");
-					loginService.insertSelective(newLogin);
-				//}
+				newLogin = new Login(FormatUtil.createUuid(), phone, null, null, now, effectiveTime, sessionId, null,
+						null, "1", "web");
+				loginService.insertSelective(newLogin);
+				UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone);
+				if(!StringUtils.isEmpty(uniqueLogin)){
+					uniqueLoginService.deleteByPhone(phone);
+				}
+				uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,sessionId,"","","1",now));
 				Uusers user = uusersService.selectCompanyBySessionId(sessionId);
 				result.put("companyId", user.getCompanyId());
 			}
-			if (id != null && !"".equals(id)) {
-				int i = loginService.updateStatusByPrimaryKey(id);
+			if (!StringUtils.isEmpty(id)) {
+				int i = loginService.updateStatusById(id);
 				if (i <= 0) {
 					result.put("message", "token替换失败");
 					result.put("returnCode", "");
@@ -410,11 +401,11 @@ public class LoginController {
 			}
 			UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(phone, smsCode);
 			Subject subject = SecurityUtils.getSubject();
-			// usernamePasswordToken.setRememberMe(true);
 			subject.login(usernamePasswordToken); // 完成登录
 			if (Integer.valueOf(type) == 1) {
 				result.put("token", token);
 			}
+			session.setAttribute("phone", phone);
 			result.put("message", "登录成功!");
 			result.put("returnCode", "3000");
 			return result;
@@ -448,15 +439,49 @@ public class LoginController {
 	}
 
 	/**
+	 * @author 李业/检查登录信息是否改变
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/offsiteLogin")
+	public Map<String, Object> offsiteLogin(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result.put("message", "账号在别处登录,请重新登录");
+			result.put("returnCode", "");
+			return result;
+		} catch (Exception e) {
+			logger.info(e);
+			result.put("message", "服务器错误");
+			result.put("returnCode", "3001");
+			return result;
+		}
+
+	}
+
+	/**
 	 * @author 李业/shiro退出
 	 * @param session
 	 * @return
 	 */
 	@RequiresRoles(value = { "admin", "superAdmin" }, logical = Logical.OR)
 	@RequestMapping(value = "/logOut")
-	public Map<String, Object> logOut(HttpSession session) {
+	public Map<String, Object> logOut(HttpServletRequest request ,HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
+			String phone = "";
+			String type = request.getHeader("type");
+			if("0".equals(type)){
+				Object obj = session.getAttribute("phone");
+				if(!StringUtils.isEmpty(obj)){
+					phone = obj.toString();
+					uniqueLoginService.deleteByPhone(phone);
+				}
+			}else{
+				String token = request.getHeader("ACCESS_TOKEN");
+				String clientId = request.getHeader("clientId");
+				uniqueLoginService.deleteByTokenAndClientId(token, clientId);
+			}
 			Subject subject = SecurityUtils.getSubject();
 			subject.logout();
 			result.put("message", "退出成功");

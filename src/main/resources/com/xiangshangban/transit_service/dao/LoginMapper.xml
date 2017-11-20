@@ -61,8 +61,15 @@
 		select
 		<include refid="Base_Column_List" />
 		from login_
-		where session_id = #{sessionId} order by create_time desc limit 1 offset 0
+		where session_id = #{sessionId} and status = '1'
 	</select>
+	
+	<select id="selectByTokenAndClientId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"/>
+  	from login_
+  	where status = '1' and token = #{token} and clientId = #{clientId}
+  </select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from login_
@@ -148,7 +155,17 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateStatusByPrimaryKey" parameterType="com.xiangshangban.transit_service.bean.Login">
+	<update id="updateStatusByPhone" parameterType="java.lang.String">
+		update login_
+		set status = '0'
+		where phone=#{phone} and status = '1'
+	</update>
+	<update id="updateStatusBySessionId" parameterType="java.lang.String">
+		update login_
+		set status = '0'
+		where session_id=#{sessionId} and status = '1'
+	</update>
+	<update id="updateStatusById" parameterType="java.lang.String">
 		update login_
 		set status = '0'
 		where id=#{id}
