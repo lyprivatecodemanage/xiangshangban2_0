@@ -221,7 +221,7 @@ public class RegisterController {
 				// 将用户信息打包数据做员工信息新增
                 Map<String,String> userMap = new HashMap<>();
                 userMap.put("employeeName", userName);
-				userMap.put("userName", phone);
+				userMap.put("loginName", phone);
                 
                 String url = "http://192.168.0.242:8093/organization/EmployeeController/insertEmployee";
     			String str = HttpClientUtil.sendRequet(url,"{}",ContentType.APPLICATION_JSON, userMap);
