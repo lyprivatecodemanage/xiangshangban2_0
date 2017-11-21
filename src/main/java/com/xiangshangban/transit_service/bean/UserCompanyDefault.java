@@ -1,20 +1,26 @@
 package com.xiangshangban.transit_service.bean;
 
 public class UserCompanyDefault {
-	
-	public static String status_0 = "0";
-	
+	// 默认公司
 	public static String status_1 = "1";
+	// 备选公司
+	public static String status_2 = "2";
+	
 	private String userId;
 	private String companyId;
 	private String currentOption;
+	private String isActive;
+	private String infoStatus;
 	
 	public UserCompanyDefault(){}
 	
-	public UserCompanyDefault(String userId, String companyId, String currentOption) {
+	public UserCompanyDefault(String userId, String companyId, String currentOption, String isActive,
+			String infoStatus) {
 		this.userId = userId;
 		this.companyId = companyId;
 		this.currentOption = currentOption;
+		this.isActive = isActive;
+		this.infoStatus = infoStatus;
 	}
 	
 	public UserCompanyDefault(String userId, String companyId) {
@@ -40,6 +46,22 @@ public class UserCompanyDefault {
 	}
 	public void setCurrentOption(String currentOption) {
 		this.currentOption = currentOption;
+	}
+
+	public String getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(String isActive) {
+		this.isActive = isActive;
+	}
+
+	public String getInfoStatus() {
+		return infoStatus;
+	}
+
+	public void setInfoStatus(String infoStatus) {
+		this.infoStatus = infoStatus;
 	}
 	
 	
