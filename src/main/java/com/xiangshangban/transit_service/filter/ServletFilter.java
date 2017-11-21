@@ -81,9 +81,7 @@ public class ServletFilter implements Filter {
 				if ("0".equals(type)) {
 					Object phone = req.getSession().getAttribute("phone");
 					if (StringUtils.isEmpty(phone)) {
-						/*if(!uri.contains("/")){
-							
-						}*/
+						
 					} else {
 						UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone.toString());
 						if (uniqueLogin != null) {
@@ -101,7 +99,7 @@ public class ServletFilter implements Filter {
 					String clientId = req.getHeader("clientId");
 					if (!StringUtils.isEmpty(token)) {
 						UniqueLogin uniqueLogin = uniqueLoginService.selectByToken(token);
-						if (!StringUtils.isEmpty(uniqueLogin) && !clientId.equals(uniqueLogin.getClientId())) {
+						if (StringUtils.isEmpty(uniqueLogin)) {
 							flag=false;
 							req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
 							return;
