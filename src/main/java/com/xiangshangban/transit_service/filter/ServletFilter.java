@@ -142,7 +142,7 @@ public class ServletFilter implements Filter {
 					String clientId = req.getHeader("clientId");
 					if (!StringUtils.isEmpty(token)) {
 						UniqueLogin uniqueLogin = uniqueLoginService.selectByToken(token);
-						if (!StringUtils.isEmpty(uniqueLogin) && !clientId.equals(uniqueLogin.getClientId())) {
+						if (StringUtils.isEmpty(uniqueLogin)) {
 							flag=false;
 							req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
 							return;

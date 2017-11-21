@@ -45,6 +45,13 @@ public class TimeUtil {
 		return format.format(now.getTime());
 	}
 	
-	
+	public static String getDateAfterString(String time,String period)throws Exception {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Date date =format.parse(time);
+		Calendar now = Calendar.getInstance();
+		now.setTime(date);
+		now.add(Calendar.MONTH, Integer.valueOf(period));
+		return format.format(now.getTime());
+	}
 	
 }
