@@ -33,6 +33,7 @@ import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.service.CompanyService;
 import com.xiangshangban.transit_service.service.LoginService;
 import com.xiangshangban.transit_service.service.UniqueLoginService;
+import com.xiangshangban.transit_service.service.UusersRolesService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.FileMD5Util;
 import com.xiangshangban.transit_service.util.FormatUtil;
@@ -51,7 +52,8 @@ public class LoginController {
 	CompanyService companyService;
 	@Autowired
 	private UniqueLoginService uniqueLoginService;
-
+	@Autowired
+	private UusersRolesService uusersRolesService;
 	/**
 	 * @author 李业/获取二维码
 	 * @param session
@@ -373,14 +375,17 @@ public class LoginController {
 					newLogin = new Login(FormatUtil.createUuid(), phone, token, salt, now, effectiveTime, sessionId,
 							null, null, "1", clientId);
 					loginService.insertSelective(newLogin);
-					
 					UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone);
 					if(!StringUtils.isEmpty(uniqueLogin)){
 						uniqueLoginService.deleteByPhone(phone);
 					}
 					uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,"",token,clientId,"1",now));
-					
 				}
+				Uusers user = uusersService.selectByPhone(phone);
+				//companyService.s
+				result.put("userId", user.getUserid());
+				Uroles roles = uusersRolesService.SelectRoleByUserId(user.getUserid(), user.getCompanyId());
+				result.put("roles", roles.getRolename());
 			}
 			// web
 			if (type != null && Integer.valueOf(type) == 0) {
@@ -394,6 +399,9 @@ public class LoginController {
 				uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,sessionId,"","","1",now));
 				Uusers user = uusersService.selectCompanyBySessionId(sessionId);
 				result.put("companyId", user.getCompanyId());
+				result.put("userId", user.getUserid());
+				Uroles roles = uusersRolesService.SelectRoleByUserId(user.getUserid(), user.getCompanyId());
+				result.put("roles", roles.getRolename());
 			}
 			if (!StringUtils.isEmpty(id)) {
 				int i = loginService.updateStatusById(id);
