@@ -1,6 +1,5 @@
 package com.xiangshangban.transit_service.service;
 
-import org.apache.ibatis.annotations.Param;
 
 import com.xiangshangban.transit_service.bean.UniqueLogin;
 

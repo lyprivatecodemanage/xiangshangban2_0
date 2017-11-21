@@ -9,20 +9,25 @@ import java.util.Properties;
 
 import javax.servlet.Filter;
 
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.MultipartAutoConfiguration;
+import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
@@ -38,8 +43,9 @@ import com.xiangshangban.transit_service.shiro.CredentialsMatcher;
  */
 @EnableAutoConfiguration(exclude = { MultipartAutoConfiguration.class })
 @SpringBootApplication
+@EnableTransactionManagement
+@ServletComponentScan
 public class ApiApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
 	}
@@ -55,13 +61,23 @@ public class ApiApplication {
 		return registrationBean;
 	}
 
+	@Bean
+	public EmbeddedServletContainerCustomizer containerCustomizer() {
+		return new EmbeddedServletContainerCustomizer() {
+			@Override
+			public void customize(ConfigurableEmbeddedServletContainer container) {
+				container.setSessionTimeout(1800);// 单位为S
+			}
+		};
+	}
+
 	@Bean(name = "shiroFilter")
 	public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager) {
 		ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
 		bean.setSecurityManager(manager);
 		// 配置登录的url
 		bean.setLoginUrl("/loginController/loginUser");
-		bean.setUnauthorizedUrl("/loginController/unAuthorizedUrl");
+		// bean.setUnauthorizedUrl("/loginController/unAuthorizedUrl");
 		CustomFormAuthenticationFilter formAuthenticationFilter = new CustomFormAuthenticationFilter();
 		formAuthenticationFilter.setUsernameParam("phone");
 		formAuthenticationFilter.setPasswordParam("smsCode");
@@ -70,11 +86,12 @@ public class ApiApplication {
 		bean.setFilters(map);
 		// 配置访问权限
 		LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-
 		filterChainDefinitionMap.put("/loginController/sendSms", "anon");
+		filterChainDefinitionMap.put("/loginController/offsiteLogin", "anon");
 		filterChainDefinitionMap.put("/registerController/*", "anon");
 		filterChainDefinitionMap.put("/loginController/logOut", "logout");
-		// filterChainDefinitionMap.put("/loginController/loginUser", "anon");
+		// filterChainDefinitionMap.put("/CompanyController/selectByCompany",
+		// "perms[admin:companyController:selectByCompany]");
 		// filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
 		filterChainDefinitionMap.put("/**", "authc");// 表示需要认证才可以访问
 		// filterChainDefinitionMap.put("/*.*", "authc");
@@ -88,11 +105,38 @@ public class ApiApplication {
 		System.err.println("--------------shiro已经加载----------------");
 		DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
 		manager.setRealm(myRealm);
-		DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-		sessionManager.setGlobalSessionTimeout(3600000);
-		sessionManager.setDeleteInvalidSessions(true);
-		manager.setSessionManager(sessionManager);
+		/*
+		 * SimpleCookie sessionIdCookie = new SimpleCookie();
+		 * sessionIdCookie.setHttpOnly(true); sessionIdCookie.setMaxAge(-1);
+		 * sessionIdCookie.setName("JSID"); ShiroSessionListener
+		 * shiroSessionListener = new ShiroSessionListener();
+		 * List<SessionListener> sessionListenerList = new
+		 * ArrayList<SessionListener>();
+		 * sessionListenerList.add(shiroSessionListener);
+		 * DefaultWebSessionManager sessionManager = new
+		 * DefaultWebSessionManager();
+		 * sessionManager.setGlobalSessionTimeout(10000);
+		 * sessionManager.setSessionValidationInterval(5000);
+		 * sessionManager.setDeleteInvalidSessions(true);
+		 * sessionManager.setSessionIdCookie(sessionIdCookie);
+		 * sessionManager.setSessionIdCookieEnabled(true);
+		 * sessionManager.setSessionListeners(sessionListenerList);
+		 * manager.setSessionManager(sessionManager);
+		 */
+		EhCacheManager ehCacheManager = new EhCacheManager();
+		ehCacheManager.setCacheManagerConfigFile("classpath:shiro-ehcache.xml");
+		manager.setCacheManager(ehCacheManager);
 		return manager;
+	}
+
+	@Bean
+	public FilterRegistrationBean delegatingFilterProxy() {
+		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+		DelegatingFilterProxy proxy = new DelegatingFilterProxy();
+		proxy.setTargetFilterLifecycle(true);
+		proxy.setTargetBeanName("shiroFilter");
+		filterRegistrationBean.setFilter(proxy);
+		return filterRegistrationBean;
 	}
 
 	// 配置自定义的权限登录器
@@ -152,5 +196,4 @@ public class ApiApplication {
 		/* resolver.setMaxUploadSize(50*1024*1024);//上传文件大小 50M 50*1024*1024 */
 		return resolver;
 	}
-
 }

@@ -302,7 +302,7 @@ public class LoginController {
 				result.put("returnCode", "4004");
 				return result;
 			}
-			if (!StringUtils.isEmpty(loginRecord)) {
+			if(!StringUtils.isEmpty(loginRecord)){
 				id = loginRecord.getId();
 
 			}
@@ -452,7 +452,7 @@ public class LoginController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result.put("message", "账号在别处登录,请重新登录");
-			result.put("returnCode", "");
+			result.put("returnCode", "4021");
 			return result;
 		} catch (Exception e) {
 			logger.info(e);
