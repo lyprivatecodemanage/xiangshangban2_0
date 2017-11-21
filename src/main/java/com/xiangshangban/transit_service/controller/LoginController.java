@@ -83,7 +83,12 @@ public class LoginController {
 			if (Integer.valueOf(type) == 1) {
 				// 根据公司ID查询出公司编号 生成二维码
 				Company company = companyService.selectByPrimaryKey(companyId);
-				qrcode = "shjn:invite=" + company.getCompany_no();
+				Map<String, String> invite = new HashMap<>();
+				invite.put("companyNo", company.getCompany_no());
+				invite.put("companyName", company.getCompany_name());
+				invite.put("companyPersonalName", company.getCompany_personal_name());
+				qrcode = "shjn:invite=" + invite;
+
 			}
 			result.put("qrcode", qrcode);
 			result.put("message", "成功");
@@ -283,7 +288,6 @@ public class LoginController {
 	@RequestMapping(value = "/loginUser", method = RequestMethod.POST)
 	public Map<String, Object> loginUser(String phone, String smsCode, HttpSession session,
 			HttpServletRequest request) {
-		System.out.println("logingUser:\t"+request.getSession().getId());
 		System.out.println("logingUser:\t"+session.getId());
 		Map<String, Object> result = new HashMap<String, Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

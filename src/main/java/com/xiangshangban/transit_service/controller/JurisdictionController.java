@@ -62,6 +62,13 @@ public class JurisdictionController {
 		}
 	}
 
+	/***
+	 * 焦振/根据用户ID和请求头中的公司ID 来获取角色信息
+	 * 
+	 * @param userId
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "LoginRole", method = RequestMethod.POST)
 	public Map<String, Object> LoginRole(String userId, HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<>();

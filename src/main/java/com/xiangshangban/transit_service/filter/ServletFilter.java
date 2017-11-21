@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -21,13 +22,17 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.xiangshangban.transit_service.bean.UniqueLogin;
+import com.xiangshangban.transit_service.bean.Upermission;
 import com.xiangshangban.transit_service.service.UniqueLoginService;
+import com.xiangshangban.transit_service.service.UusersRolesService;
 import com.xiangshangban.transit_service.util.HttpClientUtil;
 
 @WebFilter(filterName = "ServletFilter", urlPatterns = "/*")
 public class ServletFilter implements Filter {
 
 	private UniqueLoginService uniqueLoginService;
+
+	private UusersRolesService uusersRolesService;
 
 	public static void uploadFile(byte[] file, String filePath, String fileName) throws Exception {
 		File targetFile = new File(filePath);
@@ -45,6 +50,9 @@ public class ServletFilter implements Filter {
 		WebApplicationContext cxt = WebApplicationContextUtils.getWebApplicationContext(sc);
 		if (cxt != null && cxt.getBean("uniqueLoginService") != null && uniqueLoginService == null)
 			uniqueLoginService = (UniqueLoginService) cxt.getBean("uniqueLoginService");
+
+		if (cxt != null && cxt.getBean("uusersRolesService") != null && uusersRolesService == null)
+			uusersRolesService = (UusersRolesService) cxt.getBean("uusersRolesService");
 	}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -81,17 +89,50 @@ public class ServletFilter implements Filter {
 				if ("0".equals(type)) {
 					Object phone = req.getSession().getAttribute("phone");
 					if (StringUtils.isEmpty(phone)) {
-						/*if(!uri.contains("/")){
-							
-						}*/
+						if (uri.indexOf("registerController") < 0 && uri.indexOf("loginController") < 0) {
+							redirectUrl = "/registerController/LoginOut";
+							flag = false;
+							redirect = true;
+						}
 					} else {
 						UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone.toString());
 						if (uniqueLogin != null) {
 							String oldSessionId = uniqueLogin.getSessionId();
+							// sessionId 不一致则是登录掉线
 							if (!oldSessionId.equals(req.getSession().getId())) {
 								flag=false;
 								req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
 								return;
+							} else {
+								// sessionId 一直 则也视为 存在
+								boolean status = false;
+								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
+									flag = false;
+									redirect = false;
+								} else {
+									System.err.println("------授权模块进入-------");
+									String companyId = req.getHeader("companyId");
+									String userId = req.getHeader("userId");
+									List<Upermission> list = uusersRolesService.SelectUserIdByPermission(userId,
+											companyId);
+
+									for (Upermission upermission : list) {
+										if (uri.indexOf(upermission.getPermissionurl()) > -1) {
+											status = true;
+											break;
+										}
+									}
+									if (status) {
+										System.err.println("<---------------权限进入------------------>");
+										flag = false;
+										redirect = false;
+									} else {
+										System.err.println("<--------无权限--------->");
+										redirectUrl = "/loginController/unAuthorizedUrl";
+										flag = false;
+										redirect = true;
+									}
+								}
 							}
 						}
 					}
@@ -106,8 +147,42 @@ public class ServletFilter implements Filter {
 							req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
 							return;
 						}
+						if (!StringUtils.isEmpty(uniqueLogin) && clientId.equals(uniqueLogin.getClientId())) {
+							// sessionId 一直 则也视为 存在
+								boolean status = false;
+								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
+								flag = false;
+								redirect = false;
+								} else {
+									String companyId = req.getHeader("companyId");
+									String userId = req.getHeader("userId");
+									List<Upermission> list = uusersRolesService.SelectUserIdByPermission(userId, companyId);
+
+									for (Upermission upermission : list) {
+										if (uri.indexOf(upermission.getPermissionurl()) > -1) {
+											status = true;
+											break;
+										}
+									}
+									if (status) {
+										flag = false;
+										redirect = false;
+									} else {
+										redirectUrl = "/loginController/unAuthorizedUrl";
+										flag = false;
+										redirect = true;
+									}
+							}
+						}
+					} else{
+						if (uri.indexOf("registerController") < 0 && uri.indexOf("loginController") < 0) {
+							redirectUrl = "/registerController/LoginOut";
+							flag = false;
+							redirect = true;
+						}
 					}
 				}
+
 
 			}
 		if(flag){
