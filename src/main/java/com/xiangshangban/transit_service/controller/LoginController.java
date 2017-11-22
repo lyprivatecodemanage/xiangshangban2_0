@@ -388,6 +388,7 @@ public class LoginController {
 				Uusers user = uusersService.selectByPhone(phone);
 				//companyService.s
 				result.put("userId", user.getUserid());
+				result.put("companyId",user.getCompanyId());
 				Uroles roles = uusersRolesService.SelectRoleByUserId(user.getUserid(), user.getCompanyId());
 				result.put("roles", roles.getRolename());
 			}
@@ -463,6 +464,7 @@ public class LoginController {
 	public Map<String, Object> offsiteLogin(HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
+			//request.getSession().invalidate();
 			result.put("message", "账号在别处登录,请重新登录");
 			result.put("returnCode", "4021");
 			return result;
