@@ -54,6 +54,7 @@ public class LoginController {
 	private UniqueLoginService uniqueLoginService;
 	@Autowired
 	private UusersRolesService uusersRolesService;
+	
 	/**
 	 * @author 李业/获取二维码
 	 * @param session
@@ -90,7 +91,6 @@ public class LoginController {
 				invite.put("companyName", company.getCompany_name());
 				invite.put("companyPersonalName", company.getCompany_personal_name());
 				qrcode = "shjn:invite=" + invite;
-
 			}
 			result.put("qrcode", qrcode);
 			result.put("message", "成功");
