@@ -12,6 +12,11 @@
     <result column="permissionurl" jdbcType="VARCHAR" property="permissionurl" />
     <result column="permissiondescribe" jdbcType="VARCHAR" property="permissiondescribe" />
   </resultMap>
+  <resultMap type="com.xiangshangban.transit_service.bean.Uroles" id="BaseRolesResultMap">
+  	<result column="roleid" property="roleid"/>
+  	<result column="rolename" property="rolename"/>
+  	<result column="description" property="description"/>
+  </resultMap>
   <sql id="BaseList">
   	roleid,userid,company_id,history_user_ids
   </sql>
@@ -85,7 +90,7 @@
 	and company_id = #{companyId,jdbcType=VARCHAR}))
   </select>
   
-  <select id="SelectRoleByUserId" resultType="com.xiangshangban.transit_service.bean.Uroles">
+  <select id="SelectRoleByUserId" resultType="com.xiangshangban.transit_service.bean.Uroles" resultMap="BaseRolesResultMap">
   	select 
   	<include refid="Base_role_List"></include>
   	from u_roles

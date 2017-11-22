@@ -135,9 +135,9 @@
 	<select id="selectByPhone" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
-		from u_users
-		where status = '1' and phone = #{phone}
+		<include refid="Base_Column_List" />,uc.company_id
+		from u_users u,user_company uc 
+		where status = '1' and phone = #{phone} and u.userid = uc.user_id
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
 		delete from
