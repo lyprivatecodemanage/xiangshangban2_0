@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.xiangshangban.transit_service.bean.Company;
 import com.xiangshangban.transit_service.bean.Login;
 import com.xiangshangban.transit_service.bean.UniqueLogin;
@@ -84,13 +85,15 @@ public class LoginController {
 			}
 			// 注册
 			if (Integer.valueOf(type) == 1) {
+
+				String format = "http://www.xiangshangban.com/show?shjncode=invite_";
 				// 根据公司ID查询出公司编号 生成二维码
 				Company company = companyService.selectByPrimaryKey(companyId);
 				Map<String, String> invite = new HashMap<>();
 				invite.put("companyNo", company.getCompany_no());
 				invite.put("companyName", company.getCompany_name());
 				invite.put("companyPersonalName", company.getCompany_personal_name());
-				qrcode = "shjn:invite=" + invite;
+				qrcode = format + JSON.toJSONString(invite);
 			}
 			result.put("qrcode", qrcode);
 			result.put("message", "成功");
@@ -538,7 +541,9 @@ public class LoginController {
 		YtxSmsUtil sms = new YtxSmsUtil("LTAIcRopzlp5cbUd", "VnLMEEXQRukZQSP6bXM6hcNWPlphiP");
 		try {
 			Uusers user = uusersService.selectByPhone(phone);
-			String smsCode = sms.sendIdSms(phone);
+			// 获取验证码
+			// String smsCode = sms.sendIdSms(phone);
+			String smsCode = "6666";
 			// user不为null,说明是登录获取验证码
 			if (user != null) {
 				// 更新数据库验证码记录,当做登录凭证
