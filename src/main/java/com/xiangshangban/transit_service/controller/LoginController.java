@@ -286,6 +286,7 @@ public class LoginController {
 	 * @param request
 	 * @return
 	 */
+	@SuppressWarnings("static-access")
 	@Transactional
 	@RequestMapping(value = "/loginUser", method = RequestMethod.POST)
 	public Map<String, Object> loginUser(String phone, String smsCode, HttpSession session,

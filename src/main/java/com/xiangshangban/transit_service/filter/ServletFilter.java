@@ -27,7 +27,7 @@ import com.xiangshangban.transit_service.service.UniqueLoginService;
 import com.xiangshangban.transit_service.service.UusersRolesService;
 import com.xiangshangban.transit_service.util.HttpClientUtil;
 
-@WebFilter(filterName = "ServletFilter", urlPatterns = "/*")
+/*@WebFilter(filterName = "ServletFilter", urlPatterns = "/*")*/
 public class ServletFilter implements Filter {
 
 	private UniqueLoginService uniqueLoginService;
@@ -79,8 +79,15 @@ public class ServletFilter implements Filter {
 		boolean flag=true;
 		boolean redirect = false;
 		String redirectUrl = "";
+		boolean uriFlag = true;
 		if (!"OPTIONS".equals(req.getMethod())) {
-			if (!uri.contains("/loginController/offsiteLogin")) {
+			String [] unValidateRepetitiveLogin = HttpClientUtil.getUnValidateRepetitiveLogin();
+			for(String unUri : unValidateRepetitiveLogin){
+				if(uri.contains(unUri)){
+					uriFlag=false;
+				}
+			}
+			if (uriFlag) {
 				/*System.out.println("doFilter :\t" + req.getMethod());
 				System.out.println(uri);
 				System.out.println("doFilter=======================>" + req.getSession().getId());
@@ -89,11 +96,11 @@ public class ServletFilter implements Filter {
 				if ("0".equals(type)) {
 					Object phone = req.getSession().getAttribute("phone");
 					if (StringUtils.isEmpty(phone)) {
-						if (uri.indexOf("registerController") < 0 && uri.indexOf("loginController") < 0) {
+						/*if (uri.indexOf("registerController") < 0 && uri.indexOf("loginController") < 0) {
 							redirectUrl = "/registerController/LoginOut";
 							flag = false;
 							redirect = true;
-						}
+						}*/
 					} else {
 						UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone.toString());
 						if (uniqueLogin != null) {
@@ -103,7 +110,7 @@ public class ServletFilter implements Filter {
 								flag=false;
 								req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
 								return;
-							} else {
+							} /*else {
 								// sessionId 一直 则也视为 存在
 								boolean status = false;
 								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
@@ -133,7 +140,7 @@ public class ServletFilter implements Filter {
 										redirect = true;
 									}
 								}
-							}
+							}*/
 						}
 					}
 				}
@@ -147,7 +154,7 @@ public class ServletFilter implements Filter {
 							req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
 							return;
 						}
-						if (!StringUtils.isEmpty(uniqueLogin) && clientId.equals(uniqueLogin.getClientId())) {
+						/*if (!StringUtils.isEmpty(uniqueLogin) && clientId.equals(uniqueLogin.getClientId())) {
 							// sessionId 一直 则也视为 存在
 								boolean status = false;
 								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
@@ -173,14 +180,14 @@ public class ServletFilter implements Filter {
 										redirect = true;
 									}
 							}
-						}
-					} else{
+						}*/
+					} /*else{
 						if (uri.indexOf("registerController") < 0 && uri.indexOf("loginController") < 0) {
 							redirectUrl = "/registerController/LoginOut";
 							flag = false;
 							redirect = true;
 						}
-					}
+					}*/
 				}
 
 
@@ -203,6 +210,7 @@ public class ServletFilter implements Filter {
 		if (redirect) {
 			req.getRequestDispatcher(redirectUrl).forward(req, res);
 		} else {
+			System.out.println("=========>");
 			chain.doFilter(req, res);
 		}
 		}
