@@ -187,6 +187,7 @@ public class RegisterController {
 				userCompanyKey.setCompanyId(companyId);
 				userCompanyKey.setUserId(userId);
 				userCompanyKey.setCurrentOption(userCompanyKey.status_1);
+				userCompanyKey.setIsActive(userCompanyKey.status_1);
 				userCompanyService.insertSelective(userCompanyKey);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -406,6 +407,13 @@ public class RegisterController {
 					// // return map;
 					// // }
 					// }
+
+					map.put("companyId", company.getCompany_id());
+					map.put("companyName", company.getCompany_name());
+					map.put("user_name", company.getUser_name());
+					map.put("returnCode", "3000");
+					map.put("message", "数据请求成功");
+					return map;
                 } else {
                 	uusersService.deleteByPrimaryKey(userId);
                     map.put("returnCode", "4006");
@@ -421,7 +429,8 @@ public class RegisterController {
                 return map;
             }
         }
-        map.put("returnCode", "3001");
+		uusersService.deleteByPrimaryKey(userId);
+		map.put("returnCode", "3001");
 		map.put("message", "服务器错误");
 		return map;
     }
