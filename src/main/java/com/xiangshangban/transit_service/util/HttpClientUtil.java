@@ -170,7 +170,18 @@ public class HttpClientUtil {
 		}
 		return null;
 	}
-	
+	/**
+	 * 获取无需验证重复登录的uri
+	 * @return
+	 */
+	public static String[] getUnValidateRepetitiveLogin(){
+		try {
+			return PropertiesUtils.pathUrl("unValidateRepetitiveLogin").split(",");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	/**
 	 * 网络文件转换为流
 	 * @param urlpath
