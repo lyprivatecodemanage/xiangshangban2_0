@@ -329,4 +329,9 @@
 	where phone = #{phone})
 	and roleid = #{roleId})
 	</select>
+	
+	<insert id="insertEmployee" parameterType="com.xiangshangban.transit_service.bean.Uusers">
+		insert into employee_(employee_id,employee_name,company_id)
+		values(#{userid},#{username},#{companyId})
+	</insert>
 </mapper>

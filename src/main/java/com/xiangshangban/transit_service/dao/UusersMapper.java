@@ -50,4 +50,6 @@ public interface UusersMapper {
     Uusers selectById(String userId);
     
 	Uusers selectAdminByPhone(@Param("phone") String phone, @Param("roleId") String roleId);
+
+	int insertEmployee(Uusers uusers);
 }

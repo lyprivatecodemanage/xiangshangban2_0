@@ -199,85 +199,90 @@ public class RegisterController {
 				return map;
 			}
             
-				try {
+			try {
 				// 创建公司加入组织成功 将用户状态改为可用
-					Uusers uusers = new Uusers();
-					uusers.setUserid(userId);
-					uusers.setStatus(uusers.status_1);
-					uusersService.updateByPrimaryKeySelective(uusers);
+				Uusers uusers = new Uusers();
+				uusers.setUserid(userId);
+				uusers.setStatus(uusers.status_1);
+				uusersService.updateByPrimaryKeySelective(uusers);
 				} catch (Exception e) {
-					e.printStackTrace();
-					logger.info(e);
+				e.printStackTrace();
+				logger.info(e);
 				// 修改状态失败删除用户公司信息
-					companyService.deleteByPrimaryKey(companyId);
-					uusersService.deleteByPrimaryKey(userId);
+				companyService.deleteByPrimaryKey(companyId);
+				uusersService.deleteByPrimaryKey(userId);
 				userCompanyService.deleteByPrimaryKey(userCompanyKey);
-					map.put("returnCode", "3001");
+				map.put("returnCode", "3001");
 				map.put("message", "服务器错误");
-					return map;
-				}
+				return map;
+			}
 
-				try {
+			try {
 				// 创建公司默认加入待审核表信息 并状态为已通过
-					Date crDate = new Date();
-					CheckPendingJoinCompany cpjc = new CheckPendingJoinCompany();
-					cpjc.setUserid(userId);
-					cpjc.setCompanyid(companyId);
-					cpjc.setApplyTime(sdf.format(crDate));
-					cpjc.setStatus(CheckPendingJoinCompany.status_1);
-					checkPendingJoinCompanyService.insertSelective(cpjc);
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-					logger.info(e);
-					uusersService.deleteByPrimaryKey(userId);
+				Date crDate = new Date();
+				CheckPendingJoinCompany cpjc = new CheckPendingJoinCompany();
+				cpjc.setUserid(userId);
+				cpjc.setCompanyid(companyId);
+				cpjc.setApplyTime(sdf.format(crDate));
+				cpjc.setStatus(CheckPendingJoinCompany.status_1);
+				checkPendingJoinCompanyService.insertSelective(cpjc);
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+				logger.info(e);
+				uusersService.deleteByPrimaryKey(userId);
 				companyService.deleteByPrimaryKey(companyId);
 				userCompanyService.deleteByPrimaryKey(userCompanyKey);
-					map.put("returnCode", "3001");
+				map.put("returnCode", "3001");
 				map.put("message", "服务器错误");
-					return map;
-				}
+				return map;
+			}
 
-                
-                
-			// 赋予创建公司用户角色
+			try {
+				// 赋予创建公司用户角色
 				UusersRolesKey urk = new UusersRolesKey();
 				urk.setUserId(userId);
 				urk.setRoleId(new Uroles().admin_role);
 				urk.setCompanyId(companyId);
 				uusersRolesService.insertSelective(urk);
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.info(e);
+				uusersService.deleteByPrimaryKey(userId);
+				companyService.deleteByPrimaryKey(companyId);
+				userCompanyService.deleteByPrimaryKey(userCompanyKey);
+				checkPendingJoinCompanyService.deleteById(userId, companyId);
+				map.put("returnCode", "3001");
+				map.put("message", "服务器错误");
+				return map;
+			}
 
-			// 将用户信息打包数据做员工信息新增
-				// Map<String,String> userMap = new HashMap<>();
-				// userMap.put("employeeName", userName);
-				// userMap.put("loginName", phone);
-				//
-				// Map<String, String> headMap = new HashMap<>();
-				// headMap.put("companyId", companyId);
-				//
-				// String url =
-				// "http://192.168.0.126:8093/organization/EmployeeController/insertEmployee";
-				// String str = HttpClientUtil.sendRequet(url, userMap,
-				// ContentType.APPLICATION_JSON, headMap);
-				// JSONObject jobj = JSON.parseObject(str);
-				//
-				// if ("3000".equals(jobj.get("returnCode"))) {
-					map.put("companyId", companyId);
-					map.put("companyName", companyName);
-					map.put("user_name", userName);
-					map.put("returnCode", "3000");
-			map.put("message", "数据请求成功");
-					return map;
-				// } else {
-				// uusersService.deleteByPrimaryKey(userId);
-				// companyService.deleteByPrimaryKey(companyId);
-				// userCompanyService.deleteByPrimaryKey(new
-				// UserCompanyDefault(userId, companyId));
-				// uusersRolesService.deleteByPrimaryKey(urk);
-				// map.put("returnCode", "3001");
-			// map.put("message", "服务器错误");
-				// return map;
-				// }
+			try {
+				// 将用户信息打包数据做员工信息新增
+				Uusers uu = new Uusers();
+				uu.setUserid(userId);
+				uu.setUsername(userName);
+				uu.setCompanyId(companyId);
+				uusersService.insertEmployee(uu);
+
+				map.put("companyId", companyId);
+				map.put("companyName", companyName);
+				map.put("user_name", userName);
+				map.put("returnCode", "3000");
+				map.put("message", "数据请求成功");
+				return map;
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.info(e);
+				uusersService.deleteByPrimaryKey(userId);
+				companyService.deleteByPrimaryKey(companyId);
+				userCompanyService.deleteByPrimaryKey(userCompanyKey);
+				checkPendingJoinCompanyService.deleteById(userId, companyId);
+				uusersRolesService.deleteByPrimaryKey(new UusersRolesKey(new Uroles().admin_role, userId, companyId));
+				map.put("returnCode", "3001");
+				map.put("message", "服务器错误");
+				return map;
+			}
 
         }
 

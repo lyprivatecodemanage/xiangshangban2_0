@@ -52,4 +52,6 @@ public interface UusersService {
 	Uusers selectById(String userId);
 	
 	Uusers selectAdminByPhone(String phone, String roleId);
+
+	int insertEmployee(Uusers uusers);
 }

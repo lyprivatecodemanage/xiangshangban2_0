@@ -112,4 +112,10 @@ public class UusersServiceImpl implements UusersService {
 		// TODO Auto-generated method stub
 		return uusersMapper.selectAdminByPhone(phone, roleId);
 	}
+
+	@Override
+	public int insertEmployee(Uusers uusers) {
+		// TODO Auto-generated method stub
+		return uusersMapper.insertEmployee(uusers);
+	}
 }
