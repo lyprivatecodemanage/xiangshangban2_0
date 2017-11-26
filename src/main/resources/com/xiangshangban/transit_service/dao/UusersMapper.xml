@@ -16,6 +16,7 @@
 		<result column="wechat_code" property="wechatCode" />
 		<result column="wechat_name" property="wecharName" />
 		<result column="company_id" property="companyId" />
+		<result column="is_active" property="isActive"/>
 	</resultMap>
 	<resultMap id="BaseRoleMap" type="com.xiangshangban.transit_service.bean.Uroles">
 		<id column="roleid" property="roleid"/>
@@ -95,7 +96,7 @@
 		l,user_company uc
 		where l.token = #{token} and l.phone = u.phone and
 		uc.user_id = u.userid
-		and uc.current_option = '1' AND l.status='1' 
+		and uc.current_option = '1' AND l.status='1' AND uc.is_active='1'
 	</select>
 	<select id="selectCompanyBySessionId" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
@@ -106,6 +107,7 @@
 		l,user_company uc
 		where l.session_id = #{sessionId} and l.phone =
 		u.phone and uc.user_id = u.userid and uc.current_option = '1' AND l.status='1'
+		AND uc.is_active='1'
 		order by
 		l.create_time desc limit 1 offset 0
 	</select>
@@ -135,7 +137,9 @@
 	<select id="selectByPhone" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />,uc.company_id
+		userid, account, userpwd, temporarypwd, salt, username,
+		phone, create_time, last_login_time, status, wechat_id, wechat_code,
+		wechat_name,uc.company_id,uc.is_active,uc.company_id
 		from u_users u,user_company uc 
 		where status = '1' and phone = #{phone} and u.userid = uc.user_id
 	</select>

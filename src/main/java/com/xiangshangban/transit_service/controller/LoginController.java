@@ -289,7 +289,6 @@ public class LoginController {
 	 * @param request
 	 * @return
 	 */
-	@SuppressWarnings("static-access")
 	@Transactional
 	@RequestMapping(value = "/loginUser", method = RequestMethod.POST)
 	public Map<String, Object> loginUser(String phone, String smsCode, HttpSession session,
@@ -310,6 +309,11 @@ public class LoginController {
 			if (user == null) {
 				result.put("message", "手机号不存在,请注册");
 				result.put("returnCode", "4004");
+				return result;
+			}
+			if("1".equals(user.getIsActive())){
+				result.put("message", "账号未激活");
+				result.put("returnCode", "4022");
 				return result;
 			}
 			if(!StringUtils.isEmpty(loginRecord)){
@@ -346,19 +350,19 @@ public class LoginController {
 					Login login = loginService.selectByToken(token);
 					// 验证设备
 					if (!clientId.equals(login.getClientId())) {
-						result.put("message", "设备已更换,请重新登录");
-						result.put("returnCode", "");
+						result.put("message", "账号在其他设备登录");
+						result.put("returnCode", "4021");
 						return result;
 					}
 					// 判断token对应的用户信息是否存在,以及token是否过期
 					if (!StringUtils.isEmpty(login)) {
 						Date createTime = sdf.parse(login.getCreateTime());
 						calendar.setTime(date);
-						calendar.add(calendar.DATE, Integer.parseInt(login.getEffectiveTime()));
+						calendar.add(Calendar.DATE, Integer.parseInt(login.getEffectiveTime()));
 						phone = login.getPhone();
 						if (StringUtils.isEmpty(phone)) {
-							result.put("message", "非法登录!");
-							result.put("returnCode", "");
+							result.put("message", "用户身份信息缺失");
+							result.put("returnCode", "3003");
 							return result;
 						}
 						Uusers user = uusersService.selectByPhone(phone);
@@ -390,6 +394,11 @@ public class LoginController {
 					uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,"",token,clientId,"1",now));
 				}
 				Uusers user = uusersService.selectByPhone(phone);
+				if(user==null || StringUtils.isEmpty(user.getCompanyId())){
+					result.put("message", "用户身份信息缺失");
+					result.put("returnCode", "3003");
+					return result;
+				}
 				//companyService.s
 				result.put("userId", user.getUserid());
 				result.put("companyId",user.getCompanyId());
@@ -407,6 +416,11 @@ public class LoginController {
 				}
 				uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,sessionId,"","","1",now));
 				Uusers user = uusersService.selectCompanyBySessionId(sessionId);
+				if(user==null || StringUtils.isEmpty(user.getCompanyId())){
+					result.put("message", "用户身份信息缺失");
+					result.put("returnCode", "3003");
+					return result;
+				}
 				result.put("companyId", user.getCompanyId());
 				result.put("userId", user.getUserid());
 				Uroles roles = uusersRolesService.SelectRoleByUserId(user.getUserid(), user.getCompanyId());
@@ -416,7 +430,7 @@ public class LoginController {
 				int i = loginService.updateStatusById(id);
 				if (i <= 0) {
 					result.put("message", "token替换失败");
-					result.put("returnCode", "");
+					result.put("returnCode", "4023");
 					return result;
 				}
 			}
@@ -434,7 +448,7 @@ public class LoginController {
 			e.printStackTrace();
 			String url = request.getRequestURI();
 			logger.info("url :" + url + "message : 没有登录认证");
-			result.put("message", "请登录");
+			result.put("message", "无访问权限");
 			result.put("returnCode", "4000");
 			return result;
 		} catch (NumberFormatException e) {
@@ -452,7 +466,7 @@ public class LoginController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("returnCode", "3001");
-			result.put("message", "失败");
+			result.put("message", "服务器错误");
 			logger.info(e);
 			return result;
 		}
