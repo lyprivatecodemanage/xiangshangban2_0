@@ -311,7 +311,7 @@ public class LoginController {
 				result.put("returnCode", "4004");
 				return result;
 			}
-			if("1".equals(user.getIsActive())){
+			if(!"1".equals(user.getIsActive())){
 				result.put("message", "账号未激活");
 				result.put("returnCode", "4022");
 				return result;
