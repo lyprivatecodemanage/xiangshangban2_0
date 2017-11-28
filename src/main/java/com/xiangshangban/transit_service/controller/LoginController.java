@@ -402,8 +402,17 @@ public class LoginController {
 				if(!StringUtils.isEmpty(uniqueLogin)){
 					uniqueLoginService.deleteByPhone(phone);
 				}
+				UniqueLogin oldUniqueLogin = uniqueLoginService.selectBySessionId(sessionId);
+				if(oldUniqueLogin!=null){
+					uniqueLoginService.deleteBySessinId(sessionId);
+				}
 				uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,sessionId,"","","1",now));
 				Uusers user = uusersService.selectCompanyBySessionId(sessionId);
+				if(user == null ){
+					result.put("message", "没有加入公司");
+					result.put("returnCode", "4016");
+					return result;
+				}
 				result.put("companyId", user.getCompanyId());
 				result.put("userId", user.getUserid());
 				Uroles roles = uusersRolesService.SelectRoleByUserId(user.getUserid(), user.getCompanyId());
@@ -483,7 +492,7 @@ public class LoginController {
 	 * @param session
 	 * @return
 	 */
-	@RequiresRoles(value = { "admin", "superAdmin" }, logical = Logical.OR)
+	
 	@RequestMapping(value = "/logOut")
 	public Map<String, Object> logOut(HttpServletRequest request ,HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -495,6 +504,7 @@ public class LoginController {
 				if(!StringUtils.isEmpty(obj)){
 					phone = obj.toString();
 					uniqueLoginService.deleteByPhone(phone);
+					request.getSession().invalidate();
 				}
 			}else{
 				String token = request.getHeader("ACCESS_TOKEN");

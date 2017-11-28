@@ -28,4 +28,10 @@ public class UserCompanyServiceImpl implements UserCompanyService {
     public int insertSelective(UserCompanyDefault record) {
         return userCompanyDefaultMapper.insertSelective(record);
     }
+
+	@Override
+	public UserCompanyDefault selectByUserIdAndCompanyId(String userId, String companyId) {
+		// TODO Auto-generated method stub
+		return userCompanyDefaultMapper.selectByUserIdAndCompanyId(userId, companyId);
+	}
 }

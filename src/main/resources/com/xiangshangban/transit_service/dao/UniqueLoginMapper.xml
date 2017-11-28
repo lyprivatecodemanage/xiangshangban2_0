@@ -52,7 +52,6 @@
 	</delete>
 	<delete id="deleteBySessinId" parameterType="java.lang.String">
 		delete from unique_login where session_id=#{SessionId}
-	
 	</delete>
 
 
