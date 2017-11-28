@@ -16,6 +16,7 @@
 		<result column="wechat_code" property="wechatCode" />
 		<result column="wechat_name" property="wecharName" />
 		<result column="company_id" property="companyId" />
+		<result column="is_active" property="isActive" />
 	</resultMap>
 	<resultMap id="BaseRoleMap" type="com.xiangshangban.transit_service.bean.Uroles">
 		<id column="roleid" property="roleid"/>
@@ -135,7 +136,7 @@
 	<select id="selectByPhone" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />,uc.company_id
+		<include refid="Base_Column_List" />,uc.company_id,uc.is_active
 		from u_users u,user_company uc 
 		where status = '1' and phone = #{phone} and u.userid = uc.user_id
 	</select>

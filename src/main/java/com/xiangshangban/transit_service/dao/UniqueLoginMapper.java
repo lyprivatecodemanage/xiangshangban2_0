@@ -8,7 +8,9 @@ import com.xiangshangban.transit_service.bean.UniqueLogin;
 @Mapper
 public interface UniqueLoginMapper {
 	
-	UniqueLogin selectByPhone(String phone);
+	UniqueLogin selectByPhoneFromApp(String phone);
+	
+	UniqueLogin selectByPhoneFromWeb(String phone);
 	
 	UniqueLogin selectBySessionId(String sessionId);
 	

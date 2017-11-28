@@ -387,7 +387,7 @@ public class LoginController {
 					newLogin = new Login(FormatUtil.createUuid(), phone, token, salt, now, effectiveTime, sessionId,
 							null, null, "1", clientId);
 					loginService.insertSelective(newLogin);
-					UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone);
+					UniqueLogin uniqueLogin = uniqueLoginService.selectByPhoneFromApp(phone);
 					if(!StringUtils.isEmpty(uniqueLogin)){
 						uniqueLoginService.deleteByPhoneFromApp(phone);
 					}
@@ -410,7 +410,7 @@ public class LoginController {
 				newLogin = new Login(FormatUtil.createUuid(), phone, null, null, now, effectiveTime, sessionId, null,
 						null, "1", "web");
 				loginService.insertSelective(newLogin);
-				UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone);
+				UniqueLogin uniqueLogin = uniqueLoginService.selectByPhoneFromWeb(phone);
 				if(!StringUtils.isEmpty(uniqueLogin)){
 					uniqueLoginService.deleteByPhoneFromWeb(phone);
 				}

@@ -99,7 +99,7 @@ public class ServletFilter implements Filter {
 							redirect = true;
 						}*/
 					} else {
-						UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone.toString());
+						UniqueLogin uniqueLogin = uniqueLoginService.selectByPhoneFromWeb(phone.toString());
 						if (uniqueLogin != null) {
 							String oldSessionId = uniqueLogin.getSessionId();
 							// sessionId 不一致则是登录掉线

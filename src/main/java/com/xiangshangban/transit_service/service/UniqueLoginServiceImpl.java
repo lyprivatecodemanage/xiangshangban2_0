@@ -12,8 +12,13 @@ public class UniqueLoginServiceImpl implements UniqueLoginService{
 	
 	
 	@Override
-	public UniqueLogin selectByPhone(String phone) {
-		return uniqueLoginMapper.selectByPhone(phone);
+	public UniqueLogin selectByPhoneFromApp(String phone) {
+		return uniqueLoginMapper.selectByPhoneFromApp(phone);
+	}
+	
+	@Override
+	public UniqueLogin selectByPhoneFromWeb(String phone) {
+		return uniqueLoginMapper.selectByPhoneFromWeb(phone);
 	}
 
 	@Override
