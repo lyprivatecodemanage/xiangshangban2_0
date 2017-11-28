@@ -113,11 +113,6 @@ public class UusersServiceImpl implements UusersService {
 		return uusersMapper.selectAdminByPhone(phone, roleId);
 	}
 	@Override
-	public int updateEmployeeImgUrl(String employeeId, String companyId, String ossFileString) {
-		
-		return uusersMapper.updateEmployeeImgUrl(employeeId, companyId, ossFileString);
-	}
-	@Override
 	public int insertEmployee(Uusers uusers) {
 		// TODO Auto-generated method stub
 		return uusersMapper.insertEmployee(uusers);

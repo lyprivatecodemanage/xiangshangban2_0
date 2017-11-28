@@ -50,13 +50,6 @@ public interface UusersMapper {
     Uusers selectById(String userId);
     
 	Uusers selectAdminByPhone(@Param("phone") String phone, @Param("roleId") String roleId);
-	/**
-	 * 更新手机端用户上传的头像key
-	 * @param employeeId
-	 * @param companyId
-	 * @return
-	 */
-	int updateEmployeeImgUrl(@Param("employeeId")String employeeId,@Param("companyId")String companyId,@Param("employeeImgUrl")String employeeImgUrl);
-
+	
 	int insertEmployee(Uusers uusers);
 }
