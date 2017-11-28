@@ -44,8 +44,11 @@
 	values (#{id},#{phone},#{sessionId},#{token},#{clientId},#{status},#{createTime})
 	</insert>
 
-	<delete id="deleteByPhone" parameterType="java.lang.String">
-		delete from unique_login where phone = #{phone}
+	<delete id="deleteByPhoneFromApp" parameterType="java.lang.String">
+		delete from unique_login where phone = #{phone} and status ='1'
+	</delete>
+	<delete id="deleteByPhoneFromWeb" parameterType="java.lang.String">
+		delete from unique_login where phone = #{phone} and status = '0'
 	</delete>
 	<delete id="deleteByTokenAndClientId" parameterType="java.lang.String">
 		delete from unique_login where token = #{token} and client_id = #{clientId}

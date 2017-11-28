@@ -378,7 +378,7 @@ public class LoginController {
 						login = new Login(FormatUtil.createUuid(), phone, token, salt, now, effectiveTime, sessionId,
 								null, null, "1", clientId);
 						loginService.insertSelective(login);
-						uniqueLoginService.deleteByPhone(phone);
+						uniqueLoginService.deleteByPhoneFromApp(phone);
 						uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,"",token,clientId,"1",now));
 					}
 				} else {
@@ -389,7 +389,7 @@ public class LoginController {
 					loginService.insertSelective(newLogin);
 					UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone);
 					if(!StringUtils.isEmpty(uniqueLogin)){
-						uniqueLoginService.deleteByPhone(phone);
+						uniqueLoginService.deleteByPhoneFromApp(phone);
 					}
 					uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,"",token,clientId,"1",now));
 				}
@@ -412,9 +412,9 @@ public class LoginController {
 				loginService.insertSelective(newLogin);
 				UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone);
 				if(!StringUtils.isEmpty(uniqueLogin)){
-					uniqueLoginService.deleteByPhone(phone);
+					uniqueLoginService.deleteByPhoneFromWeb(phone);
 				}
-				uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,sessionId,"","","1",now));
+				uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,sessionId,"","","0",now));
 				Uusers user = uusersService.selectCompanyBySessionId(sessionId);
 				if(user==null || StringUtils.isEmpty(user.getCompanyId())){
 					result.put("message", "用户身份信息缺失");
@@ -511,7 +511,7 @@ public class LoginController {
 				Object obj = session.getAttribute("phone");
 				if(!StringUtils.isEmpty(obj)){
 					phone = obj.toString();
-					uniqueLoginService.deleteByPhone(phone);
+					uniqueLoginService.deleteByPhoneFromWeb(phone);
 				}
 			}else{
 				String token = request.getHeader("ACCESS_TOKEN");
