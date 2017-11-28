@@ -56,4 +56,6 @@ public interface UusersService {
 	Uusers selectAdminByPhone(String phone, String roleId);
 	
 	int updateEmployeeImgUrl(String employeeId,String companyId,String ossFileString);
+
+	int insertEmployee(Uusers uusers);
 }

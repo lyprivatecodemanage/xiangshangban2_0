@@ -27,6 +27,7 @@
     delete from u_users_roles
     where roleid = #{roleId,jdbcType=VARCHAR}
       and userid = #{userId,jdbcType=VARCHAR}
+      and company_id = #{companyId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.xiangshangban.transit_service.bean.UusersRolesKey">
     insert into u_users_roles (roleid, userid,company_id,history_user_ids)

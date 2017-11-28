@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.util.List;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -13,7 +12,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,12 +20,11 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.xiangshangban.transit_service.bean.UniqueLogin;
-import com.xiangshangban.transit_service.bean.Upermission;
 import com.xiangshangban.transit_service.service.UniqueLoginService;
 import com.xiangshangban.transit_service.service.UusersRolesService;
 import com.xiangshangban.transit_service.util.HttpClientUtil;
 
-/*@WebFilter(filterName = "ServletFilter", urlPatterns = "/*")*/
+//@WebFilter(filterName = "ServletFilter", urlPatterns = "/*")
 public class ServletFilter implements Filter {
 
 	private UniqueLoginService uniqueLoginService;
@@ -110,38 +107,37 @@ public class ServletFilter implements Filter {
 								flag=false;
 								req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
 								return;
-							} /*else {
-								// sessionId 一直 则也视为 存在
-								boolean status = false;
-								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
-									flag = false;
-									redirect = false;
-								} else {
-									System.err.println("------授权模块进入-------");
-									String companyId = req.getHeader("companyId");
-									String userId = req.getHeader("userId");
-									List<Upermission> list = uusersRolesService.SelectUserIdByPermission(userId,
-											companyId);
-
-									for (Upermission upermission : list) {
-										if (uri.indexOf(upermission.getPermissionurl()) > -1) {
-											status = true;
-											break;
-										}
-									}
-									if (status) {
-										System.err.println("<---------------权限进入------------------>");
-										flag = false;
-										redirect = false;
-									} else {
-										System.err.println("<--------无权限--------->");
-										redirectUrl = "/loginController/unAuthorizedUrl";
-										flag = false;
-										redirect = true;
-									}
-								}
-							}*/
-						}
+							} else {
+								// // sessionId 一直 则也视为 存在
+//								boolean status = false;
+//								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
+//									flag = false;
+//									redirect = false;
+//								} else {
+								// System.err.println("------权限效验模块进入-------");
+//									String companyId = req.getHeader("companyId");
+//									String userId = req.getHeader("userId");
+//									List<Upermission> list = uusersRolesService.SelectUserIdByPermission(userId,
+//											companyId);
+//
+//									for (Upermission upermission : list) {
+//										if (uri.indexOf(upermission.getPermissionurl()) > -1) {
+//											status = true;
+//											break;
+//										}
+//									}
+//									if (status) {
+								// System.err.println("<---------------权限进入------------------>");
+//										flag = false;
+//										redirect = false;
+//									} else {
+								// System.err.println("<--------无权限--------->");
+//										redirectUrl = "/loginController/unAuthorizedUrl";
+//										flag = false;
+//										redirect = true;
+//									}
+//								}
+							}
 					}
 				}
 				if ("1".equals(type)) {
@@ -154,6 +150,42 @@ public class ServletFilter implements Filter {
 							req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
 							return;
 						}
+//						if (!StringUtils.isEmpty(uniqueLogin) && clientId.equals(uniqueLogin.getClientId())) {
+						// // sessionId 一直 则也视为 存在
+//								boolean status = false;
+//								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
+//								flag = false;
+//								redirect = false;
+//								} else {
+//									String companyId = req.getHeader("companyId");
+//									String userId = req.getHeader("userId");
+//									List<Upermission> list = uusersRolesService.SelectUserIdByPermission(userId, companyId);
+//
+//									for (Upermission upermission : list) {
+//										if (uri.indexOf(upermission.getPermissionurl()) > -1) {
+//											status = true;
+//											break;
+//										}
+//									}
+//									if (status) {
+//										flag = false;
+//										redirect = false;
+//									} else {
+//										redirectUrl = "/loginController/unAuthorizedUrl";
+//										flag = false;
+//										redirect = true;
+//									}
+//							}
+//						}
+					}
+					// else{
+					// if (uri.indexOf("registerController") < 0 &&
+					// uri.indexOf("loginController") < 0) {
+					// redirectUrl = "/registerController/LoginOut";
+					// flag = false;
+					// redirect = true;
+					// }
+					// }
 						/*if (!StringUtils.isEmpty(uniqueLogin) && clientId.equals(uniqueLogin.getClientId())) {
 							// sessionId 一直 则也视为 存在
 								boolean status = false;

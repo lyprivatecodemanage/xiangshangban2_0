@@ -22,6 +22,7 @@ public class Uusers {
     private String wechatId;
     private String wechatCode;
     private String wechatName;
+    private String isActive;
     private List<Uroles> UrolesList;
 
     public Uusers() {
@@ -165,4 +166,12 @@ public class Uusers {
     public void setStatus(String status) {
         this.status = status== null ? null : status.trim();
     }
+
+	public String getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(String isActive) {
+		this.isActive = isActive;
+	}
 }

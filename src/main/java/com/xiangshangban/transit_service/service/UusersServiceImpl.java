@@ -117,4 +117,9 @@ public class UusersServiceImpl implements UusersService {
 		
 		return uusersMapper.updateEmployeeImgUrl(employeeId, companyId, ossFileString);
 	}
+	@Override
+	public int insertEmployee(Uusers uusers) {
+		// TODO Auto-generated method stub
+		return uusersMapper.insertEmployee(uusers);
+	}
 }

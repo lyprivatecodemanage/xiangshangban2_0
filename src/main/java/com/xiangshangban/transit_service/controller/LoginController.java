@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.xiangshangban.transit_service.bean.Company;
 import com.xiangshangban.transit_service.bean.Login;
 import com.xiangshangban.transit_service.bean.UniqueLogin;
@@ -84,13 +85,15 @@ public class LoginController {
 			}
 			// 注册
 			if (Integer.valueOf(type) == 1) {
+
+				String format = "http://www.xiangshangban.com/show?shjncode=invite_";
 				// 根据公司ID查询出公司编号 生成二维码
 				Company company = companyService.selectByPrimaryKey(companyId);
 				Map<String, String> invite = new HashMap<>();
 				invite.put("companyNo", company.getCompany_no());
 				invite.put("companyName", company.getCompany_name());
 				invite.put("companyPersonalName", company.getCompany_personal_name());
-				qrcode = "shjn:invite=" + invite;
+				qrcode = format + JSON.toJSONString(invite);
 			}
 			result.put("qrcode", qrcode);
 			result.put("message", "成功");
@@ -286,7 +289,6 @@ public class LoginController {
 	 * @param request
 	 * @return
 	 */
-	@SuppressWarnings("static-access")
 	@Transactional
 	@RequestMapping(value = "/loginUser", method = RequestMethod.POST)
 	public Map<String, Object> loginUser(String phone, String smsCode, HttpSession session,
@@ -307,6 +309,11 @@ public class LoginController {
 			if (user == null) {
 				result.put("message", "手机号不存在,请注册");
 				result.put("returnCode", "4004");
+				return result;
+			}
+			if(!"1".equals(user.getIsActive())){
+				result.put("message", "账号未激活");
+				result.put("returnCode", "4022");
 				return result;
 			}
 			if(!StringUtils.isEmpty(loginRecord)){
@@ -343,19 +350,19 @@ public class LoginController {
 					Login login = loginService.selectByToken(token);
 					// 验证设备
 					if (!clientId.equals(login.getClientId())) {
-						result.put("message", "设备已更换,请重新登录");
-						result.put("returnCode", "");
+						result.put("message", "账号在其他设备登录");
+						result.put("returnCode", "4021");
 						return result;
 					}
 					// 判断token对应的用户信息是否存在,以及token是否过期
 					if (!StringUtils.isEmpty(login)) {
 						Date createTime = sdf.parse(login.getCreateTime());
 						calendar.setTime(date);
-						calendar.add(calendar.DATE, Integer.parseInt(login.getEffectiveTime()));
+						calendar.add(Calendar.DATE, Integer.parseInt(login.getEffectiveTime()));
 						phone = login.getPhone();
 						if (StringUtils.isEmpty(phone)) {
-							result.put("message", "非法登录!");
-							result.put("returnCode", "");
+							result.put("message", "用户身份信息缺失");
+							result.put("returnCode", "3003");
 							return result;
 						}
 						Uusers user = uusersService.selectByPhone(phone);
@@ -387,6 +394,11 @@ public class LoginController {
 					uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,"",token,clientId,"1",now));
 				}
 				Uusers user = uusersService.selectByPhone(phone);
+				if(user==null || StringUtils.isEmpty(user.getCompanyId())){
+					result.put("message", "用户身份信息缺失");
+					result.put("returnCode", "3003");
+					return result;
+				}
 				//companyService.s
 				result.put("userId", user.getUserid());
 				result.put("companyId",user.getCompanyId());
@@ -402,15 +414,11 @@ public class LoginController {
 				if(!StringUtils.isEmpty(uniqueLogin)){
 					uniqueLoginService.deleteByPhone(phone);
 				}
-				UniqueLogin oldUniqueLogin = uniqueLoginService.selectBySessionId(sessionId);
-				if(oldUniqueLogin!=null){
-					uniqueLoginService.deleteBySessinId(sessionId);
-				}
 				uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,sessionId,"","","1",now));
 				Uusers user = uusersService.selectCompanyBySessionId(sessionId);
-				if(user == null ){
-					result.put("message", "没有加入公司");
-					result.put("returnCode", "4016");
+				if(user==null || StringUtils.isEmpty(user.getCompanyId())){
+					result.put("message", "用户身份信息缺失");
+					result.put("returnCode", "3003");
 					return result;
 				}
 				result.put("companyId", user.getCompanyId());
@@ -422,7 +430,7 @@ public class LoginController {
 				int i = loginService.updateStatusById(id);
 				if (i <= 0) {
 					result.put("message", "token替换失败");
-					result.put("returnCode", "");
+					result.put("returnCode", "4023");
 					return result;
 				}
 			}
@@ -440,7 +448,7 @@ public class LoginController {
 			e.printStackTrace();
 			String url = request.getRequestURI();
 			logger.info("url :" + url + "message : 没有登录认证");
-			result.put("message", "请登录");
+			result.put("message", "无访问权限");
 			result.put("returnCode", "4000");
 			return result;
 		} catch (NumberFormatException e) {
@@ -458,7 +466,7 @@ public class LoginController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("returnCode", "3001");
-			result.put("message", "失败");
+			result.put("message", "服务器错误");
 			logger.info(e);
 			return result;
 		}
@@ -492,7 +500,7 @@ public class LoginController {
 	 * @param session
 	 * @return
 	 */
-	
+	@RequiresRoles(value = { "admin", "superAdmin" }, logical = Logical.OR)
 	@RequestMapping(value = "/logOut")
 	public Map<String, Object> logOut(HttpServletRequest request ,HttpSession session) {
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -504,7 +512,6 @@ public class LoginController {
 				if(!StringUtils.isEmpty(obj)){
 					phone = obj.toString();
 					uniqueLoginService.deleteByPhone(phone);
-					request.getSession().invalidate();
 				}
 			}else{
 				String token = request.getHeader("ACCESS_TOKEN");
@@ -549,7 +556,9 @@ public class LoginController {
 		YtxSmsUtil sms = new YtxSmsUtil("LTAIcRopzlp5cbUd", "VnLMEEXQRukZQSP6bXM6hcNWPlphiP");
 		try {
 			Uusers user = uusersService.selectByPhone(phone);
-			String smsCode = sms.sendIdSms(phone);
+			// 获取验证码
+			// String smsCode = sms.sendIdSms(phone);
+			String smsCode = "6666";
 			// user不为null,说明是登录获取验证码
 			if (user != null) {
 				// 更新数据库验证码记录,当做登录凭证

@@ -44,6 +44,13 @@ public class UusersRolesKey {
 	public UusersRolesKey() {
     }
 
+	public UusersRolesKey(String roleId, String userId, String companyId) {
+		super();
+		this.roleId = roleId;
+		this.userId = userId;
+		this.companyId = companyId;
+	}
+
 	public UusersRolesKey(String roleId, String userId, String companyId, String historyUserIds) {
 		super();
 		this.roleId = roleId;

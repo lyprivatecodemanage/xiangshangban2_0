@@ -330,6 +330,11 @@
 	and roleid = #{roleId})
 	</select>
 	
+	<insert id="insertEmployee" parameterType="com.xiangshangban.transit_service.bean.Uusers">
+		insert into employee_(employee_id,employee_name,company_id)
+		values(#{userid},#{username},#{companyId})
+	</insert>
+	
 	<update id="updateEmployeeImgUrl" parameterType="java.lang.String">
 		update employee_
 		set employee_img_url = #{employeeImgUrl}
