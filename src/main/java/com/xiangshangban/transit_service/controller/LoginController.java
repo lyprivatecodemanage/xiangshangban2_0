@@ -347,7 +347,7 @@ public class LoginController {
 			Login newLogin = new Login();
 			// 判断app请求和web请求
 			// app
-			if (!StringUtils.isNotEmpty(type) && Integer.valueOf(type) == 1) {
+			if (StringUtils.isNotEmpty(type) && Integer.valueOf(type) == 1) {
 				// 判断token是否为null,也就是判断app是否是已登录
 				if (StringUtils.isNotEmpty(token)) {
 					// 已登录则根据token查用户的信息
