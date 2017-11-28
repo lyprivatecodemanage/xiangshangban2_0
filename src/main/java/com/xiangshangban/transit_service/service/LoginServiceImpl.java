@@ -70,6 +70,20 @@ public class LoginServiceImpl implements LoginService {
 	public Login selectOneByPhone(String phone) {
 		return loginMapper.selectOneByPhone(phone);
 	}
+	/**
+	 * 根据手机号查询最近的一次app登录信息
+	 */
+	@Override
+	public Login selectOneByPhoneFromApp(String phone) {
+		return loginMapper.selectOneByPhone(phone);
+	}
+	/**
+	 * 根据手机号查询最近的一次web登录信息
+	 */
+	@Override
+	public Login selectOneByPhoneFromWeb(String phone) {
+		return loginMapper.selectOneByPhone(phone);
+	}
 	
 	@Override
 	public Login selectByQrcode(String qrcode) {

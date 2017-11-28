@@ -45,6 +45,10 @@ public interface LoginMapper {
     
     Login selectOneByPhone(String phone);
     
+    Login selectOneByPhoneFromApp(String phone);
+    
+    Login selectOneByPhoneFromWeb(String phone);
+    
     Login selectByTokenAndClientId(@Param("token") String token,@Param("clientId") String clientId);
     
     int updateStatusBySessionId(String sessionId);

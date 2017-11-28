@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -20,11 +21,9 @@ import org.apache.shiro.subject.Subject;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSON;
 import com.xiangshangban.transit_service.bean.Company;
 import com.xiangshangban.transit_service.bean.Login;
@@ -305,7 +304,13 @@ public class LoginController {
 		if (phone != null && !"".equals(phone)) {
 			// 判断手机号是否注册
 			Uusers user = uusersService.selectByPhone(phone);
-			Login loginRecord = loginService.selectOneByPhone(phone);
+			Login loginRecord = null;
+			if("0".equals(type)){
+				loginRecord = loginService.selectOneByPhoneFromWeb(phone);
+			}
+			if("1".equals(type)){
+				loginRecord = loginService.selectOneByPhoneFromApp(phone);
+			}
 			if (user == null) {
 				result.put("message", "手机号不存在,请注册");
 				result.put("returnCode", "4004");
@@ -316,9 +321,8 @@ public class LoginController {
 				result.put("returnCode", "4022");
 				return result;
 			}
-			if(!StringUtils.isEmpty(loginRecord)){
+			if(loginRecord!=null){
 				id = loginRecord.getId();
-
 			}
 			// 初始化redis
 			RedisUtil redis = RedisUtil.getInstance();
@@ -343,9 +347,9 @@ public class LoginController {
 			Login newLogin = new Login();
 			// 判断app请求和web请求
 			// app
-			if (!StringUtils.isEmpty(type) && Integer.valueOf(type) == 1) {
+			if (!StringUtils.isNotEmpty(type) && Integer.valueOf(type) == 1) {
 				// 判断token是否为null,也就是判断app是否是已登录
-				if (!StringUtils.isEmpty(token)) {
+				if (StringUtils.isNotEmpty(token)) {
 					// 已登录则根据token查用户的信息
 					Login login = loginService.selectByToken(token);
 					// 验证设备
@@ -355,18 +359,18 @@ public class LoginController {
 						return result;
 					}
 					// 判断token对应的用户信息是否存在,以及token是否过期
-					if (!StringUtils.isEmpty(login)) {
+					if (login!=null) {
 						Date createTime = sdf.parse(login.getCreateTime());
 						calendar.setTime(date);
 						calendar.add(Calendar.DATE, Integer.parseInt(login.getEffectiveTime()));
 						phone = login.getPhone();
-						if (StringUtils.isEmpty(phone)) {
+						if (StringUtils.isEmpty(phone)){
 							result.put("message", "用户身份信息缺失");
 							result.put("returnCode", "3003");
 							return result;
 						}
 						Uusers user = uusersService.selectByPhone(phone);
-						if (!StringUtils.isEmpty(user)) {
+						if (user!=null) {
 							phone = user.getPhone();
 							smsCode = user.getTemporarypwd();
 						}
@@ -388,7 +392,7 @@ public class LoginController {
 							null, null, "1", clientId);
 					loginService.insertSelective(newLogin);
 					UniqueLogin uniqueLogin = uniqueLoginService.selectByPhoneFromApp(phone);
-					if(!StringUtils.isEmpty(uniqueLogin)){
+					if(uniqueLogin!=null){
 						uniqueLoginService.deleteByPhoneFromApp(phone);
 					}
 					uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,"",token,clientId,"1",now));
@@ -411,7 +415,7 @@ public class LoginController {
 						null, "1", "web");
 				loginService.insertSelective(newLogin);
 				UniqueLogin uniqueLogin = uniqueLoginService.selectByPhoneFromWeb(phone);
-				if(!StringUtils.isEmpty(uniqueLogin)){
+				if(uniqueLogin!=null){
 					uniqueLoginService.deleteByPhoneFromWeb(phone);
 				}
 				uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,sessionId,"","","0",now));
@@ -509,7 +513,7 @@ public class LoginController {
 			String type = request.getHeader("type");
 			if("0".equals(type)){
 				Object obj = session.getAttribute("phone");
-				if(!StringUtils.isEmpty(obj)){
+				if(obj!=null){
 					phone = obj.toString();
 					uniqueLoginService.deleteByPhoneFromWeb(phone);
 				}
