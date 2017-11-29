@@ -2,6 +2,7 @@
 <<<<<<<=HEAD
 >>>>>>>=1f3dae59ecbbdd22cd2fcfede78989d9bfb5c918
 eclipse.preferences.version=1
+encoding//bin/src/main/resources/properties/redis.properties=UTF-8
 encoding//src/main/java=UTF-8
 encoding//src/main/resources=UTF-8
 encoding//src/main/resources/application.properties=UTF-8
