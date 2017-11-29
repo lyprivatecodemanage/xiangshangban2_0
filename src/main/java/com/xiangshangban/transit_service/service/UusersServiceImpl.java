@@ -117,4 +117,8 @@ public class UusersServiceImpl implements UusersService {
 		// TODO Auto-generated method stub
 		return uusersMapper.insertEmployee(uusers);
 	}
+	@Override
+	public int isActive(String phone) {
+		return uusersMapper.isActive(phone);
+	}
 }
