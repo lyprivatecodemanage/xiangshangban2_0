@@ -56,4 +56,10 @@ public interface UusersService {
 	Uusers selectAdminByPhone(String phone, String roleId);
 	
 	int insertEmployee(Uusers uusers);
+	/**
+	 * 查询是否已激活
+	 * @param phone
+	 * @return
+	 */
+	int isActive(String phone);
 }
