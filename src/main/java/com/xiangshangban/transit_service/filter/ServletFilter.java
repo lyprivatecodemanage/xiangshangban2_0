@@ -221,8 +221,6 @@ public class ServletFilter implements Filter {
 						}
 					}*/
 				}
-
-
 			}
 		if(flag){
 		String[] includeMode = HttpClientUtil.getIncludeMode();
