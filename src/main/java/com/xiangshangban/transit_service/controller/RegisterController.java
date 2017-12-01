@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -447,7 +449,7 @@ public class RegisterController {
 	 * @return
 	 */
     @RequestMapping(value = "/SelectByPhone")
-    public Map<String, Object> SelectByPhone(String phone) {
+    public Map<String, Object> SelectByPhone(String phone,HttpServletRequest request) {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
 			// 查询条件为手机号，统计用户表中是否有用户使用了这个手机号
@@ -457,11 +459,13 @@ public class RegisterController {
                 map.put("status", "1");
                 map.put("returnCode", "4005");
 				map.put("message", "已注册");
+				request.setAttribute("map", map);
                 return map;
             } else {
                 map.put("status", "0");
                 map.put("returnCode", "3000");
 				map.put("message", "未注册");
+				request.setAttribute("map", map);
                 return map;
             }
         } catch (Exception e) {
@@ -469,6 +473,7 @@ public class RegisterController {
             logger.info(e);
             map.put("returnCode", "3001");
 			map.put("message", "服务器错误");
+			request.setAttribute("map", map);
             return map;
         }
     }

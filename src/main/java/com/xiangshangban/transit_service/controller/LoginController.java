@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +40,7 @@ import com.xiangshangban.transit_service.util.FileMD5Util;
 import com.xiangshangban.transit_service.util.FormatUtil;
 import com.xiangshangban.transit_service.util.RedisUtil;
 import com.xiangshangban.transit_service.util.YtxSmsUtil;
-
+import com.xiangshangban.transit_service.util.RedisUtil.Hash;
 @RestController
 @RequestMapping("/loginController")
 public class LoginController {
@@ -386,7 +387,7 @@ public class LoginController {
 						uniqueLoginService.deleteByPhoneFromApp(phone);
 						uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,"",token,clientId,"1",now));
 					}
-				} else {
+				}else {
 					// 首次登录,或退出账号时
 					token = FileMD5Util.getMD5String(phone + now + salt);
 					newLogin = new Login(FormatUtil.createUuid(), phone, token, salt, now, effectiveTime, sessionId,
@@ -408,6 +409,11 @@ public class LoginController {
 				result.put("userId", user.getUserid());
 				result.put("companyId",user.getCompanyId());
 				Uroles roles = uusersRolesService.SelectRoleByUserId(user.getUserid(), user.getCompanyId());
+				if(roles==null || StringUtils.isEmpty(roles.getRolename())){
+					result.put("message", "用户身份信息缺失");
+					result.put("returnCode", "3003");
+					return result;
+				}
 				result.put("roles", roles.getRolename());
 			}
 			// web
@@ -429,6 +435,11 @@ public class LoginController {
 				result.put("companyId", user.getCompanyId());
 				result.put("userId", user.getUserid());
 				Uroles roles = uusersRolesService.SelectRoleByUserId(user.getUserid(), user.getCompanyId());
+				if(roles==null || StringUtils.isEmpty(roles.getRolename())){
+					result.put("message", "用户身份信息缺失");
+					result.put("returnCode", "3003");
+					return result;
+				}
 				result.put("roles", roles.getRolename());
 			}
 			if (!StringUtils.isEmpty(id)) {
@@ -548,7 +559,45 @@ public class LoginController {
 			return result;
 		}
 	}
-
+	/**
+	 * @author 校验手机验证码
+	 * @param phone
+	 * @param smsCode
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/confirmSms",method = RequestMethod.POST)
+	public Map<String,Object> confirmSms(String phone,String smsCode,HttpServletRequest request){
+		Map<String,Object> result = new HashMap<String,Object>();
+		boolean phoneFlag = Pattern.matches("((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}", phone);
+		if(!phoneFlag){
+			result.put("message", "手机号格式不正确");
+			result.put("returnCode", "4024");
+			return result;
+		}
+		boolean smsCodeFlag = Pattern.matches("[0-9]{4}", smsCode);
+		if(!smsCodeFlag){
+			result.put("message", "验证码不正确");
+			result.put("returnCode", "4002");
+			return result;
+		}
+		// 初始化redis
+		RedisUtil redis = RedisUtil.getInstance();
+		// 从redis取出短信验证码
+		String redisSmsCode = redis.new Hash().hget("smsCode_" + phone, "smsCode");
+		if (StringUtils.isEmpty(redisSmsCode)) {
+			result.put("message", "验证码过期");
+			result.put("returnCode", "4001");
+			return result;
+		} else if (!redisSmsCode.equals(smsCode)) {
+			result.put("message", "验证码不正确");
+			result.put("returnCode", "4002");
+			return result;
+		}
+		result.put("message", "成功");
+		result.put("returnCode", "3000");
+		return result;
+	}
 	/**
 	 * @author 李业/获取短信验证码
 	 * @param phone
@@ -575,7 +624,7 @@ public class LoginController {
 			// 设置redis保存时间
 			redis.expire("smsCode_" + phone, 120);
 			// 设置返回结果
-			result.put("smsCode", smsCode);
+			//result.put("smsCode", smsCode);
 			result.put("message", "成功");
 			result.put("returnCode", "3000");
 			return result;
