@@ -569,6 +569,11 @@ public class LoginController {
 	@RequestMapping(value = "/confirmSms",method = RequestMethod.POST)
 	public Map<String,Object> confirmSms(String phone,String smsCode,HttpServletRequest request){
 		Map<String,Object> result = new HashMap<String,Object>();
+		if(StringUtils.isEmpty(phone) || StringUtils.isEmpty(smsCode)){
+			result.put("message", "必传参数为空");
+			result.put("returnCode", "3006");
+			return result;
+		}
 		boolean phoneFlag = Pattern.matches("((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}", phone);
 		if(!phoneFlag){
 			result.put("message", "手机号格式不正确");
