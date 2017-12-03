@@ -17,4 +17,5 @@ public interface UserCompanyDefaultMapper {
 
 	int insertSelective(UserCompanyDefault record);
 	
+	UserCompanyDefault selectBySoleUserId(String userId);
 }

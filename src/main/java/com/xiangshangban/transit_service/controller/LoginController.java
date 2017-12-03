@@ -30,10 +30,12 @@ import com.xiangshangban.transit_service.bean.Company;
 import com.xiangshangban.transit_service.bean.Login;
 import com.xiangshangban.transit_service.bean.UniqueLogin;
 import com.xiangshangban.transit_service.bean.Uroles;
+import com.xiangshangban.transit_service.bean.UserCompanyDefault;
 import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.service.CompanyService;
 import com.xiangshangban.transit_service.service.LoginService;
 import com.xiangshangban.transit_service.service.UniqueLoginService;
+import com.xiangshangban.transit_service.service.UserCompanyService;
 import com.xiangshangban.transit_service.service.UusersRolesService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.FileMD5Util;
@@ -55,7 +57,8 @@ public class LoginController {
 	private UniqueLoginService uniqueLoginService;
 	@Autowired
 	private UusersRolesService uusersRolesService;
-	
+	@Autowired
+	private UserCompanyService userCompanyService;
 	/**
 	 * @author 李业/获取二维码
 	 * @param session
@@ -293,7 +296,6 @@ public class LoginController {
 	@RequestMapping(value = "/loginUser", method = RequestMethod.POST)
 	public Map<String, Object> loginUser(String phone, String smsCode, HttpSession session,
 			HttpServletRequest request) {
-		System.out.println("logingUser:\t"+session.getId());
 		Map<String, Object> result = new HashMap<String, Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar calendar = Calendar.getInstance();
@@ -407,6 +409,20 @@ public class LoginController {
 			}
 			// web
 			if (type != null && Integer.valueOf(type) == 0) {
+				
+				//通过手机号码查出用户信息
+				Uusers uuser = uusersService.selectByPhone(phone);
+				//通过用户的ID查询出 用户 公司关联表信息
+				UserCompanyDefault ucd = userCompanyService.selectBySoleUserId(uuser.getUserid());
+				
+				Uroles uroles = uusersRolesService.SelectRoleByUserId(uuser.getUserid(),ucd.getCompanyId());
+				
+				if(uroles.getRoleid().equals(new Uroles().user_role)){
+					result.put("message", "没有权限");
+					result.put("returnCode", "4000");
+					return result;
+				}
+				
 				newLogin = new Login(FormatUtil.createUuid(), phone, null, null, now, effectiveTime, sessionId, null,
 						null, "1", "web");
 				loginService.insertSelective(newLogin);
@@ -434,6 +450,7 @@ public class LoginController {
 					return result;
 				}
 			}
+			
 			UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(phone, smsCode);
 			Subject subject = SecurityUtils.getSubject();
 			subject.login(usernamePasswordToken); // 完成登录

@@ -73,12 +73,17 @@
   	and company_id = #{companyId,jdbcType=VARCHAR}
   </select>
   
+  <update id="updateAdminClearHist">
+  	update organization.u_users_roles
+  	set history_user_ids = '',roleid = #{roleId,jdbcType=VARCHAR}
+  	where userid = #{userId,jdbcType=VARCHAR}
+  </update>
+  
   <update id="updateAdministrator">
   	update organization.u_users_roles
-  	set userid = #{newUserId,jdbcType=VARCHAR},history_user_ids = #{historyUserIds,jdbcType=VARCHAR}
-  	where userid = #{userId,jdbcType=VARCHAR}
+  	set history_user_ids = #{historyUserIds,jdbcType=VARCHAR},roleid = #{roleId,jdbcType=VARCHAR}
+  	where userid = #{newUserId,jdbcType=VARCHAR}
   	and company_id = #{companyId,jdbcType=VARCHAR}
-  	and roleid = #{roleId,jdbcType=VARCHAR}
   </update>
   
   <select id="SelectUserIdByPermission" parameterType="java.lang.String" resultMap="JurisdictionMap">
