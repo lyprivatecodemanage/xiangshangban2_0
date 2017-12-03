@@ -56,6 +56,24 @@
 		order by create_time desc
 		limit 1 offset 0
 	</select>
+	<select id="selectOneByPhoneFromApp" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from login_
+		where phone = #{phone} and and client_id != 'web'
+		order by create_time desc
+		limit 1 offset 0
+	</select>
+	<select id="selectOneByPhoneFromWeb" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from login_
+		where phone = #{phone} and client_id = 'web'
+		order by create_time desc
+		limit 1 offset 0
+	</select>
 	<select id="selectBySessionId" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select

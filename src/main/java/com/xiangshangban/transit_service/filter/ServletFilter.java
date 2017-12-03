@@ -125,8 +125,7 @@ public class ServletFilter implements Filter {
 						}
 						System.err.println("进入注册登录模块");
 					} else {
-						UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone.toString());
-
+						UniqueLogin uniqueLogin = uniqueLoginService.selectByPhoneFromWeb(phone.toString());
 						if (uniqueLogin != null) {
 							String oldSessionId = uniqueLogin.getSessionId();
 							// sessionId 不一致则是登录掉线
@@ -224,6 +223,8 @@ public class ServletFilter implements Filter {
 						 }
 					 }
 				} 
+					
+				}
 			}
 
 		if(flag){
@@ -248,7 +249,6 @@ public class ServletFilter implements Filter {
 			System.err.println("过滤器结束");
 		}
 		}
-	}
 
 	public void destroy() {
 	}

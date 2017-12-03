@@ -32,6 +32,10 @@ public interface LoginService {
 	
 	Login selectOneByPhone(String phone);
 	
+    Login selectOneByPhoneFromApp(String phone);
+    
+    Login selectOneByPhoneFromWeb(String phone);
+	
 	Login selectByQrcode(String qrcode);
 	
 	int updateByPrimaryKeySelective(Login record);

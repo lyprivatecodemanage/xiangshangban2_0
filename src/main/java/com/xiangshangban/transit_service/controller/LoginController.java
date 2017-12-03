@@ -6,11 +6,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -20,11 +22,9 @@ import org.apache.shiro.subject.Subject;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSON;
 import com.xiangshangban.transit_service.bean.Company;
 import com.xiangshangban.transit_service.bean.Login;
@@ -42,7 +42,7 @@ import com.xiangshangban.transit_service.util.FileMD5Util;
 import com.xiangshangban.transit_service.util.FormatUtil;
 import com.xiangshangban.transit_service.util.RedisUtil;
 import com.xiangshangban.transit_service.util.YtxSmsUtil;
-
+import com.xiangshangban.transit_service.util.RedisUtil.Hash;
 @RestController
 @RequestMapping("/loginController")
 public class LoginController {
@@ -59,6 +59,7 @@ public class LoginController {
 	private UusersRolesService uusersRolesService;
 	@Autowired
 	private UserCompanyService userCompanyService;
+	
 	/**
 	 * @author 李业/获取二维码
 	 * @param session
@@ -296,6 +297,7 @@ public class LoginController {
 	@RequestMapping(value = "/loginUser", method = RequestMethod.POST)
 	public Map<String, Object> loginUser(String phone, String smsCode, HttpSession session,
 			HttpServletRequest request) {
+		System.out.println("logingUser:\t"+session.getId());
 		Map<String, Object> result = new HashMap<String, Object>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar calendar = Calendar.getInstance();
@@ -307,20 +309,26 @@ public class LoginController {
 		if (phone != null && !"".equals(phone)) {
 			// 判断手机号是否注册
 			Uusers user = uusersService.selectByPhone(phone);
-			Login loginRecord = loginService.selectOneByPhone(phone);
+			Login loginRecord = null;
+			if("0".equals(type)){
+				loginRecord = loginService.selectOneByPhoneFromWeb(phone);
+			}
+			if("1".equals(type)){
+				loginRecord = loginService.selectOneByPhoneFromApp(phone);
+			}
 			if (user == null) {
 				result.put("message", "手机号不存在,请注册");
 				result.put("returnCode", "4004");
 				return result;
 			}
-			if(!"1".equals(user.getIsActive())){
+			int isActive = uusersService.isActive(phone);
+			if(isActive==0){
 				result.put("message", "账号未激活");
 				result.put("returnCode", "4022");
 				return result;
 			}
-			if(!StringUtils.isEmpty(loginRecord)){
+			if(loginRecord!=null){
 				id = loginRecord.getId();
-
 			}
 			// 初始化redis
 			RedisUtil redis = RedisUtil.getInstance();
@@ -345,9 +353,9 @@ public class LoginController {
 			Login newLogin = new Login();
 			// 判断app请求和web请求
 			// app
-			if (!StringUtils.isEmpty(type) && Integer.valueOf(type) == 1) {
+			if (StringUtils.isNotEmpty(type) && Integer.valueOf(type) == 1) {
 				// 判断token是否为null,也就是判断app是否是已登录
-				if (!StringUtils.isEmpty(token)) {
+				if (StringUtils.isNotEmpty(token)) {
 					// 已登录则根据token查用户的信息
 					Login login = loginService.selectByToken(token);
 					// 验证设备
@@ -357,18 +365,18 @@ public class LoginController {
 						return result;
 					}
 					// 判断token对应的用户信息是否存在,以及token是否过期
-					if (!StringUtils.isEmpty(login)) {
+					if (login!=null) {
 						Date createTime = sdf.parse(login.getCreateTime());
 						calendar.setTime(date);
 						calendar.add(Calendar.DATE, Integer.parseInt(login.getEffectiveTime()));
 						phone = login.getPhone();
-						if (StringUtils.isEmpty(phone)) {
+						if (StringUtils.isEmpty(phone)){
 							result.put("message", "用户身份信息缺失");
 							result.put("returnCode", "3003");
 							return result;
 						}
 						Uusers user = uusersService.selectByPhone(phone);
-						if (!StringUtils.isEmpty(user)) {
+						if (user!=null) {
 							phone = user.getPhone();
 							smsCode = user.getTemporarypwd();
 						}
@@ -380,18 +388,18 @@ public class LoginController {
 						login = new Login(FormatUtil.createUuid(), phone, token, salt, now, effectiveTime, sessionId,
 								null, null, "1", clientId);
 						loginService.insertSelective(login);
-						uniqueLoginService.deleteByPhone(phone);
+						uniqueLoginService.deleteByPhoneFromApp(phone);
 						uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,"",token,clientId,"1",now));
 					}
-				} else {
+				}else {
 					// 首次登录,或退出账号时
 					token = FileMD5Util.getMD5String(phone + now + salt);
 					newLogin = new Login(FormatUtil.createUuid(), phone, token, salt, now, effectiveTime, sessionId,
 							null, null, "1", clientId);
 					loginService.insertSelective(newLogin);
-					UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone);
-					if(!StringUtils.isEmpty(uniqueLogin)){
-						uniqueLoginService.deleteByPhone(phone);
+					UniqueLogin uniqueLogin = uniqueLoginService.selectByPhoneFromApp(phone);
+					if(uniqueLogin!=null){
+						uniqueLoginService.deleteByPhoneFromApp(phone);
 					}
 					uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,"",token,clientId,"1",now));
 				}
@@ -405,11 +413,15 @@ public class LoginController {
 				result.put("userId", user.getUserid());
 				result.put("companyId",user.getCompanyId());
 				Uroles roles = uusersRolesService.SelectRoleByUserId(user.getUserid(), user.getCompanyId());
+				if(roles==null || StringUtils.isEmpty(roles.getRolename())){
+					result.put("message", "用户身份信息缺失");
+					result.put("returnCode", "3003");
+					return result;
+				}
 				result.put("roles", roles.getRolename());
 			}
 			// web
 			if (type != null && Integer.valueOf(type) == 0) {
-				
 				//通过手机号码查出用户信息
 				Uusers uuser = uusersService.selectByPhone(phone);
 				//通过用户的ID查询出 用户 公司关联表信息
@@ -426,11 +438,11 @@ public class LoginController {
 				newLogin = new Login(FormatUtil.createUuid(), phone, null, null, now, effectiveTime, sessionId, null,
 						null, "1", "web");
 				loginService.insertSelective(newLogin);
-				UniqueLogin uniqueLogin = uniqueLoginService.selectByPhone(phone);
-				if(!StringUtils.isEmpty(uniqueLogin)){
-					uniqueLoginService.deleteByPhone(phone);
+				UniqueLogin uniqueLogin = uniqueLoginService.selectByPhoneFromWeb(phone);
+				if(uniqueLogin!=null){
+					uniqueLoginService.deleteByPhoneFromWeb(phone);
 				}
-				uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,sessionId,"","","1",now));
+				uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,sessionId,"","","0",now));
 				Uusers user = uusersService.selectCompanyBySessionId(sessionId);
 				if(user==null || StringUtils.isEmpty(user.getCompanyId())){
 					result.put("message", "用户身份信息缺失");
@@ -440,6 +452,11 @@ public class LoginController {
 				result.put("companyId", user.getCompanyId());
 				result.put("userId", user.getUserid());
 				Uroles roles = uusersRolesService.SelectRoleByUserId(user.getUserid(), user.getCompanyId());
+				if(roles==null || StringUtils.isEmpty(roles.getRolename())){
+					result.put("message", "用户身份信息缺失");
+					result.put("returnCode", "3003");
+					return result;
+				}
 				result.put("roles", roles.getRolename());
 			}
 			if (!StringUtils.isEmpty(id)) {
@@ -450,7 +467,6 @@ public class LoginController {
 					return result;
 				}
 			}
-			
 			UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(phone, smsCode);
 			Subject subject = SecurityUtils.getSubject();
 			subject.login(usernamePasswordToken); // 完成登录
@@ -526,9 +542,9 @@ public class LoginController {
 			String type = request.getHeader("type");
 			if("0".equals(type)){
 				Object obj = session.getAttribute("phone");
-				if(!StringUtils.isEmpty(obj)){
+				if(obj!=null){
 					phone = obj.toString();
-					uniqueLoginService.deleteByPhone(phone);
+					uniqueLoginService.deleteByPhoneFromWeb(phone);
 				}
 			}else{
 				String token = request.getHeader("ACCESS_TOKEN");
@@ -560,7 +576,50 @@ public class LoginController {
 			return result;
 		}
 	}
-
+	/**
+	 * @author 校验手机验证码
+	 * @param phone
+	 * @param smsCode
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/confirmSms",method = RequestMethod.POST)
+	public Map<String,Object> confirmSms(String phone,String smsCode,HttpServletRequest request){
+		Map<String,Object> result = new HashMap<String,Object>();
+		if(StringUtils.isEmpty(phone) || StringUtils.isEmpty(smsCode)){
+			result.put("message", "必传参数为空");
+			result.put("returnCode", "3006");
+			return result;
+		}
+		boolean phoneFlag = Pattern.matches("((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}", phone);
+		if(!phoneFlag){
+			result.put("message", "手机号格式不正确");
+			result.put("returnCode", "4024");
+			return result;
+		}
+		boolean smsCodeFlag = Pattern.matches("[0-9]{4}", smsCode);
+		if(!smsCodeFlag){
+			result.put("message", "验证码不正确");
+			result.put("returnCode", "4002");
+			return result;
+		}
+		// 初始化redis
+		RedisUtil redis = RedisUtil.getInstance();
+		// 从redis取出短信验证码
+		String redisSmsCode = redis.new Hash().hget("smsCode_" + phone, "smsCode");
+		if (StringUtils.isEmpty(redisSmsCode)) {
+			result.put("message", "验证码过期");
+			result.put("returnCode", "4001");
+			return result;
+		} else if (!redisSmsCode.equals(smsCode)) {
+			result.put("message", "验证码不正确");
+			result.put("returnCode", "4002");
+			return result;
+		}
+		result.put("message", "成功");
+		result.put("returnCode", "3000");
+		return result;
+	}
 	/**
 	 * @author 李业/获取短信验证码
 	 * @param phone
@@ -587,7 +646,7 @@ public class LoginController {
 			// 设置redis保存时间
 			redis.expire("smsCode_" + phone, 120);
 			// 设置返回结果
-			result.put("smsCode", smsCode);
+			//result.put("smsCode", smsCode);
 			result.put("message", "成功");
 			result.put("returnCode", "3000");
 			return result;

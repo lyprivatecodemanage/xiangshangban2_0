@@ -14,10 +14,15 @@
 		id, phone, session_id, token, client_id, status, create_time
 	</sql>
 	
-	<select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+	<select id="selectByPhoneFromWeb" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select <include refid="Base_Column_List"/>
 		from unique_login
-		where phone = #{phone}
+		where phone = #{phone} and status = '0'
+	</select>
+	<select id="selectByPhoneFromApp" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from unique_login
+		where phone = #{phone} and status = '1'
 	</select>
 	
 	<select id="selectBySessionId" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -44,15 +49,17 @@
 	values (#{id},#{phone},#{sessionId},#{token},#{clientId},#{status},#{createTime})
 	</insert>
 
-	<delete id="deleteByPhone" parameterType="java.lang.String">
-		delete from unique_login where phone = #{phone}
+	<delete id="deleteByPhoneFromApp" parameterType="java.lang.String">
+		delete from unique_login where phone = #{phone} and status ='1'
+	</delete>
+	<delete id="deleteByPhoneFromWeb" parameterType="java.lang.String">
+		delete from unique_login where phone = #{phone} and status = '0'
 	</delete>
 	<delete id="deleteByTokenAndClientId" parameterType="java.lang.String">
 		delete from unique_login where token = #{token} and client_id = #{clientId}
 	</delete>
 	<delete id="deleteBySessinId" parameterType="java.lang.String">
 		delete from unique_login where session_id=#{SessionId}
-	
 	</delete>
 
 

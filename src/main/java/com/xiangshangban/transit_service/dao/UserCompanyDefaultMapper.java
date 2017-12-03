@@ -3,6 +3,7 @@ package com.xiangshangban.transit_service.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.xiangshangban.transit_service.bean.UserCompanyDefault;
 
@@ -18,4 +19,6 @@ public interface UserCompanyDefaultMapper {
 	int insertSelective(UserCompanyDefault record);
 	
 	UserCompanyDefault selectBySoleUserId(String userId);
+	
+	UserCompanyDefault selectByUserIdAndCompanyId(@Param("userId")String userId,@Param("companyId") String companyId);
 }

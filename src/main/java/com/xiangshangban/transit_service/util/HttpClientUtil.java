@@ -183,6 +183,19 @@ public class HttpClientUtil {
 		return null;
 	}
 	/**
+	 * 获取上传文件的固定文件名
+	 * @return
+	 */
+	public static String[] getFuncDirectory(){
+		try {
+			return PropertiesUtils.pathUrl("func-directory").split(",");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
 	 * 网络文件转换为流
 	 * @param urlpath
 	 * @return

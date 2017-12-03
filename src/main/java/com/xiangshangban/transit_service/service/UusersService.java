@@ -2,6 +2,8 @@ package com.xiangshangban.transit_service.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.xiangshangban.transit_service.bean.ChangePhone;
 import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.Uusers;
@@ -52,6 +54,12 @@ public interface UusersService {
 	Uusers selectById(String userId);
 	
 	Uusers selectAdminByPhone(String phone, String roleId);
-
+	
 	int insertEmployee(Uusers uusers);
+	/**
+	 * 查询是否已激活
+	 * @param phone
+	 * @return
+	 */
+	int isActive(String phone);
 }

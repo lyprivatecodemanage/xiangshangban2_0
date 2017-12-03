@@ -12,8 +12,13 @@ public class UniqueLoginServiceImpl implements UniqueLoginService{
 	
 	
 	@Override
-	public UniqueLogin selectByPhone(String phone) {
-		return uniqueLoginMapper.selectByPhone(phone);
+	public UniqueLogin selectByPhoneFromApp(String phone) {
+		return uniqueLoginMapper.selectByPhoneFromApp(phone);
+	}
+	
+	@Override
+	public UniqueLogin selectByPhoneFromWeb(String phone) {
+		return uniqueLoginMapper.selectByPhoneFromWeb(phone);
 	}
 
 	@Override
@@ -32,8 +37,12 @@ public class UniqueLoginServiceImpl implements UniqueLoginService{
 	}
 
 	@Override
-	public int deleteByPhone(String phone) {
-		return uniqueLoginMapper.deleteByPhone(phone);
+	public int deleteByPhoneFromApp(String phone) {
+		return uniqueLoginMapper.deleteByPhoneFromApp(phone);
+	}
+	@Override
+	public int deleteByPhoneFromWeb(String phone) {
+		return uniqueLoginMapper.deleteByPhoneFromWeb(phone);
 	}
 
 	@Override

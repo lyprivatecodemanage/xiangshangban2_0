@@ -26,6 +26,14 @@
 		where user_id = #{userId}
 		and current_option = '1'
 	</select>
+	
+	<select id="selectByUserIdAndCompanyId" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List"/>
+		from user_company
+		where user_id = #{userId} and company_id = #{companyId}
+	</select>
+	
 	<delete id="deleteByPrimaryKey" parameterType="com.xiangshangban.transit_service.bean.UserCompanyDefault" >
 		delete from user_company
 		where user_id = #{userId,jdbcType=VARCHAR}
