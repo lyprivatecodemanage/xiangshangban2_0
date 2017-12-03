@@ -30,7 +30,11 @@ public class UserCompanyServiceImpl implements UserCompanyService {
     }
 
 	@Override
-	public UserCompanyDefault selectByUserIdAndCompanyId(String userId, String companyId) {
+	public UserCompanyDefault selectBySoleUserId(String userId) {
+		// TODO Auto-generated method stub
+		return userCompanyDefaultMapper.selectBySoleUserId(userId);
+	}
+		public UserCompanyDefault selectByUserIdAndCompanyId(String userId, String companyId) {
 		// TODO Auto-generated method stub
 		return userCompanyDefaultMapper.selectByUserIdAndCompanyId(userId, companyId);
 	}

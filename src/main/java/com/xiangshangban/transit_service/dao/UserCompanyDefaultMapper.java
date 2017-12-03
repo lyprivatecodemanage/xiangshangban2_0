@@ -18,6 +18,7 @@ public interface UserCompanyDefaultMapper {
 
 	int insertSelective(UserCompanyDefault record);
 	
-	UserCompanyDefault selectByUserIdAndCompanyId(@Param("userId")String userId,@Param("companyId") String companyId);
+	UserCompanyDefault selectBySoleUserId(String userId);
 	
+	UserCompanyDefault selectByUserIdAndCompanyId(@Param("userId")String userId,@Param("companyId") String companyId);
 }

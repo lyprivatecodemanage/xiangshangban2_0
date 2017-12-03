@@ -18,9 +18,11 @@ public interface UusersRolesMapper {
     
 	// 查看当前管理员及历史管理员
 	UusersRolesKey SelectAdministrator(@Param("companyId") String companyId, @Param("roleId") String roleId);
+	
+	int updateAdminClearHist(@Param("userId") String userId,@Param("roleId")String roleId);
     
 	// 修改管理员
-	int updateAdministrator(@Param("userId") String userId, @Param("newUserId") String newUserId,
+	int updateAdministrator(@Param("newUserId") String newUserId,
 			@Param("companyId") String companyId, @Param("historyUserIds") String historyUserIds,
 			@Param("roleId") String roleId);
 

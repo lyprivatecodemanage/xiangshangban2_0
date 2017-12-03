@@ -13,5 +13,6 @@ public interface UserCompanyService {
 
     int insertSelective(UserCompanyDefault record);
     
+    UserCompanyDefault selectBySoleUserId(String userId);
     UserCompanyDefault selectByUserIdAndCompanyId(String userId,String companyId);
 }
