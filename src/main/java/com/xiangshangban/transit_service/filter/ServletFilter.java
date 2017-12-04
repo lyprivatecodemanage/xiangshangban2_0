@@ -157,8 +157,7 @@ public class ServletFilter implements Filter {
 //										redirect = true;
 //									}
 //								}
-								flag = false;
-								redirect = false;
+								
 							}
 						}
 					}
@@ -204,10 +203,8 @@ public class ServletFilter implements Filter {
 //										redirect = true;
 //									}
 //							}
-							flag = false;
-							redirect = false;
-						}
 						
+						}
 						if(!StringUtils.isEmpty(uniqueLogin) && !clientId.equals(uniqueLogin.getClientId())){
 							redirectUrl = "/loginController/offsiteLogin";
 							flag = false;
