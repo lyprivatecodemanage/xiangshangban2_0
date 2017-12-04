@@ -102,10 +102,10 @@ public class ServletFilter implements Filter {
 				}
 			}
 			if (uriFlag) {
-				/*System.out.println("doFilter :\t" + req.getMethod());
+				System.out.println("doFilter :\t" + req.getMethod());
 				System.out.println(uri);
 				System.out.println("doFilter=======================>" + req.getSession().getId());
-				System.out.println("doFilter=======================>" + req.getHeader("type"));*/
+				System.out.println("doFilter=======================>" + req.getHeader("type"));
 				String type = req.getHeader("type");
 				if ("0".equals(type)) {
 					Object phone = req.getSession().getAttribute("phone");
@@ -133,7 +133,8 @@ public class ServletFilter implements Filter {
 								flag=false;
 								req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
 								return;
-							} else {
+							} 
+							else {/*
 								 // sessionId 一致 则也视为 存在
 								boolean status = false;
 								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
@@ -161,6 +162,9 @@ public class ServletFilter implements Filter {
 										redirect = true;
 									}
 								}
+							*/
+								flag = false;
+								redirect = false;
 							}
 						}
 					}
@@ -183,7 +187,7 @@ public class ServletFilter implements Filter {
 								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
 									flag = false;
 									redirect = false;
-								} else {
+								} else {/*
 									//通过手机号码查出用户信息
 									Uusers uuser = usersService.selectByPhone(uniqueLogin.getPhone());
 									//通过用户的ID查询出 用户 公司关联表信息
@@ -204,7 +208,9 @@ public class ServletFilter implements Filter {
 										redirectUrl = "/loginController/unAuthorizedUrl";
 										flag = false;
 										redirect = true;
-									}
+									}*/
+									flag = false;
+									redirect = false;
 							}
 						}else if(!StringUtils.isEmpty(uniqueLogin) && !clientId.equals(uniqueLogin.getClientId())){
 							flag = false;
