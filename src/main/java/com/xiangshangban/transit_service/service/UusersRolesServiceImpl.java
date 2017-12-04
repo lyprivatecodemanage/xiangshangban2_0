@@ -2,6 +2,7 @@ package com.xiangshangban.transit_service.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,10 +42,10 @@ public class UusersRolesServiceImpl implements UusersRolesService {
 	}
 
 	@Override
-	public int updateAdministrator(String userId, String newUserId, String companyId, String historyUserIds,
+	public int updateAdministrator(String newUserId, String companyId, String historyUserIds,
 			String roleId) {
 		// TODO Auto-generated method stub
-		return uusersRolesMapper.updateAdministrator(userId, newUserId, companyId, historyUserIds, roleId);
+		return uusersRolesMapper.updateAdministrator(newUserId, companyId, historyUserIds, roleId);
 	}
 
 	@Override
@@ -57,6 +58,12 @@ public class UusersRolesServiceImpl implements UusersRolesService {
 	public Uroles SelectRoleByUserId(String userId, String companyId) {
 		// TODO Auto-generated method stub
 		return uusersRolesMapper.SelectRoleByUserId(userId, companyId);
+	}
+
+	@Override
+	public int updateAdminClearHist(String userId,@Param("roleId")String roleId) {
+		// TODO Auto-generated method stub
+		return uusersRolesMapper.updateAdminClearHist(userId, roleId);
 	}
 
 }

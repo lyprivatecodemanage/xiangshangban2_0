@@ -114,7 +114,7 @@ public class AdministratorController {
 				result.put("departmentDate", jobj.get("data"));
 				result.put("returnCode", "3000");
 				result.put("message", "成功");
-				return result;	
+				return result;		
 			}else{
 				result.put("returnCode", "3001");
 				result.put("message", "失败");
@@ -202,9 +202,11 @@ public class AdministratorController {
 			if(uusersRolesKey.gethistoryUserIds().split(",").length>2){
 				historyUserIds = huids.substring(huids.indexOf(",")+1)+","+uusersRolesKey.getUserId();
 			}
-			// 更换新管理员
-			uusersRolesService.updateAdministrator(uusersRolesKey.getUserId(), newUserId, companyId, historyUserIds,
-					new Uroles().admin_role);
+			//删除上一位管理员的 历史管理员记录
+			uusersRolesService.updateAdminClearHist(uusersRolesKey.getUserId(),new Uroles().user_role);
+			
+			//将 历史管理员记录更新到新的管理员记录上
+			uusersRolesService.updateAdministrator(newUserId, companyId, historyUserIds,new Uroles().admin_role);
 			
 			map.put("returnCode", "3000");
 			map.put("message", "数据请求成功");
