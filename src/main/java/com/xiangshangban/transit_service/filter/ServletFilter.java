@@ -102,10 +102,6 @@ public class ServletFilter implements Filter {
 				}
 			}
 			if (uriFlag) {
-				/*System.out.println("doFilter :\t" + req.getMethod());
-				System.out.println(uri);
-				System.out.println("doFilter=======================>" + req.getSession().getId());
-				System.out.println("doFilter=======================>" + req.getHeader("type"));*/
 				String type = req.getHeader("type");
 				if ("0".equals(type)) {
 					Object phone = req.getSession().getAttribute("phone");
@@ -122,8 +118,8 @@ public class ServletFilter implements Filter {
 						if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
 							flag = false;
 							redirect = false;
+							System.err.println("进入注册登录模块");
 						}
-						System.err.println("进入注册登录模块");
 					} else {
 						UniqueLogin uniqueLogin = uniqueLoginService.selectByPhoneFromWeb(phone.toString());
 						if (uniqueLogin != null) {
@@ -135,32 +131,34 @@ public class ServletFilter implements Filter {
 								return;
 							} else {
 								 // sessionId 一致 则也视为 存在
-								boolean status = false;
-								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
-									flag = false;
-									redirect = false;
-								} else {
-									String companyId = req.getHeader("companyId");
-									String userId = req.getHeader("userId");
-									List<Upermission> list = uusersRolesService.SelectUserIdByPermission(userId,companyId);
-
-									for (Upermission upermission : list) {
-										if (uri.indexOf(upermission.getPermissionurl()) > -1) {
-											status = true;
-											break;
-										}
-									}
-									if (status) {
-										System.err.println("<---------------权限进入------------------>");
-										flag = false;
-										redirect = false;
-									} else {
-										System.err.println("<--------无权限--------->");
-										redirectUrl = "/loginController/unAuthorizedUrl";
-										flag = false;
-										redirect = true;
-									}
-								}
+//								boolean status = false;
+//								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
+//									flag = false;
+//									redirect = false;
+//								} else {
+//									String companyId = req.getSession().getAttribute("companyId").toString();
+//									String userId = req.getSession().getAttribute("userId").toString();
+//									List<Upermission> list = uusersRolesService.SelectUserIdByPermission(userId,companyId);
+//
+//									for (Upermission upermission : list) {
+//										if (uri.indexOf(upermission.getPermissionurl()) > -1) {
+//											status = true;
+//											break;
+//										}
+//									}
+//									if (status) {
+//										System.err.println("<---------------权限进入------------------>");
+//										flag = false;
+//										redirect = false;
+//									} else {
+//										System.err.println("<--------无权限--------->");
+//										redirectUrl = "/loginController/unAuthorizedUrl";
+//										flag = false;
+//										redirect = true;
+//									}
+//								}
+								flag = false;
+								redirect = false;
 							}
 						}
 					}
@@ -179,36 +177,41 @@ public class ServletFilter implements Filter {
 						}
 						if (!StringUtils.isEmpty(uniqueLogin) && clientId.equals(uniqueLogin.getClientId())) {
 							 // sessionId 一直 则也视为 存在
-								boolean status = false;
-								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
-									flag = false;
-									redirect = false;
-								} else {
-									//通过手机号码查出用户信息
-									Uusers uuser = usersService.selectByPhone(uniqueLogin.getPhone());
-									//通过用户的ID查询出 用户 公司关联表信息
-									UserCompanyDefault ucd = userCompanyService.selectBySoleUserId(uuser.getUserid());
-									
-									List<Upermission> list = uusersRolesService.SelectUserIdByPermission(uuser.getUserid(),ucd.getCompanyId());
-
-									for (Upermission upermission : list) {
-										if (uri.indexOf(upermission.getPermissionurl()) > -1) {
-											status = true;
-											break;
-										}
-									}
-									if (status) {
-										flag = false;
-										redirect = false;
-									} else {
-										redirectUrl = "/loginController/unAuthorizedUrl";
-										flag = false;
-										redirect = true;
-									}
-							}
-						}else if(!StringUtils.isEmpty(uniqueLogin) && !clientId.equals(uniqueLogin.getClientId())){
+//								boolean status = false;
+//								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
+//									flag = false;
+//									redirect = false;
+//								} else {
+//									//通过手机号码查出用户信息
+//									Uusers uuser = usersService.selectByPhone(uniqueLogin.getPhone());
+//									//通过用户的ID查询出 用户 公司关联表信息
+//									UserCompanyDefault ucd = userCompanyService.selectBySoleUserId(uuser.getUserid());
+//									
+//									List<Upermission> list = uusersRolesService.SelectUserIdByPermission(uuser.getUserid(),ucd.getCompanyId());
+//
+//									for (Upermission upermission : list) {
+//										if (uri.indexOf(upermission.getPermissionurl()) > -1) {
+//											status = true;
+//											break;
+//										}
+//									}
+//									if (status) {
+//										flag = false;
+//										redirect = false;
+//									} else {
+//										redirectUrl = "/loginController/unAuthorizedUrl";
+//										flag = false;
+//										redirect = true;
+//									}
+//							}
 							flag = false;
 							redirect = false;
+						}
+						
+						if(!StringUtils.isEmpty(uniqueLogin) && !clientId.equals(uniqueLogin.getClientId())){
+							redirectUrl = "/loginController/offsiteLogin";
+							flag = false;
+							redirect = true;
 						}
 					} else{
 						 if (uri.indexOf("registerController") < 0 || uri.indexOf("loginController") < 0) {

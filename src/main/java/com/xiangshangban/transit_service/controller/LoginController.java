@@ -458,6 +458,8 @@ public class LoginController {
 					return result;
 				}
 				result.put("roles", roles.getRolename());
+				session.setAttribute("userId",user.getUserid());
+				session.setAttribute("companyId", user.getCompanyId());
 			}
 			if (!StringUtils.isEmpty(id)) {
 				int i = loginService.updateStatusById(id);
