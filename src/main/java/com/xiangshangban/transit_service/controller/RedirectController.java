@@ -125,22 +125,20 @@ public class RedirectController {
 			user = userService.selectCompanyByToken(token);
 		}
 		
-		/*if(user==null || StringUtils.isEmpty(user.getCompanyId()) || StringUtils.isEmpty(user.getUserid())){
+		if(user==null || StringUtils.isEmpty(user.getCompanyId()) || StringUtils.isEmpty(user.getUserid())){
 			ReturnData returnData = new ReturnData();
 			returnData.setReturnCode("3003");
 			returnData.setMessage("用户身份获取失败");
 			return JSON.toJSONString(returnData);
-		}*/
+		}
 		
 		String uri = request.getParameter("redirectUrl");//转发路径
 		String modeCode = request.getParameter("redirectMode");//模块
 		String sendurl = HttpClientUtil.getModeUrl(modeCode)+uri;
 		//头信息
 		Map<String,String> headers = new HashMap<String,String>();
-		/*headers.put("companyId", user.getCompanyId());
-		headers.put("accessUserId", user.getUserid());*/
-		headers.put("companyId", "");
-		headers.put("accessUserId", "");
+		headers.put("companyId", user.getCompanyId());
+		headers.put("accessUserId", user.getUserid());
 		//请求参数
 		Map<String,String[]> paramMap =  (Map<String,String[]>)request.getParameterMap();
 		JSONObject newParamMap = new JSONObject();
@@ -151,7 +149,8 @@ public class RedirectController {
 			}
 		}
 		String contentType = request.getHeader("content-type");
-		if(contentType.contains("application/json")){
+		if(StringUtils.isNotEmpty(contentType) &&
+				contentType.contains("application/json")){
 			try {
 				String jsonStr = RequestJSONUtil.getRequestJsonString(request);
 				if(StringUtils.isNotEmpty(jsonStr)){
@@ -183,7 +182,6 @@ public class RedirectController {
 	    } finally {
 	    	try {
 	    		response.getOutputStream().flush();
-				response.getOutputStream().close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

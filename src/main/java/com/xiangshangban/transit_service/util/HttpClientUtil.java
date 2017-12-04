@@ -108,9 +108,11 @@ public class HttpClientUtil {
 		    if(agent!=null && agent.indexOf("MSIE")==-1&&agent.indexOf("rv:11")==-1 && 
 					agent.indexOf("Edge")==-1 && agent.indexOf("Apache-HttpClient")==-1){//非IE
 				excelName = new String(excelName.getBytes("UTF-8"), "ISO-8859-1");
-				response.setHeader("Content-Disposition", "attachment;filename="+excelName);
+				//response.setHeader("Content-Disposition", "attachment;filename="+excelName);
+				resp.setHeader("Content-Disposition", "attachment;filename="+excelName);
 			}else{
-				response.setHeader("Content-Disposition", "attachment;filename="+java.net.URLEncoder.encode(excelName,"UTF-8"));  	
+				//response.setHeader("Content-Disposition", "attachment;filename="+java.net.URLEncoder.encode(excelName,"UTF-8"));  
+				resp.setHeader("Content-Disposition", "attachment;filename="+java.net.URLEncoder.encode(excelName,"UTF-8"));
 			}
 		    if (response.getStatusLine().getStatusCode() == 200) {
 		        HttpEntity entity = response.getEntity();
