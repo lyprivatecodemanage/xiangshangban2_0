@@ -497,7 +497,7 @@ public class RegisterController {
 	@RequestMapping(value = "/LoginOut")
 	public Map<String, Object> LoginOut() {
 		Map<String, Object> map = new HashMap<>();
-		map.put("resultCode", "3003");
+		map.put("returnCode", "3003");
 		map.put("message", "用户身份信息缺失");
 		return map;
 	}
