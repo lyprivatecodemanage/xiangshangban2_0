@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.xiangshangban.transit_service.bean.CheckPendingJoinCompany;
 import com.xiangshangban.transit_service.bean.Company;
 import com.xiangshangban.transit_service.bean.Uroles;
@@ -109,7 +110,13 @@ public class RegisterController {
 				map.put("message", "验证码错误");
                 return map;
             }
-        } catch (Exception e) {
+        }catch(NullPointerException e){
+        	e.printStackTrace();
+        	logger.info(e);
+            map.put("returnCode", "3006");
+ 			map.put("message", "必传参数为空");
+            return map;
+        }catch (Exception e) {
             e.printStackTrace();
             logger.info(e);
             map.put("returnCode", "3001");
@@ -170,6 +177,15 @@ public class RegisterController {
                     company.setCompany_no(sDate + companyNameLo + "00" + num);
                 }
 
+                //公司二维码生成
+            	String format ="http://www.xiangshangban.com/show?shjncode=invite_";
+            	Map<String, String> invite = new HashMap<>();
+				invite.put("companyNo", company.getCompany_no());
+				invite.put("companyName", company.getCompany_name());
+				invite.put("companyPersonalName", company.getCompany_personal_name());
+				String qrcode =  format + JSON.toJSONString(invite);
+				company.setCompany_code(qrcode);
+                
 				// 对创建公司的信息进行插入操作
 				companyService.insertSelective(company);
 
@@ -207,7 +223,7 @@ public class RegisterController {
 				uusers.setUserid(userId);
 				uusers.setStatus(uusers.status_1);
 				uusersService.updateByPrimaryKeySelective(uusers);
-				} catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				logger.info(e);
 				// 修改状态失败删除用户公司信息
