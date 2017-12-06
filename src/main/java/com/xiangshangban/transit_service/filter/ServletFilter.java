@@ -163,8 +163,6 @@ public class ServletFilter implements Filter {
 									}
 								}
 							*/
-								flag = false;
-								redirect = false;
 							}
 						}
 					}
@@ -209,8 +207,6 @@ public class ServletFilter implements Filter {
 										flag = false;
 										redirect = true;
 									}*/
-									flag = false;
-									redirect = false;
 							}
 						}else if(!StringUtils.isEmpty(uniqueLogin) && !clientId.equals(uniqueLogin.getClientId())){
 							flag = false;
