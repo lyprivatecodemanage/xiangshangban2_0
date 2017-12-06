@@ -94,7 +94,9 @@ public class ServletFilter implements Filter {
 		boolean redirect = false;
 		String redirectUrl = "";
 		boolean uriFlag = true;
+		System.out.println(req.getMethod());
 		if (!"OPTIONS".equals(req.getMethod())) {
+			System.out.println(req.getSession().getId());
 			String [] unValidateRepetitiveLogin = HttpClientUtil.getUnValidateRepetitiveLogin();
 			for(String unUri : unValidateRepetitiveLogin){
 				if(uri.contains(unUri)){
@@ -102,10 +104,10 @@ public class ServletFilter implements Filter {
 				}
 			}
 			if (uriFlag) {
-				System.out.println("doFilter :\t" + req.getMethod());
+				/*System.out.println("doFilter :\t" + req.getMethod());
 				System.out.println(uri);
 				System.out.println("doFilter=======================>" + req.getSession().getId());
-				System.out.println("doFilter=======================>" + req.getHeader("type"));
+				System.out.println("doFilter=======================>" + req.getHeader("type"));*/
 				String type = req.getHeader("type");
 				if ("0".equals(type)) {
 					Object phone = req.getSession().getAttribute("phone");
@@ -133,8 +135,7 @@ public class ServletFilter implements Filter {
 								flag=false;
 								req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
 								return;
-							} 
-							else {/*
+							} else {/*
 								 // sessionId 一致 则也视为 存在
 								boolean status = false;
 								if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
@@ -161,10 +162,7 @@ public class ServletFilter implements Filter {
 										flag = false;
 										redirect = true;
 									}
-								}
-							*/
-								flag = false;
-								redirect = false;
+								}*/
 							}
 						}
 					}
@@ -209,8 +207,6 @@ public class ServletFilter implements Filter {
 										flag = false;
 										redirect = true;
 									}*/
-									flag = false;
-									redirect = false;
 							}
 						}else if(!StringUtils.isEmpty(uniqueLogin) && !clientId.equals(uniqueLogin.getClientId())){
 							flag = false;

@@ -16,8 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +40,6 @@ import com.xiangshangban.transit_service.util.FileMD5Util;
 import com.xiangshangban.transit_service.util.FormatUtil;
 import com.xiangshangban.transit_service.util.RedisUtil;
 import com.xiangshangban.transit_service.util.YtxSmsUtil;
-import com.xiangshangban.transit_service.util.RedisUtil.Hash;
 @RestController
 @RequestMapping("/loginController")
 public class LoginController {
@@ -429,7 +426,7 @@ public class LoginController {
 				
 				Uroles uroles = uusersRolesService.SelectRoleByUserId(uuser.getUserid(),ucd.getCompanyId());
 				
-				if(uroles.getRoleid().equals(new Uroles().user_role)){
+				if(uroles.getRoleid().equals(Uroles.user_role)){
 					result.put("message", "没有权限");
 					result.put("returnCode", "4000");
 					return result;
@@ -461,6 +458,7 @@ public class LoginController {
 			}
 			if (!StringUtils.isEmpty(id)) {
 				int i = loginService.updateStatusById(id);
+				loginService.deleteByPrimatyKey(id);
 				if (i <= 0) {
 					result.put("message", "token替换失败");
 					result.put("returnCode", "4023");
@@ -533,18 +531,19 @@ public class LoginController {
 	 * @param session
 	 * @return
 	 */
-	@RequiresRoles(value = { "admin", "superAdmin" }, logical = Logical.OR)
-	@RequestMapping(value = "/logOut")
-	public Map<String, Object> logOut(HttpServletRequest request ,HttpSession session) {
+	//@RequiresRoles(value = { "admin", "superAdmin" }, logical = Logical.OR)
+	@RequestMapping(value = "/logOut",method=RequestMethod.GET)
+	public Map<String, Object> logOut(HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			String phone = "";
 			String type = request.getHeader("type");
 			if("0".equals(type)){
-				Object obj = session.getAttribute("phone");
+				Object obj = request.getSession().getAttribute("phone");
 				if(obj!=null){
 					phone = obj.toString();
 					uniqueLoginService.deleteByPhoneFromWeb(phone);
+					request.getSession().invalidate();
 				}
 			}else{
 				String token = request.getHeader("ACCESS_TOKEN");
