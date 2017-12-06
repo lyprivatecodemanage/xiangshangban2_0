@@ -1,10 +1,6 @@
 package com.xiangshangban.transit_service.service;
 
 import com.xiangshangban.transit_service.bean.Company;
-import com.xiangshangban.transit_service.bean.UserCompanyDefault;
-
-import java.util.List;
-
 /**
  * Created by mian on 2017/10/31.
  */
@@ -36,5 +32,5 @@ public interface CompanyService {
     
     //根据手机号查询出公司信息
    	Company selectByPhone(String phone);
-
+ 
 }

@@ -1,13 +1,11 @@
 package com.xiangshangban.transit_service.service;
 
 import com.xiangshangban.transit_service.bean.Company;
-import com.xiangshangban.transit_service.bean.UserCompanyDefault;
 import com.xiangshangban.transit_service.dao.CompanyMapper;
 import com.xiangshangban.transit_service.service.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 /**
  * Created by mian on 2017/10/31.
