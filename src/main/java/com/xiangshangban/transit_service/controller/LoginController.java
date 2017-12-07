@@ -634,7 +634,8 @@ public class LoginController {
 			Uusers user = uusersService.selectByPhone(phone);
 			// 获取验证码
 			String smsCode = "";
-			if("test".equals(PropertiesUtils.ossProperty("ossEnvironment"))){
+			//测试环境或者测试账号
+			if("test".equals(PropertiesUtils.ossProperty("ossEnvironment")) || "15995611270".equals(phone)){
 				smsCode = "6666";
 			}else{
 				smsCode = sms.sendIdSms(phone);
