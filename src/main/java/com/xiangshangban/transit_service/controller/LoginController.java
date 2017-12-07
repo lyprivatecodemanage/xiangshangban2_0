@@ -17,7 +17,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.apache.log4j.Logger;
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -634,7 +634,8 @@ public class LoginController {
 			Uusers user = uusersService.selectByPhone(phone);
 			// 获取验证码
 			String smsCode = "";
-			if("test".equals(PropertiesUtils.ossProperty("ossEnvironment"))){
+			//测试环境或者测试账号
+			if("test".equals(PropertiesUtils.ossProperty("ossEnvironment")) || "15995611270".equals(phone)){
 				smsCode = "6666";
 			}else{
 				smsCode = sms.sendIdSms(phone);
