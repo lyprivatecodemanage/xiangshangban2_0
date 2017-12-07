@@ -133,7 +133,7 @@ public class LoginController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			RedisUtil redis = RedisUtil.getInstance();
-			String token = request.getHeader("ACCESS_TOKEN");
+			String token = request.getHeader("token");
 			// 二维码是否过期(过期时间300秒)
 			String redisQrcode = redis.new Hash().hget("qrcode_" + qrcode, "qrcode");
 			if (redisQrcode == null) {
@@ -207,7 +207,7 @@ public class LoginController {
 	public Map<String, Object> confirmLogin(HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			String token = request.getHeader("ACCESS_TOKEN");
+			String token = request.getHeader("token");
 			Login login = loginService.selectByToken(token);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			// 设置登录时间
@@ -301,7 +301,7 @@ public class LoginController {
 		Calendar calendar = Calendar.getInstance();
 		// 获取请求参数
 		String type = request.getHeader("type");
-		String token = request.getHeader("ACCESS_TOKEN");
+		String token = request.getHeader("token");
 		String clientId = request.getHeader("clientId");
 		String id = "";
 		if (phone != null && !"".equals(phone)) {
@@ -549,7 +549,7 @@ public class LoginController {
 					request.getSession().invalidate();
 				}
 			}else{
-				String token = request.getHeader("ACCESS_TOKEN");
+				String token = request.getHeader("token");
 				String clientId = request.getHeader("clientId");
 				uniqueLoginService.deleteByTokenAndClientId(token, clientId);
 			}

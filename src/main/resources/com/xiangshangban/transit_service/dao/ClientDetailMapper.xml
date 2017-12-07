@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.xiangshangban.transit_service.bean.ClientDetail">
     <result column="create_time" jdbcType="VARCHAR" property="createTime" />
     <result column="trusted" jdbcType="VARCHAR" property="trusted" />
-    <result column="access_token" jdbcType="VARCHAR" property="accessToken" />
+    <result column="token" jdbcType="VARCHAR" property="accessToken" />
     <result column="refresh_token" jdbcType="VARCHAR" property="refreshToken" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="company_id" jdbcType="VARCHAR" property="companyId" />
@@ -12,7 +12,7 @@
     <result column="client_id" jdbcType="VARCHAR" property="clientId" />
   </resultMap>
   <insert id="insert" parameterType="com.xiangshangban.transit_service.bean.ClientDetail">
-    insert into client_detail (create_time, trusted, access_token, 
+    insert into client_detail (create_time, trusted, token, 
       refresh_token, user_id, company_id, 
       type, client_id)
     values (#{createTime,jdbcType=VARCHAR}, #{trusted,jdbcType=VARCHAR}, #{accessToken,jdbcType=VARCHAR}, 
@@ -29,7 +29,7 @@
         trusted,
       </if>
       <if test="accessToken != null">
-        access_token,
+        token,
       </if>
       <if test="refreshToken != null">
         refresh_token,
