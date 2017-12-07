@@ -175,7 +175,6 @@ public class ServletFilter implements Filter {
 					System.out.println("app访问："+uri+";token="+token+";clientId="+clientId);
 					if (!StringUtils.isEmpty(token)) {
 						UniqueLogin uniqueLogin = uniqueLoginService.selectByToken(token);
-
 						if (StringUtils.isEmpty(uniqueLogin)) {
 							flag = false;
 							req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
@@ -209,7 +208,10 @@ public class ServletFilter implements Filter {
 									 * = false; redirect = true; }
 									 */
 							}
-						} 
+						} else if (!StringUtils.isEmpty(uniqueLogin) && !clientId.equals(uniqueLogin.getClientId())) {
+							flag = false;
+							redirect = false;
+						}
 					} else {
 						if (uri.indexOf("registerController") < 0 || uri.indexOf("loginController") < 0) {
 							redirectUrl = "/registerController/LoginOut";
