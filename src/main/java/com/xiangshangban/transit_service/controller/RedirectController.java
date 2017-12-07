@@ -51,7 +51,7 @@ public class RedirectController {
     public String sendRequest(HttpServletRequest request) {
 		
 		//根据token获得当前用户id,公司id
-		String token = request.getHeader("ACCESS_TOKEN");
+		String token = request.getHeader("token");
 		Uusers user = new Uusers();
 		if (StringUtils.isEmpty(token)) {
 			String sessionId = request.getSession().getId();
@@ -116,7 +116,7 @@ public class RedirectController {
     public String export(HttpServletRequest request, HttpServletResponse response) {
 		
 		//根据token获得当前用户id,公司id
-		String token = request.getHeader("ACCESS_TOKEN");
+		String token = request.getHeader("token");
 		Uusers user = new Uusers();
 		if(StringUtils.isEmpty(token)){
 			String sessionId = request.getSession().getId();
