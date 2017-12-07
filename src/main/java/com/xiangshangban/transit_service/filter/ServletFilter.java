@@ -175,7 +175,6 @@ public class ServletFilter implements Filter {
 					System.out.println("app访问："+uri+";token="+token+";clientId="+clientId);
 					if (!StringUtils.isEmpty(token)) {
 						UniqueLogin uniqueLogin = uniqueLoginService.selectByToken(token);
-
 						if (StringUtils.isEmpty(uniqueLogin)) {
 							flag = false;
 							req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
