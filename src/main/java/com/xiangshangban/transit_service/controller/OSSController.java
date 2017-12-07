@@ -34,7 +34,7 @@ public class OSSController {
 	/**
 	 * 上传文件到OSS
 	 * @param file
-	 * @param ACCESS_TOKEN 
+	 * @param token 
 	 * @param funcDirectory 存储模块名称
 	 * @return
 	 */
@@ -43,7 +43,7 @@ public class OSSController {
 			@RequestParam(value="funcDirectory") String funcDirectory,HttpServletRequest request){ 
 		ReturnData returnData = new ReturnData();
 		//根据token获得当前用户id,公司id
-		String token = request.getHeader("ACCESS_TOKEN");
+		String token = request.getHeader("token");
 		Uusers user = new Uusers();
 		if (StringUtils.isEmpty(token)) {
 			String sessionId = request.getSession().getId();
@@ -89,14 +89,14 @@ public class OSSController {
 	/**
 	 * 根据文件名获取全路径
 	 * @param key
-	 * @param ACCESS_TOKEN
+	 * @param token
 	 * @return
 	 */
 	@RequestMapping(value = "/getPath",produces = "application/json;charset=UTF-8",method=RequestMethod.GET)
 	public String appGetPath(String key,@RequestParam String funcDirectory,HttpServletRequest request){
 		
 		//根据token获得当前用户id,公司id
-		String token = request.getHeader("ACCESS_TOKEN");
+		String token = request.getHeader("token");
 		Uusers user = new Uusers();
 		if (StringUtils.isEmpty(token)) {
 			String sessionId = request.getSession().getId();

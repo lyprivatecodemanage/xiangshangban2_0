@@ -170,8 +170,10 @@ public class ServletFilter implements Filter {
 				}
 
 				if ("1".equals(type)) {
-					String token = req.getHeader("ACCESS_TOKEN");
+					String token = req.getHeader("token");
 					String clientId = req.getHeader("clientId");
+					System.out.println("url\t"+url);
+					System.out.println("token\t"+token);
 					System.out.println("app访问："+uri+";token="+token+";clientId="+clientId);
 					if (!StringUtils.isEmpty(token)) {
 						UniqueLogin uniqueLogin = uniqueLoginService.selectByToken(token);
