@@ -83,7 +83,7 @@ public class LoginController {
 				login.setQrcodeStatus("0");
 				login.setId(FormatUtil.createUuid());
 				loginService.insertSelective(login);
-				qrcode = "shjn:login=" + qrcode;
+				qrcode = "http://www.xiangshangban.com/show?shjncode=login_" + qrcode;
 			}
 			// 注册
 			if (Integer.valueOf(type) == 1) {
@@ -456,6 +456,8 @@ public class LoginController {
 					return result;
 				}
 				result.put("roles", roles.getRolename());
+				session.setAttribute("userId",user.getUserid());
+				session.setAttribute("companyId", user.getCompanyId());
 			}
 			if (!StringUtils.isEmpty(id)) {
 				int i = loginService.updateStatusById(id);
