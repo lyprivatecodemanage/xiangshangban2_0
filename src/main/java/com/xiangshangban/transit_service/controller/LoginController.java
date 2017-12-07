@@ -38,6 +38,7 @@ import com.xiangshangban.transit_service.service.UusersRolesService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.FileMD5Util;
 import com.xiangshangban.transit_service.util.FormatUtil;
+import com.xiangshangban.transit_service.util.PropertiesUtils;
 import com.xiangshangban.transit_service.util.RedisUtil;
 import com.xiangshangban.transit_service.util.YtxSmsUtil;
 @RestController
@@ -534,7 +535,7 @@ public class LoginController {
 	 * @return
 	 */
 	//@RequiresRoles(value = { "admin", "superAdmin" }, logical = Logical.OR)
-	@RequestMapping(value = "/logOut",method=RequestMethod.GET)
+	@RequestMapping(value = "/logOuterr",produces="application/json;charset=utf-8",method=RequestMethod.POST)
 	public Map<String, Object> logOut(HttpServletRequest request) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
@@ -552,8 +553,6 @@ public class LoginController {
 				String clientId = request.getHeader("clientId");
 				uniqueLoginService.deleteByTokenAndClientId(token, clientId);
 			}
-			Subject subject = SecurityUtils.getSubject();
-			subject.logout();
 			result.put("message", "退出成功");
 			result.put("returnCode", "3000");
 			return result;
@@ -634,8 +633,12 @@ public class LoginController {
 		try {
 			Uusers user = uusersService.selectByPhone(phone);
 			// 获取验证码
-			// String smsCode = sms.sendIdSms(phone);
-			String smsCode = "6666";
+			String smsCode = "";
+			if("test".equals(PropertiesUtils.ossProperty("ossEnvironment"))){
+				smsCode = "6666";
+			}else{
+				smsCode = sms.sendIdSms(phone);
+			}
 			// user不为null,说明是登录获取验证码
 			if (user != null) {
 				// 更新数据库验证码记录,当做登录凭证
