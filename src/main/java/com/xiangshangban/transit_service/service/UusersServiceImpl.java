@@ -121,4 +121,9 @@ public class UusersServiceImpl implements UusersService {
 	public int isActive(String phone) {
 		return uusersMapper.isActive(phone);
 	}
+	@Override
+	public String SelectEmployeeIdByPhone(String phone) {
+		// TODO Auto-generated method stub
+		return uusersMapper.SelectEmployeeIdByPhone(phone);
+	}
 }
