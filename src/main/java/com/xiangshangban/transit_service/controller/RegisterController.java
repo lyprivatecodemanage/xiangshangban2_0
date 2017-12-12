@@ -301,7 +301,6 @@ public class RegisterController {
 				map.put("message", "服务器错误");
 				return map;
 			}
-
         }
 
         if (type.equals("1")) {
