@@ -282,6 +282,7 @@ public class RegisterController {
 				uu.setUserid(userId);
 				uu.setUsername(userName);
 				uu.setCompanyId(companyId);
+				uu.setPhone(phone);
 				uusersService.insertEmployee(uu);
 
 				map.put("companyId", companyId);

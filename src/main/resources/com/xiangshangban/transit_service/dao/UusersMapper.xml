@@ -337,8 +337,8 @@
 	</select>
 	
 	<insert id="insertEmployee" parameterType="com.xiangshangban.transit_service.bean.Uusers">
-		insert into employee_(employee_id,employee_name,company_id)
-		values(#{userid},#{username},#{companyId})
+		insert into employee_(employee_id,employee_name,company_id,login_name)
+		values(#{userid},#{username},#{companyId},#{phone})
 	</insert>
 	
 	<select id="SelectEmployeeIdByPhone" parameterType="java.lang.String" resultType="java.lang.String">
