@@ -38,4 +38,10 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 		// TODO Auto-generated method stub
 		return userCompanyDefaultMapper.selectByUserIdAndCompanyId(userId, companyId);
 	}
+
+		@Override
+		public int updateUserCompanyCoption(String userId, String companyId, String option) {
+			// TODO Auto-generated method stub
+			return userCompanyDefaultMapper.updateUserCompanyCoption(userId, companyId, option);
+		}
 }

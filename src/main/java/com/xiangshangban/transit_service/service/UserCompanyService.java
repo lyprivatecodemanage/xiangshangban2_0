@@ -1,5 +1,7 @@
 package com.xiangshangban.transit_service.service;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.xiangshangban.transit_service.bean.UserCompanyDefault;
 
 /**
@@ -15,4 +17,6 @@ public interface UserCompanyService {
     
     UserCompanyDefault selectBySoleUserId(String userId);
     UserCompanyDefault selectByUserIdAndCompanyId(String userId,String companyId);
+    
+    int updateUserCompanyCoption(String userId,String companyId,String option);
 }
