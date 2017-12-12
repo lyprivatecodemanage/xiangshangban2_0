@@ -62,4 +62,6 @@ public interface UusersService {
 	 * @return
 	 */
 	int isActive(String phone);
+	
+	String SelectEmployeeIdByPhone(String phone);
 }

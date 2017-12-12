@@ -4,7 +4,7 @@ import com.xiangshangban.transit_service.bean.Client;
 import com.xiangshangban.transit_service.service.ClientService;
 import com.xiangshangban.transit_service.util.FormatUtil;
 
-import org.jboss.logging.Logger;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -340,4 +340,8 @@
 		insert into employee_(employee_id,employee_name,company_id)
 		values(#{userid},#{username},#{companyId})
 	</insert>
+	
+	<select id="SelectEmployeeIdByPhone" parameterType="java.lang.String" resultType="java.lang.String">
+		select employee_id from employee_ where login_name=#{phone} LIMIT 1
+	</select>
 </mapper>

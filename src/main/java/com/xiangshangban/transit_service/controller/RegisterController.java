@@ -7,7 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.jboss.logging.Logger;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,19 +73,31 @@ public class RegisterController {
 		// 用户编号
         String userId = "";
         
-        if(null==type||"".equals(type)){
+        if(null==type||"".equals(type)||phone==null||"".equals(phone)||temporaryPwd==null||
+        		"".equals(temporaryPwd)||userName==null||"".equals(userName)){
         	map.put("returnCode", "3006");
 			map.put("message", "参数为空");
             return map;
         }
+        //使用手机号码查询出EmployeeID
+        String employeeId = uusersService.SelectEmployeeIdByPhone(phone);
+        //根据company_no查询出companyID
+        Company companyT = companyService.selectByCompanyName(company_no);
+        //根据EmployeeID 与 companyID查询 usercompany表  看是否存在记录 
+        //存在记录则已加入公司直接返回  不存在则继续操作
+        UserCompanyDefault ucd = userCompanyService.selectByUserIdAndCompanyId(employeeId, companyT.getCompany_id());
         
+        if(ucd!=null){
+        	map.put("returnCode", "4025");
+ 			map.put("message", "已加入该公司，暂未激活");
+            return map;
+        }
         try {
 			// 从redis中获取之前存入的验证码 判断是否还在有效期
             RedisUtil redis = RedisUtil.getInstance();
             String redisTemporaryPwd = redis.new Hash().hget("smsCode_"+phone, "smsCode");
             if (temporaryPwd.equals(redisTemporaryPwd)) {
                 if(redisTemporaryPwd!=null){
-                	
 					// 生成UUID作为用户编号
                     userId = FormatUtil.createUuid();
 					// 获取系统时间作为用户创建时间
@@ -98,7 +110,6 @@ public class RegisterController {
                     uUsers.setUsername(userName);
                     uUsers.setCreateTime(sdf.format(date));
                     uUsers.setStatus(Uusers.status_0);
-                    
                     uusersService.insertSelective(uUsers);
                 }else{
                     map.put("returnCode", "4001");

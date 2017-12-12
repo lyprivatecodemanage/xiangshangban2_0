@@ -54,4 +54,6 @@ public interface UusersMapper {
 	int insertEmployee(Uusers uusers);
 
 	int isActive(String phone);
+	
+	String SelectEmployeeIdByPhone(String phone);
 }
