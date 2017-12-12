@@ -1,0 +1,10 @@
+2017-12-11 15:09:41.978  INFO 22228 --- [main] c.x.transit_service.ApiApplication       : Starting ApiApplication on DESKTOP-32CKNA2 with PID 22228 (D:\eclipse-jee-mars-2-win32-x86_64\workspace\api\target\classes started by cachee in D:\eclipse-jee-mars-2-win32-x86_64\workspace\api)
+2017-12-11 15:09:41.984  INFO 22228 --- [main] c.x.transit_service.ApiApplication       : No active profile set, falling back to default profiles: default
+2017-12-11 15:09:48.476  INFO 22228 --- [main] o.a.shiro.cache.ehcache.EhCacheManager   : Cache with name 'com.xiangshangban.transit_service.realm.MyRealm.authorizationCache' does not yet exist.  Creating now.
+2017-12-11 15:09:48.539  INFO 22228 --- [main] o.a.shiro.cache.ehcache.EhCacheManager   : Added EhCache named [com.xiangshangban.transit_service.realm.MyRealm.authorizationCache]
+2017-12-11 15:09:50.164  INFO 22228 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2017-12-11 15:09:50.168  INFO 22228 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.15
+2017-12-11 15:09:50.375  INFO 22228 --- [localhost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring embedded WebApplicationContext
+2017-12-11 15:09:57.791  INFO 22228 --- [main] c.x.transit_service.ApiApplication       : Started ApiApplication in 16.518 seconds (JVM running for 17.669)
+2017-12-11 15:10:14.959  INFO 22228 --- [http-nio-8095-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring FrameworkServlet 'dispatcherServlet'
+2017-12-11 15:10:15.949  INFO 22228 --- [http-nio-8095-exec-2] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited

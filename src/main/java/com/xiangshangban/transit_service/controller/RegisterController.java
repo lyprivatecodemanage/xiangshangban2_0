@@ -79,7 +79,6 @@ public class RegisterController {
 			map.put("message", "参数为空");
             return map;
         }
-        
         //使用手机号码查询出EmployeeID
         String employeeId = uusersService.SelectEmployeeIdByPhone(phone);
         //根据company_no查询出companyID
@@ -93,14 +92,12 @@ public class RegisterController {
  			map.put("message", "已加入该公司，暂未激活");
             return map;
         }
-        
         try {
 			// 从redis中获取之前存入的验证码 判断是否还在有效期
             RedisUtil redis = RedisUtil.getInstance();
             String redisTemporaryPwd = redis.new Hash().hget("smsCode_"+phone, "smsCode");
             if (temporaryPwd.equals(redisTemporaryPwd)) {
                 if(redisTemporaryPwd!=null){
-                	
 					// 生成UUID作为用户编号
                     userId = FormatUtil.createUuid();
 					// 获取系统时间作为用户创建时间
@@ -113,7 +110,6 @@ public class RegisterController {
                     uUsers.setUsername(userName);
                     uUsers.setCreateTime(sdf.format(date));
                     uUsers.setStatus(Uusers.status_0);
-                    
                     uusersService.insertSelective(uUsers);
                 }else{
                     map.put("returnCode", "4001");
