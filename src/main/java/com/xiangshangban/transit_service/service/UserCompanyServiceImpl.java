@@ -2,6 +2,9 @@ package com.xiangshangban.transit_service.service;
 
 import com.xiangshangban.transit_service.bean.UserCompanyDefault;
 import com.xiangshangban.transit_service.dao.UserCompanyDefaultMapper;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,5 +46,11 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 		public int updateUserCompanyCoption(String userId, String companyId, String option) {
 			// TODO Auto-generated method stub
 			return userCompanyDefaultMapper.updateUserCompanyCoption(userId, companyId, option);
+		}
+
+		@Override
+		public List<UserCompanyDefault> selectByUserId(String userId) {
+			// TODO Auto-generated method stub
+			return userCompanyDefaultMapper.selectByUserId(userId);
 		}
 }
