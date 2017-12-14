@@ -9,7 +9,7 @@ import com.xiangshangban.transit_service.bean.Login;
 @Mapper
 public interface LoginMapper {
 
-	int deleteByPrimaryKey(String id);
+	int deleteByPrimaryKey(@Param("id")String id,@Param("clientId")String clientId);
 
     int insert(Login record);
 
@@ -53,5 +53,5 @@ public interface LoginMapper {
     
     int updateStatusBySessionId(String sessionId);
     
-    int updateStatusById(String id);
+    int updateStatusById(@Param("id")String id,@Param("clientId")String clientId);
 }

@@ -42,11 +42,11 @@ public interface LoginService {
 	
 	int updateStatusByPhone(String phone);
 	
-	int deleteByPrimatyKey(String id);
+	int deleteByPrimatyKey(String id,String clientId);
 	
 	Login selectByTokenAndClientId(String token, String clientId);
 	
 	int updateStatusBySessionId(String sessionId);
 	
-	int updateStatusById(String id);
+	int updateStatusById(String id,String clientId);
 }
