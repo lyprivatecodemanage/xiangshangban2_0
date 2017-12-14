@@ -74,12 +74,12 @@ public class RegisterController {
         String userId = "";
         
         if(null==type||"".equals(type)||phone==null||"".equals(phone)||temporaryPwd==null||
-        		"".equals(temporaryPwd)||userName==null||"".equals(userName)){
+        		"".equals(temporaryPwd)){
         	map.put("returnCode", "3006");
 			map.put("message", "参数为空");
             return map;
         }
-        
+       
         try {
 			// 从redis中获取之前存入的验证码 判断是否还在有效期
             RedisUtil redis = RedisUtil.getInstance();

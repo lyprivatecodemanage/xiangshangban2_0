@@ -164,7 +164,7 @@ public class LoginController {
 					webLogin.setQrcodeStatus("1");
 					loginService.updateByPrimaryKeySelective(webLogin);
 				} else {
-					loginService.deleteByPrimatyKey(webLogin.getId());
+					loginService.deleteById(webLogin.getId());
 					result.put("message", "没有企业管理员的权限");
 					result.put("returnCode", "4002");
 					return result;
@@ -397,8 +397,10 @@ public class LoginController {
 					loginService.insertSelective(newLogin);
 					UniqueLogin uniqueLogin = uniqueLoginService.selectByPhoneFromApp(phone);
 					if(uniqueLogin!=null){
+						//删除app上次登录记录
 						uniqueLoginService.deleteByPhoneFromApp(phone);
 					}
+					//添加本次登录记录
 					uniqueLoginService.insert(new UniqueLogin(FormatUtil.createUuid(),phone,"",token,clientId,"1",now));
 				}
 				Uusers user = uusersService.selectByPhone(phone);
@@ -459,14 +461,25 @@ public class LoginController {
 				session.setAttribute("userId",user.getUserid());
 				session.setAttribute("companyId", user.getCompanyId());
 			}
-			if (!StringUtils.isEmpty(id)) {
-				int i = loginService.updateStatusById(id);
-				loginService.deleteByPrimatyKey(id);
-				if (i <= 0) {
-					result.put("message", "token替换失败");
-					result.put("returnCode", "4023");
-					return result;
+			if (StringUtils.isNotEmpty(id) ){
+				if(type != null && Integer.valueOf(type) == 0) {
+					loginService.updateStatusById(id,"web");
+					loginService.deleteByPrimatyKey(id,"web");
+					/*if (i <= 0) {
+						result.put("message", "session替换失败");
+						result.put("returnCode", "4023");
+						return result;
+					}*/
+				}else if(type != null && Integer.valueOf(type) == 1){
+					loginService.updateStatusById(id,"");
+					loginService.deleteByPrimatyKey(id,"");
+					/*if (i <= 0) {
+						result.put("message", "token替换失败");
+						result.put("returnCode", "4023");
+						return result;
+					}*/
 				}
+				
 			}
 			UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(phone, smsCode);
 			Subject subject = SecurityUtils.getSubject();

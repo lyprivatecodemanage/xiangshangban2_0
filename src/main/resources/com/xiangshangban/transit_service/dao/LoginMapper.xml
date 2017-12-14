@@ -61,7 +61,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from login_
-		where phone = #{phone} and and client_id != 'web'
+		where phone = #{phone} and client_id != 'web'
 		order by create_time desc
 		limit 1 offset 0
 	</select>
@@ -89,9 +89,20 @@
   	where status = '1' and token = #{token} and clientId = #{clientId}
   </select>
 
-	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteById" parameterType="java.lang.String">
 		delete from login_
 		where id = #{id}
+  </delete>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from login_
+		where id = #{id} and
+		<if test="clientId == 'web'">
+			client_id = #{clientId}
+		</if>
+		<if test="clientId != 'web'">
+			client_id !='web'
+		</if>
 	</delete>
 	<insert id="insert" parameterType="com.xiangshangban.transit_service.bean.Login">
 		insert into login_ (id, phone, token,
@@ -186,7 +197,13 @@
 	<update id="updateStatusById" parameterType="java.lang.String">
 		update login_
 		set status = '0'
-		where id=#{id}
+		where id=#{id} and 
+		<if test="clientId == 'web'">
+			client_id = #{clientId}
+		</if>
+		<if test="clientId != 'web'">
+			client_id !='web'
+		</if>
 	</update>
 	<update id="updateByPrimaryKeySelective" parameterType="java.lang.String">
 		update login_
