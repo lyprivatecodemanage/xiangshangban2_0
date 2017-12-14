@@ -318,8 +318,7 @@
 		resultType="java.lang.Integer">
 		select count(userid)
 		from organization.u_users
-		where phone =
-		#{phone}
+		where phone = #{phone}
 	</select>
 	
 	<select id="selectAdminByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">

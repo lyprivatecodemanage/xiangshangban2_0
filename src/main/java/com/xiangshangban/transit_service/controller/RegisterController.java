@@ -142,6 +142,12 @@ public class RegisterController {
                 return map;
             }
             try {
+            	if(companyName.indexOf("(")>0){
+            		companyName = companyName.replaceAll("[\\(\\)]", "");
+            	}
+            	if(companyName.indexOf("（")>0){
+            		companyName = companyName.replaceAll("[\\（\\）]", "");
+            	}
 				// 生成公司编号
                 companyId = FormatUtil.createUuid();
 				// 生成公司创建时间
