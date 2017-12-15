@@ -22,6 +22,8 @@ public interface UusersService {
 	 */
 	 Uusers selectByPhone(String phone);
 	 
+	 int deleteEmployee(String userId);
+	 
 	 List<Uusers> selectListsByPhone(String phone);
 	 
 	 int selectIdentityAuthentication(String phone,String userName,String companyName);

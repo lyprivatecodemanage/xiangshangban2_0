@@ -21,10 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.xiangshangban.transit_service.bean.Company;
+import com.xiangshangban.transit_service.bean.Department;
+import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.UserCompanyDefault;
 import com.xiangshangban.transit_service.bean.Uusers;
+import com.xiangshangban.transit_service.bean.UusersRolesKey;
 import com.xiangshangban.transit_service.service.CompanyService;
+import com.xiangshangban.transit_service.service.DepartmentService;
 import com.xiangshangban.transit_service.service.UserCompanyService;
+import com.xiangshangban.transit_service.service.UusersRolesService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.FormatUtil;
 import com.xiangshangban.transit_service.util.PinYin2Abbreviation;
@@ -44,6 +49,12 @@ public class CutCompanyController {
 	@Autowired
 	CompanyService companyService;
 	
+	@Autowired
+	UusersRolesService uusersRolesService;
+	
+	@Autowired
+	DepartmentService departmentService;
+	
 	/***
 	 * 焦振/查看登录用户所属所有公司
 	 * @param userId
@@ -54,7 +65,6 @@ public class CutCompanyController {
 	@RequestMapping(value="/selectCompanyGather",produces = "application/json;charset=utf-8",method = RequestMethod.POST)
 	public Map<String,Object> selectCompanyGather(@RequestBody String jsonString,HttpServletRequest request){
 		Map<String,Object> map = new HashMap<>();
-		String companyId = request.getHeader("companyId");
 		List<UserCompanyDefault> userCompanyList = new ArrayList<>();
 		List<Company> conpanyList = new ArrayList<>();
 		
@@ -71,7 +81,7 @@ public class CutCompanyController {
 			List<UserCompanyDefault> list = userCompanyService.selectByUserId(userId);
 			
 			for (UserCompanyDefault userCompanyDefault : list) {
-				if(!userCompanyDefault.getCompanyId().equals(companyId)){
+				if(!"1".equals(userCompanyDefault.getCurrentOption().trim()) && userCompanyDefault.getCurrentOption().trim()!="1"){
 					userCompanyList.add(userCompanyDefault);
 				}
 			}
@@ -120,7 +130,15 @@ public class CutCompanyController {
 				return map;
 			}
 			
-			String companyId = request.getHeader("companyId");
+			List<UserCompanyDefault> list = userCompanyService.selectByUserId(userId);
+
+			String companyId = "";
+			
+			for (UserCompanyDefault userCompanyDefault : list) {
+				if("1".equals(userCompanyDefault.getCurrentOption().trim())||userCompanyDefault.getCurrentOption().trim()=="1"){
+					companyId=userCompanyDefault.getCompanyId();
+				}
+			}
 			
 			int num = userCompanyService.updateUserCompanyCoption(userId, companyId, new UserCompanyDefault().status_2);
 			
@@ -128,7 +146,6 @@ public class CutCompanyController {
 				int flag = userCompanyService.updateUserCompanyCoption(userId, cutCompanyId, new UserCompanyDefault().status_1);
 				
 				if(flag>0){
-					response.setHeader("companyId",cutCompanyId);
 					map.put("returnCode", "3000");
 					map.put("message", "数据请求成功");
 					return map;
@@ -249,8 +266,9 @@ public class CutCompanyController {
             return map;
 		}
 		
+		UserCompanyDefault ucd = new UserCompanyDefault();
 		try {
-			UserCompanyDefault ucd = new UserCompanyDefault();
+			//公司与用户关联表
 			ucd.setUserId(uuser.getUserid());
 			ucd.setCompanyId(company.getCompany_id());
 			ucd.setCurrentOption(ucd.status_2);
@@ -259,15 +277,10 @@ public class CutCompanyController {
 			
 			userCompanyService.insertSelective(ucd);
 			
-			map.put("companyName",company.getCompany_name());
-			map.put("companyNo",company.getCompany_no());
-			map.put("companyCode",company.getCompany_code());
-			map.put("returnCode", "3000");
-			map.put("message", "数据请求成功");
-			return map;
 		}catch(NullPointerException e){
 			e.printStackTrace();
 			logger.info(e);
+			companyService.deleteByPrimaryKey(company.getCompany_id());
 			map.put("returnCode", "4007");
 			map.put("message", "结果为空");
             return map;
@@ -275,6 +288,73 @@ public class CutCompanyController {
 			// TODO: handle exception
 			e.printStackTrace();
 			logger.info(e);
+			companyService.deleteByPrimaryKey(company.getCompany_id());
+			map.put("returnCode", "3001");
+			map.put("message", "服务器错误");
+            return map;
+		}
+		
+		//用户表与角色表
+		UusersRolesKey urk = new UusersRolesKey();
+		try {
+			urk.setUserId(userId);
+			urk.setCompanyId(company.getCompany_id());
+			urk.setRoleId(new Uroles().admin_role);
+			
+			uusersRolesService.insertSelective(urk);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			logger.info(e);
+			companyService.deleteByPrimaryKey(company.getCompany_id());
+			userCompanyService.deleteByPrimaryKey(ucd);
+			map.put("returnCode", "3001");
+			map.put("message", "服务器错误");
+            return map;
+		}
+
+		try {
+			//生成  员工表
+			uuser.setCompanyId(company.getCompany_id());
+			uusersService.insertEmployee(uuser);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			logger.info(e);
+			companyService.deleteByPrimaryKey(company.getCompany_id());
+			userCompanyService.deleteByPrimaryKey(ucd);
+			uusersRolesService.deleteByPrimaryKey(urk);
+			map.put("returnCode", "3001");
+			map.put("message", "服务器错误");
+            return map;
+		}
+		
+		try {
+			//创建公司默认生成   全公司   部门
+			Department department = new Department();
+			department.setDepartmentId(FormatUtil.createUuid());
+			department.setDepartmentName("全公司");
+			department.setDepartmentParentId("0");
+			department.setCompanyId(company.getCompany_id());
+			
+			departmentService.insertDepartment(department);
+			
+			map.put("companyName",company.getCompany_name());
+			map.put("companyNo",company.getCompany_no());
+			map.put("companyCode",company.getCompany_code());
+			map.put("companyId", company.getCompany_id());
+			map.put("returnCode", "3000");
+			map.put("message", "数据请求成功");
+			return map;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			logger.info(e);
+			companyService.deleteByPrimaryKey(company.getCompany_id());
+			userCompanyService.deleteByPrimaryKey(ucd);
+			uusersRolesService.deleteByPrimaryKey(urk);
+			uusersService.deleteEmployee(userId);
 			map.put("returnCode", "3001");
 			map.put("message", "服务器错误");
             return map;

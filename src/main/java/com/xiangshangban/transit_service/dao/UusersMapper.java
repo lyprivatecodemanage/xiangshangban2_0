@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.xiangshangban.transit_service.bean.ChangePhone;
+import com.xiangshangban.transit_service.bean.Employee;
 import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.Uusers;
 @Mapper
@@ -51,9 +52,16 @@ public interface UusersMapper {
     
 	Uusers selectAdminByPhone(@Param("phone") String phone, @Param("roleId") String roleId);
 	
+	//新增人员表
 	int insertEmployee(Uusers uusers);
+	//产出人员
+	int deleteEmployee(String userId);
 
 	int isActive(String phone);
 	
+	//根据手机号码查询人员ID
 	String SelectEmployeeIdByPhone(String phone);
+	
+	//根据用户ID查询人员信息
+	Employee SelectByUserId(String userId);
 }

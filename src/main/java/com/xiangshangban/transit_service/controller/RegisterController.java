@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 import com.xiangshangban.transit_service.bean.CheckPendingJoinCompany;
 import com.xiangshangban.transit_service.bean.Company;
+import com.xiangshangban.transit_service.bean.Department;
 import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.UserCompanyDefault;
 import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.bean.UusersRolesKey;
 import com.xiangshangban.transit_service.service.CheckPendingJoinCompanyService;
 import com.xiangshangban.transit_service.service.CompanyService;
+import com.xiangshangban.transit_service.service.DepartmentService;
 import com.xiangshangban.transit_service.service.UserCompanyService;
 import com.xiangshangban.transit_service.service.UusersRolesService;
 import com.xiangshangban.transit_service.service.UusersService;
@@ -51,6 +53,9 @@ public class RegisterController {
 
     @Autowired
     UusersRolesService uusersRolesService;
+    
+    @Autowired
+    DepartmentService departmentService;
     
 	/***
 	 * 焦振/进行用户注册 公司注册
@@ -241,27 +246,6 @@ public class RegisterController {
 			}
 
 			try {
-				// 创建公司默认加入待审核表信息 并状态为已通过
-				Date crDate = new Date();
-				CheckPendingJoinCompany cpjc = new CheckPendingJoinCompany();
-				cpjc.setUserid(userId);
-				cpjc.setCompanyid(companyId);
-				cpjc.setApplyTime(sdf.format(crDate));
-				cpjc.setStatus(CheckPendingJoinCompany.status_1);
-				checkPendingJoinCompanyService.insertSelective(cpjc);
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-				logger.info(e);
-				uusersService.deleteByPrimaryKey(userId);
-				companyService.deleteByPrimaryKey(companyId);
-				userCompanyService.deleteByPrimaryKey(userCompanyKey);
-				map.put("returnCode", "3001");
-				map.put("message", "服务器错误");
-				return map;
-			}
-
-			try {
 				// 赋予创建公司用户角色
 				UusersRolesKey urk = new UusersRolesKey();
 				urk.setUserId(userId);
@@ -274,7 +258,6 @@ public class RegisterController {
 				uusersService.deleteByPrimaryKey(userId);
 				companyService.deleteByPrimaryKey(companyId);
 				userCompanyService.deleteByPrimaryKey(userCompanyKey);
-				checkPendingJoinCompanyService.deleteById(userId, companyId);
 				map.put("returnCode", "3001");
 				map.put("message", "服务器错误");
 				return map;
@@ -289,6 +272,27 @@ public class RegisterController {
 				uu.setPhone(phone);
 				uusersService.insertEmployee(uu);
 
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.info(e);
+				uusersService.deleteByPrimaryKey(userId);
+				companyService.deleteByPrimaryKey(companyId);
+				userCompanyService.deleteByPrimaryKey(userCompanyKey);
+				uusersRolesService.deleteByPrimaryKey(new UusersRolesKey(new Uroles().admin_role, userId, companyId));
+				map.put("returnCode", "3001");
+				map.put("message", "服务器错误");
+				return map;
+			}
+			
+			try {
+				Department department = new Department();
+				department.setDepartmentId(FormatUtil.createUuid());
+				department.setDepartmentName("全公司");
+				department.setDepartmentParentId("0");
+				department.setCompanyId(companyId);
+				
+				departmentService.insertDepartment(department);
+				
 				map.put("companyId", companyId);
 				map.put("companyName", companyName);
 				map.put("user_name", userName);
@@ -296,17 +300,19 @@ public class RegisterController {
 				map.put("message", "数据请求成功");
 				return map;
 			} catch (Exception e) {
+				// TODO: handle exception
 				e.printStackTrace();
 				logger.info(e);
 				uusersService.deleteByPrimaryKey(userId);
 				companyService.deleteByPrimaryKey(companyId);
 				userCompanyService.deleteByPrimaryKey(userCompanyKey);
-				checkPendingJoinCompanyService.deleteById(userId, companyId);
 				uusersRolesService.deleteByPrimaryKey(new UusersRolesKey(new Uroles().admin_role, userId, companyId));
+				uusersService.deleteEmployee(userId);
 				map.put("returnCode", "3001");
 				map.put("message", "服务器错误");
 				return map;
 			}
+			
         }
 
         if (type.equals("1")) {

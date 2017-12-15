@@ -335,6 +335,10 @@
 	and roleid = #{roleId})
 	</select>
 	
+	<delete id="deleteEmployee" parameterType="java.lang.String">
+		delete from employee_ where employee_id = #{userId}
+	</delete>
+	
 	<insert id="insertEmployee" parameterType="com.xiangshangban.transit_service.bean.Uusers">
 		insert into employee_(employee_id,employee_name,company_id,login_name)
 		values(#{userid},#{username},#{companyId},#{phone})

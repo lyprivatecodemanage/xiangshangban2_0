@@ -126,4 +126,9 @@ public class UusersServiceImpl implements UusersService {
 		// TODO Auto-generated method stub
 		return uusersMapper.SelectEmployeeIdByPhone(phone);
 	}
+	@Override
+	public int deleteEmployee(String userId) {
+		// TODO Auto-generated method stub
+		return uusersMapper.deleteEmployee(userId);
+	}
 }

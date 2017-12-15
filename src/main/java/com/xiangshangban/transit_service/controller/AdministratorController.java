@@ -46,6 +46,7 @@ public class AdministratorController {
 		Map<String,Object> map = new HashMap<>();
 		List<Uusers> list = new ArrayList<>();
 		try{
+			Object phone = request.getSession().getAttribute("phone");
 			// 拿到请求头中的companyId查询公司管理员
 			String companyId = request.getHeader("companyId");
 			UusersRolesKey uusersRolesKey = uusersRolesService.SelectAdministrator(companyId, new Uroles().admin_role);
