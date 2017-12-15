@@ -21,4 +21,6 @@ public interface UserCompanyDefaultMapper {
 	UserCompanyDefault selectBySoleUserId(String userId);
 	
 	UserCompanyDefault selectByUserIdAndCompanyId(@Param("userId")String userId,@Param("companyId") String companyId);
+	
+	int updateUserCompanyCoption(@Param("userId")String userId,@Param("companyId")String companyId,@Param("option")String option);
 }

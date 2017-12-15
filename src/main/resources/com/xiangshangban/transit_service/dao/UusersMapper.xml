@@ -318,8 +318,7 @@
 		resultType="java.lang.Integer">
 		select count(userid)
 		from organization.u_users
-		where phone =
-		#{phone}
+		where phone = #{phone}
 	</select>
 	
 	<select id="selectAdminByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -337,8 +336,8 @@
 	</select>
 	
 	<insert id="insertEmployee" parameterType="com.xiangshangban.transit_service.bean.Uusers">
-		insert into employee_(employee_id,employee_name,company_id)
-		values(#{userid},#{username},#{companyId})
+		insert into employee_(employee_id,employee_name,company_id,login_name)
+		values(#{userid},#{username},#{companyId},#{phone})
 	</insert>
 	
 	<select id="SelectEmployeeIdByPhone" parameterType="java.lang.String" resultType="java.lang.String">

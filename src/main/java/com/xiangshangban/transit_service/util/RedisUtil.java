@@ -59,7 +59,7 @@ public class RedisUtil {
 			   		String pass = PropertiesUtils.redisProperty("redis.pass");
 			   		if( StringUtils.isEmpty(pass))
 		            	pass = null;
-			   		
+			   			
 		            JedisPoolConfig config = new JedisPoolConfig();
 		            config.setMaxTotal( Integer.parseInt(PropertiesUtils.redisProperty("redis.pool.maxTotal")));  
 		            config.setMaxIdle( Integer.parseInt(PropertiesUtils.redisProperty("redis.pool.maxIdle")));

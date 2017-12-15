@@ -19,7 +19,7 @@ import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.service.UusersRolesService;
 
 @RestController
-@RequestMapping("aurisdictionController")
+@RequestMapping("/aurisdictionController")
 public class JurisdictionController {
 	private Logger logger = Logger.getLogger(AdministratorController.class);
 	
@@ -34,7 +34,7 @@ public class JurisdictionController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "userIdByPermission", method = RequestMethod.POST)
+	@RequestMapping(value = "/userIdByPermission", method = RequestMethod.POST)
 	public Map<String,Object> userIdByPermission(String userId,HttpServletRequest request){
 		Map<String,Object> map = new HashMap<>();
 		List<Upermission> list = new ArrayList<>();
