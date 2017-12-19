@@ -1,9 +1,7 @@
 package com.xiangshangban.transit_service.realm;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -33,11 +31,6 @@ public class MyRealm extends AuthorizingRealm {
 	private LoginService loginService;
 	@Autowired
 	private UpermissionService upermissionService;
-
-	// 对权先进行清空处理
-	public void clearAuthz() {
-		this.clearCachedAuthorizationInfo(SecurityUtils.getSubject().getPrincipals());
-	}
 
 	// 授权
 	@Override
@@ -100,4 +93,12 @@ public class MyRealm extends AuthorizingRealm {
 		return simpleAuthenticationInfo;
 	}
 
+	// 对权先进行清空处理
+		public void clearAuthz() {
+			this.clearCachedAuthorizationInfo(SecurityUtils.getSubject().getPrincipals());
+		}
+		public void clearAuthc(){
+			this.clearCachedAuthenticationInfo(SecurityUtils.getSubject().getPrincipals());
+		}
+		
 }
