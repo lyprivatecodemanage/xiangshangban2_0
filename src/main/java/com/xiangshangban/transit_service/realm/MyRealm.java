@@ -38,7 +38,9 @@ public class MyRealm extends AuthorizingRealm {
 	public void clearAuthz() {
 		this.clearCachedAuthorizationInfo(SecurityUtils.getSubject().getPrincipals());
 	}
-
+	public void clearAuthc(){
+		this.clearCachedAuthenticationInfo(SecurityUtils.getSubject().getPrincipals());
+	}
 	// 授权
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection token) {
