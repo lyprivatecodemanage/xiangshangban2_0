@@ -5,6 +5,8 @@ import com.xiangshangban.transit_service.bean.UniqueLogin;
 
 public interface UniqueLoginService {
 	
+	UniqueLogin selectByPhone(String phone);
+	
 	UniqueLogin selectByPhoneFromApp(String phone);
 
 	UniqueLogin selectByPhoneFromWeb(String phone);
@@ -24,4 +26,6 @@ public interface UniqueLoginService {
 	int deleteBySessinId(String sessionId);
 	
 	int deleteByTokenAndClientId(String token, String clientId);
+	
+	int deleteById(String id);
 }

@@ -16,7 +16,9 @@ public interface LoginMapper {
     int insert(Login record);
 
     int insertSelective(Login record);
-
+    
+    int insertLoginSelective(Login record);
+    
     Login selectByPrimaryKey(String id);
 
     int updateByPrimaryKeySelective(Login record);

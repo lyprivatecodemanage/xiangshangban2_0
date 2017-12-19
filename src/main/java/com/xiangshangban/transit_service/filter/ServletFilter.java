@@ -15,6 +15,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -25,8 +26,9 @@ import com.xiangshangban.transit_service.service.UserCompanyService;
 import com.xiangshangban.transit_service.service.UusersRolesService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.HttpClientUtil;
+import com.xiangshangban.transit_service.util.RedisUtil;
 
-//@WebFilter(filterName = "ServletFilter", urlPatterns = "/*")
+@Component
 public class ServletFilter implements Filter {
 
 	private UniqueLoginService uniqueLoginService;
@@ -90,142 +92,10 @@ public class ServletFilter implements Filter {
 		boolean redirect = false;
 		String redirectUrl = "";
 		boolean uriFlag = true;
-		System.out.println(req.getMethod());
 		if (!"OPTIONS".equals(req.getMethod())) {
-			System.out.println(req.getSession().getId());
-			String[] unValidateRepetitiveLogin = HttpClientUtil.getUnValidateRepetitiveLogin();
-			for (String unUri : unValidateRepetitiveLogin) {
-				if (uri.contains(unUri)) {
-					uriFlag = false;
-				}
-			}
-			if (uriFlag) {
-				/*
-				 * System.out.println("doFilter :\t" + req.getMethod());
-				 * System.out.println(uri);
-				 * System.out.println("doFilter=======================>" +
-				 * req.getSession().getId());
-				 * System.out.println("doFilter=======================>" +
-				 * req.getHeader("type"));
-				 */
-				String type = req.getHeader("type");
-				if ("0".equals(type)) {
-					Object phone = req.getSession().getAttribute("phone");
-					if (StringUtils.isEmpty(phone)) {
-						// 在Session 为空的情况下
-						// 判断请求地址 是否是注册 或者 登录模块的
-						// 若不是则跳转 用户未登录 Api 返回前台
-						if (uri.indexOf("registerController") < 0 || uri.indexOf("loginController") < 0) {
-							redirectUrl = "/registerController/LoginOut";
-							flag = false;
-							redirect = true;
-						}
-
-						if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
-							flag = false;
-							redirect = false;
-						}
-						System.err.println("进入注册登录模块");
-					} else {
-						UniqueLogin uniqueLogin = uniqueLoginService.selectByPhoneFromWeb(phone.toString());
-						if (uniqueLogin != null) {
-							String oldSessionId = uniqueLogin.getSessionId();
-							// sessionId 不一致则是登录掉线
-							if (!oldSessionId.equals(req.getSession().getId())) {
-								flag = false;
-								req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
-								return;
-							} else {/*
-									 * // sessionId 一致 则也视为 存在 boolean status =
-									 * false; if
-									 * (uri.indexOf("registerController") > -1
-									 * || uri.indexOf("loginController") > -1) {
-									 * flag = false; redirect = false; } else {
-									 * String companyId =
-									 * req.getHeader("companyId"); String userId
-									 * = req.getHeader("userId");
-									 * List<Upermission> list =
-									 * uusersRolesService.
-									 * SelectUserIdByPermission(userId,companyId
-									 * );
-									 * 
-									 * for (Upermission upermission : list) { if
-									 * (uri.indexOf(upermission.getPermissionurl
-									 * ()) > -1) { status = true; break; } } if
-									 * (status) { System.err.println(
-									 * "<---------------权限进入------------------>"
-									 * ); flag = false; redirect = false; } else
-									 * { System.err.println(
-									 * "<--------无权限--------->"); redirectUrl =
-									 * "/loginController/unAuthorizedUrl"; flag
-									 * = false; redirect = true; } }
-									 */
-							}
-						}
-					}
-				}
-
-				if ("1".equals(type)) {
-					String token = req.getHeader("token");
-					String clientId = req.getHeader("clientId");
-					System.out.println("url\t"+url);
-					System.out.println("token\t"+token);
-					System.out.println("app访问："+uri+";token="+token+";clientId="+clientId);
-					if (!StringUtils.isEmpty(token)) {
-						UniqueLogin uniqueLogin = uniqueLoginService.selectByToken(token);
-						if (StringUtils.isEmpty(uniqueLogin)) {
-							flag = false;
-							req.getRequestDispatcher("/loginController/offsiteLogin").forward(req, res);
-							return;
-						}
-						if (!StringUtils.isEmpty(uniqueLogin) && clientId.equals(uniqueLogin.getClientId())) {
-							// sessionId 一直 则也视为 存在
-							boolean status = false;
-							if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
-								flag = false;
-								redirect = false;
-							} else {/*
-									 * //通过手机号码查出用户信息 Uusers uuser =
-									 * usersService.selectByPhone(uniqueLogin.
-									 * getPhone()); //通过用户的ID查询出 用户 公司关联表信息
-									 * UserCompanyDefault ucd =
-									 * userCompanyService.selectBySoleUserId(
-									 * uuser.getUserid());
-									 * 
-									 * List<Upermission> list =
-									 * uusersRolesService.
-									 * SelectUserIdByPermission(uuser.getUserid(
-									 * ),ucd.getCompanyId());
-									 * 
-									 * for (Upermission upermission : list) { if
-									 * (uri.indexOf(upermission.getPermissionurl
-									 * ()) > -1) { status = true; break; } } if
-									 * (status) { flag = false; redirect =
-									 * false; } else { redirectUrl =
-									 * "/loginController/unAuthorizedUrl"; flag
-									 * = false; redirect = true; }
-									 */
-							}
-						} else if (!StringUtils.isEmpty(uniqueLogin) && !clientId.equals(uniqueLogin.getClientId())) {
-							flag = false;
-							redirect = false;
-						}
-					} else {
-						if (uri.indexOf("registerController") < 0 || uri.indexOf("loginController") < 0) {
-							redirectUrl = "/registerController/LoginOut";
-							flag = false;
-							redirect = true;
-						}
-
-						if (uri.indexOf("registerController") > -1 || uri.indexOf("loginController") > -1) {
-							flag = false;
-							redirect = false;
-						}
-					}
-				}
-
-			}
-
+			System.out.println("servletFilter\t:"+req.getMethod());
+			System.out.println("servletFilter\t:"+uri);
+			System.out.println("servletFilter\t:"+"session\t:"+req.getSession().getId());
 			if (flag) {
 				String[] includeMode = HttpClientUtil.getIncludeMode();
 				for (String mode : includeMode) {

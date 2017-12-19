@@ -126,9 +126,6 @@
 			<if test="salt != null">
 				salt,
 			</if>
-			<if test="createTime != null">
-				create_time,
-			</if>
 			<if test="effectiveTime != null">
 				effective_time,
 			</if>
@@ -147,6 +144,7 @@
 			<if test="clientId != null">
 				client_id,
 			</if>
+				create_time,
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -160,9 +158,6 @@
 			</if>
 			<if test="salt != null">
 				#{salt},
-			</if>
-			<if test="createTime != null">
-				#{createTime},
 			</if>
 			<if test="effectiveTime != null">
 				#{effectiveTime},
@@ -182,6 +177,73 @@
 			<if test="clientId != null">
 				#{clientId},
 			</if>
+			to_char(now(),'yyyy-MM-dd hh24:mi:ss')
+		</trim>
+	</insert>
+	<insert id="insertLoginSelective" parameterType="com.xiangshangban.transit_service.bean.Login">
+		insert into login_
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="token != null and status=='1'">
+				token,
+			</if>
+			<if test="salt != null">
+				salt,
+			</if>
+			<if test="effectiveTime != null">
+				effective_time,
+			</if>
+			<if test="token != null and status=='0'">
+				session_id,
+			</if>
+			<if test="qrcode != null">
+				qrcode,
+			</if>
+			<if test="qrcodeStatus != null">
+				qrcode_status,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="clientId != null">
+				client_id,
+			</if>
+				create_time,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="phone != null">
+				#{phone},
+			</if>
+			<if test="token != null">
+				#{token},
+			</if>
+			<if test="salt != null">
+				#{salt},
+			</if>
+			<if test="effectiveTime != null">
+				#{effectiveTime},
+			</if>
+			<if test="qrcode != null">
+				#{qrcode},
+			</if>
+			<if test="qrcodeStatus != null">
+				#{qrcodeStatus},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="clientId != null">
+				#{clientId},
+			</if>
+			to_char(now(),'yyyy-MM-dd hh24:mi:ss')
 		</trim>
 	</insert>
 	<update id="updateStatusByPhone" parameterType="java.lang.String">
@@ -255,5 +317,4 @@
 		client_id = #{clientId}
 		where id = #{id}
 	</update>
-
 </mapper>

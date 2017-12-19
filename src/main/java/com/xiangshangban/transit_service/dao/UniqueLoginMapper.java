@@ -8,6 +8,8 @@ import com.xiangshangban.transit_service.bean.UniqueLogin;
 @Mapper
 public interface UniqueLoginMapper {
 	
+	UniqueLogin selectByPhone(String phone);
+	
 	UniqueLogin selectByPhoneFromApp(String phone);
 	
 	UniqueLogin selectByPhoneFromWeb(String phone);
@@ -28,4 +30,5 @@ public interface UniqueLoginMapper {
 	
 	int deleteByTokenAndClientId(@Param("token") String token,@Param("clientId") String clientId);
 	
+	int deleteById(String id);
 }

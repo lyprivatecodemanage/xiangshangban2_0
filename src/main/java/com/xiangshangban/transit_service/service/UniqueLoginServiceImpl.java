@@ -63,4 +63,16 @@ public class UniqueLoginServiceImpl implements UniqueLoginService{
 		return uniqueLoginMapper.deleteByTokenAndClientId(token, clientId);
 	}
 
+	@Override
+	public UniqueLogin selectByPhone(String phone) {
+		
+		return uniqueLoginMapper.selectByPhone(phone);
+	}
+
+	@Override
+	public int deleteById(String id) {
+		
+		return uniqueLoginMapper.deleteById(id);
+	}
+
 }

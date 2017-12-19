@@ -1,29 +1,36 @@
 package com.xiangshangban.transit_service.realm;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.xiangshangban.transit_service.bean.Login;
 import com.xiangshangban.transit_service.bean.Upermission;
 import com.xiangshangban.transit_service.bean.Uroles;
 import com.xiangshangban.transit_service.bean.Uusers;
+import com.xiangshangban.transit_service.service.LoginService;
 import com.xiangshangban.transit_service.service.UpermissionService;
 import com.xiangshangban.transit_service.service.UusersService;
+import com.xiangshangban.transit_service.util.RegexUtil;
 
 
 public class MyRealm extends AuthorizingRealm {
 	@Autowired
 	private UusersService usersService;
-
+	@Autowired
+	private LoginService loginService;
 	@Autowired
 	private UpermissionService upermissionService;
 
@@ -63,6 +70,18 @@ public class MyRealm extends AuthorizingRealm {
 		// token用户输入
 		// 第一步从token中取出身份信息
 		String userCode = token.getPrincipal().toString();
+		//token登录
+		UsernamePasswordToken utoken=(UsernamePasswordToken) token;
+		String inToken = new String(utoken.getPassword());
+		if(!RegexUtil.matchPhone(userCode)){
+			Login login = loginService.selectByToken(inToken);
+			if(login!=null && userCode.equals(login.getClientId())){
+				userCode = login.getPhone();
+				Uusers user = usersService.selectByPhone(userCode);
+				utoken.setUsername(userCode);
+				utoken.setPassword(user.getTemporarypwd().toCharArray());
+			}
+		}
 		//System.out.println("=================>" + token.toString());
 		// 第二部:根据用户输入的userCode从数据库查询
 		// ....

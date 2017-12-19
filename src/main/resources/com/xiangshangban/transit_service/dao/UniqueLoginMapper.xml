@@ -13,7 +13,11 @@
 	<sql id="Base_Column_List">
 		id, phone, session_id, token, client_id, status, create_time
 	</sql>
-	
+	<select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from unique_login
+		where phone = #{phone}
+	</select>
 	<select id="selectByPhoneFromWeb" parameterType="java.lang.String" resultMap="BaseResultMap">
 		select <include refid="Base_Column_List"/>
 		from unique_login
@@ -44,11 +48,14 @@
 	</select>
 
 	<insert id="insert" parameterType="com.xiangshangban.transit_service.bean.UniqueLogin">
-	insert into unique_login
-	(<include refid="Base_Column_List"/>)
-	values (#{id},#{phone},#{sessionId},#{token},#{clientId},#{status},#{createTime})
+		insert into unique_login
+		(id,phone,token,client_id,create_time
+		)
+		values (#{id},#{phone},#{token},#{clientId},to_char(now(),'yyyy-MM-dd hh24:mi:ss'))
 	</insert>
-
+	<delete id="deleteById" parameterType="java.lang.String">
+		delete from unique_login where id = #{id} 
+	</delete>
 	<delete id="deleteByPhoneFromApp" parameterType="java.lang.String">
 		delete from unique_login where phone = #{phone} and status ='1'
 	</delete>

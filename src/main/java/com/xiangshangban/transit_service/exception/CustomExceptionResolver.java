@@ -11,15 +11,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
-/**
- * 
- * <p>Title: CustomExceptionResolver</p>
- * <p>Description: 自定义异常处理器</p>
- * <p>Company: www.itcast.com</p> 
- * @author	传智.燕青
- * @date	2015-3-22下午2:57:42
- * @version 1.0
- */
+
 public class CustomExceptionResolver implements HandlerExceptionResolver  {
 
 	//前端控制器DispatcherServlet在进行HandlerMapping、调用HandlerAdapter执行Handler过程中，如果遇到异常就会执行此方法

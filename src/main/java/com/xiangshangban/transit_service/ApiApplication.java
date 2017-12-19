@@ -15,6 +15,7 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -31,6 +32,9 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+import org.crazycake.shiro.RedisManager;
+import org.crazycake.shiro.RedisSessionDAO;
 
 import com.xiangshangban.transit_service.filter.CustomFormAuthenticationFilter;
 import com.xiangshangban.transit_service.filter.ServletFilter;
@@ -70,7 +74,7 @@ public class ApiApplication {
 			}
 		};
 	}
-
+	
 	@Bean(name = "shiroFilter")
 	public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager) {
 		ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
@@ -78,6 +82,7 @@ public class ApiApplication {
 		// 配置登录的url
 		bean.setLoginUrl("/loginController/loginUser");
 		// bean.setUnauthorizedUrl("/loginController/unAuthorizedUrl");
+		bean.setSuccessUrl("/loginController/success");
 		CustomFormAuthenticationFilter formAuthenticationFilter = new CustomFormAuthenticationFilter();
 		formAuthenticationFilter.setUsernameParam("phone");
 		formAuthenticationFilter.setPasswordParam("smsCode");
@@ -86,10 +91,12 @@ public class ApiApplication {
 		bean.setFilters(map);
 		// 配置访问权限
 		LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
+		filterChainDefinitionMap.put("/loginController/getQrcode", "anon");
 		filterChainDefinitionMap.put("/loginController/sendSms", "anon");
 		filterChainDefinitionMap.put("/loginController/offsiteLogin", "anon");
+		filterChainDefinitionMap.put("/loginController/confirmSms", "anon");
 		filterChainDefinitionMap.put("/registerController/*", "anon");
-		filterChainDefinitionMap.put("/loginController/logOut", "logout");
+		filterChainDefinitionMap.put("/loginController/logOuterr", "logout");
 		// filterChainDefinitionMap.put("/CompanyController/selectByCompany",
 		// "perms[admin:companyController:selectByCompany]");
 		// filterChainDefinitionMap.put("/*", "authc");//表示需要认证才可以访问
@@ -105,30 +112,51 @@ public class ApiApplication {
 		System.err.println("--------------shiro已经加载----------------");
 		DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
 		manager.setRealm(myRealm);
-		/*
-		 * SimpleCookie sessionIdCookie = new SimpleCookie();
-		 * sessionIdCookie.setHttpOnly(true); sessionIdCookie.setMaxAge(-1);
-		 * sessionIdCookie.setName("JSID"); ShiroSessionListener
-		 * shiroSessionListener = new ShiroSessionListener();
-		 * List<SessionListener> sessionListenerList = new
-		 * ArrayList<SessionListener>();
-		 * sessionListenerList.add(shiroSessionListener);
-		 * DefaultWebSessionManager sessionManager = new
-		 * DefaultWebSessionManager();
-		 * sessionManager.setGlobalSessionTimeout(10000);
-		 * sessionManager.setSessionValidationInterval(5000);
-		 * sessionManager.setDeleteInvalidSessions(true);
-		 * sessionManager.setSessionIdCookie(sessionIdCookie);
-		 * sessionManager.setSessionIdCookieEnabled(true);
-		 * sessionManager.setSessionListeners(sessionListenerList);
-		 * manager.setSessionManager(sessionManager);
-		 */
-		EhCacheManager ehCacheManager = new EhCacheManager();
+		 /* ShiroSessionListener shiroSessionListener = new ShiroSessionListener();
+		  List<SessionListener> sessionListenerList = new ArrayList<SessionListener>();
+		  sessionListenerList.add(shiroSessionListener);*/
+		  DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+		  sessionManager.setGlobalSessionTimeout(1800000);
+		  sessionManager.setSessionValidationInterval(30000);
+		  sessionManager.setDeleteInvalidSessions(true);
+		  sessionManager.getSessionIdCookie().setName("jsid");
+		  sessionManager.setSessionIdCookieEnabled(true);
+		  //sessionManager.setSessionListeners(sessionListenerList);
+		  sessionManager.setSessionDAO(redisSessionDAO());
+		  manager.setSessionManager(sessionManager);
+		 
+		/*EhCacheManager ehCacheManager = new EhCacheManager();
 		ehCacheManager.setCacheManagerConfigFile("classpath:shiro-ehcache.xml");
-		manager.setCacheManager(ehCacheManager);
+		manager.setCacheManager(ehCacheManager);*/
 		return manager;
 	}
 
+	/**
+     * RedisSessionDAO shiro sessionDao层的实现 通过redis
+     * 使用的是shiro-redis开源插件
+     */
+    @Bean
+    public RedisSessionDAO redisSessionDAO() {
+        RedisSessionDAO redisSessionDAO = new RedisSessionDAO();
+        redisSessionDAO.setRedisManager(redisManager());
+        return redisSessionDAO;
+    }
+    /**
+     * 配置shiro redisManager
+     * 使用的是shiro-redis开源插件
+     * @return
+     */
+    public RedisManager redisManager() {
+        RedisManager redisManager = new RedisManager();
+        redisManager.setHost("192.168.0.242");
+        redisManager.setPort(6379);
+        redisManager.setPassword("cqchina");
+        redisManager.setExpire(1800);// 配置缓存过期时间
+        redisManager.setTimeout(10000);
+        // redisManager.setPassword(password);
+        return redisManager;
+    }
+	
 	@Bean
 	public FilterRegistrationBean delegatingFilterProxy() {
 		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
@@ -144,6 +172,7 @@ public class ApiApplication {
 	public MyRealm authRealm(@Qualifier("credentialsMatcher") CredentialsMatcher matcher) {
 		MyRealm myRealm = new MyRealm();
 		myRealm.setCredentialsMatcher(matcher);
+		
 		return myRealm;
 	}
 

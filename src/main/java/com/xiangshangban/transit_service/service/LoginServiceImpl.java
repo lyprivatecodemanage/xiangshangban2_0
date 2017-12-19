@@ -122,8 +122,14 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public int deleteById(String id) {
-		// TODO Auto-generated method stub
+		
 		return loginMapper.deleteById(id);
+	}
+
+	@Override
+	public int insertLoginSelective(Login record) {
+		
+		return loginMapper.insertLoginSelective(record);
 	}
 
 }

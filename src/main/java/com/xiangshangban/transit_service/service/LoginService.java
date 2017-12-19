@@ -18,6 +18,12 @@ public interface LoginService {
 	 */
 	int insertSelective(Login record);
 	/**
+	 * 添加用户登录信息
+	 * @param record
+	 * @return
+	 */
+	int insertLoginSelective(Login record);
+	/**
 	 * 根据sessionId查询
 	 * @param sessionId
 	 * @return
