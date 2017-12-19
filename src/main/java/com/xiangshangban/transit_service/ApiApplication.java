@@ -9,10 +9,13 @@ import java.util.Properties;
 
 import javax.servlet.Filter;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
@@ -53,7 +56,7 @@ public class ApiApplication {
 		System.err.println("-------->  MyApi");
 	}
 
-	@Bean
+	/*@Bean
 	public FilterRegistrationBean filterRegistrationBean() {
 		FilterRegistrationBean registrationBean = new FilterRegistrationBean();
 		ServletFilter weChatFilter = new ServletFilter();
@@ -72,7 +75,7 @@ public class ApiApplication {
 				container.setSessionTimeout(21600);// 单位为S
 			}
 		};
-	}
+	}*/
 	
 	// 配置核心安全事务管理器
 	@Bean(name = "securityManager")
