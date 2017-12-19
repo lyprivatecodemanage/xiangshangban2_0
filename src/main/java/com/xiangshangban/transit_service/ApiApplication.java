@@ -32,7 +32,6 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
-import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 import org.crazycake.shiro.RedisManager;
 import org.crazycake.shiro.RedisSessionDAO;
 
@@ -52,6 +51,7 @@ import com.xiangshangban.transit_service.shiro.CredentialsMatcher;
 public class ApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
+		System.err.println("-------->  MyApi");
 	}
 
 	@Bean
