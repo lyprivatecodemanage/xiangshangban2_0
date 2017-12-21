@@ -1,7 +1,9 @@
 package com.xiangshangban.transit_service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -13,12 +15,16 @@ import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSource
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.crazycake.shiro.RedisManager;
+import org.crazycake.shiro.RedisSessionDAO;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.MultipartAutoConfiguration;
+import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
@@ -27,10 +33,9 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
-import org.crazycake.shiro.RedisManager;
-import org.crazycake.shiro.RedisSessionDAO;
 
 import com.xiangshangban.transit_service.filter.CustomFormAuthenticationFilter;
+import com.xiangshangban.transit_service.filter.ServletFilter;
 import com.xiangshangban.transit_service.realm.MyRealm;
 import com.xiangshangban.transit_service.shiro.CredentialsMatcher;
 
@@ -47,7 +52,7 @@ public class ApiApplication {
 		SpringApplication.run(ApiApplication.class, args);
 	}
 
-	/*@Bean
+	@Bean
 	public FilterRegistrationBean filterRegistrationBean() {
 		FilterRegistrationBean registrationBean = new FilterRegistrationBean();
 		ServletFilter weChatFilter = new ServletFilter();
@@ -65,7 +70,7 @@ public class ApiApplication {
 				container.setSessionTimeout(21600);// 单位为S
 			}
 		};
-	}*/
+	}
 	
 	@Bean(name = "shiroFilter")
 	public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager) {
@@ -160,13 +165,15 @@ public class ApiApplication {
 	}
 
 	// 配置自定义的权限登录器
-	@Bean(name = "myRealm")
-	public MyRealm authRealm(@Qualifier("credentialsMatcher") CredentialsMatcher matcher) {
-		MyRealm myRealm = new MyRealm();
-		myRealm.setCredentialsMatcher(matcher);
-		myRealm.setAuthenticationCachingEnabled(true);
-		return myRealm;
-	}
+		@Bean(name = "myRealm")
+		public MyRealm authRealm(@Qualifier("credentialsMatcher") CredentialsMatcher matcher) {
+			MyRealm myRealm = new MyRealm();
+			myRealm.setCredentialsMatcher(matcher);
+			myRealm.setCachingEnabled(true);
+			myRealm.setAuthenticationCachingEnabled(true);
+			myRealm.setAuthenticationCachingEnabled(true);
+			return myRealm;
+		}
 
 	// 配置自定义的密码比较器
 	@Bean(name = "credentialsMatcher")
