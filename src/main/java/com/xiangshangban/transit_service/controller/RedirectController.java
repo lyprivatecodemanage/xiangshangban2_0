@@ -27,6 +27,7 @@ import com.xiangshangban.transit_service.bean.Uusers;
 import com.xiangshangban.transit_service.service.LoginService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.HttpClientUtil;
+import com.xiangshangban.transit_service.util.RedisUtil;
 import com.xiangshangban.transit_service.util.RequestJSONUtil;
 
 /**
@@ -49,17 +50,22 @@ public class RedirectController {
 	 */
 	@RequestMapping(value="/sendRequest", produces = "application/json;charset=UTF-8", method=RequestMethod.POST)
     public String sendRequest(HttpServletRequest request) {
+		RedisUtil redis = RedisUtil.getInstance();
 		
 		//根据token获得当前用户id,公司id
 		String token = request.getHeader("token");
+		String phone="";
 		Uusers user = new Uusers();
 		if (StringUtils.isEmpty(token)) {
 			String sessionId = request.getSession().getId();
 			System.out.println("redirectController : "+sessionId);
-			user = userService.selectCompanyBySessionId(sessionId);
+			phone = redis.getJedis().hget(sessionId, "session");
+			//user = userService.selectCompanyBySessionId(sessionId);
 		} else {
-			user = userService.selectCompanyByToken(token);
+			phone = redis.getJedis().hget(token, "token");
+			//user = userService.selectCompanyByToken(token);
 		}
+		user = userService.selectByPhone(phone);
 
 		if (user == null || StringUtils.isEmpty(user.getCompanyId()) || StringUtils.isEmpty(user.getUserid())) {
 			ReturnData returnData = new ReturnData();

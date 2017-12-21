@@ -56,7 +56,7 @@ public class ApiApplication {
 		System.err.println("-------->  MyApi");
 	}
 
-	/*@Bean
+	@Bean
 	public FilterRegistrationBean filterRegistrationBean() {
 		FilterRegistrationBean registrationBean = new FilterRegistrationBean();
 		ServletFilter weChatFilter = new ServletFilter();
@@ -75,7 +75,7 @@ public class ApiApplication {
 				container.setSessionTimeout(21600);// 单位为S
 			}
 		};
-	}*/
+	}
 	
 	// 配置核心安全事务管理器
 	@Bean(name = "securityManager")
@@ -174,8 +174,9 @@ public class ApiApplication {
 		public MyRealm authRealm(@Qualifier("credentialsMatcher") CredentialsMatcher matcher) {
 			MyRealm myRealm = new MyRealm();
 			myRealm.setCredentialsMatcher(matcher);
+			myRealm.setCachingEnabled(true);
 			myRealm.setAuthenticationCachingEnabled(true);
-			myRealm.clearAuthc();
+			myRealm.setAuthenticationCachingEnabled(true);
 			return myRealm;
 		}
 
