@@ -29,7 +29,6 @@ import com.xiangshangban.transit_service.service.OSSFileService;
 import com.xiangshangban.transit_service.service.UserCompanyService;
 import com.xiangshangban.transit_service.service.UusersRolesService;
 import com.xiangshangban.transit_service.service.UusersService;
-import com.xiangshangban.transit_service.util.HttpClientUtil;
 import com.xiangshangban.transit_service.util.PropertiesUtils;
 import com.xiangshangban.transit_service.util.RedisUtil;
 import com.xiangshangban.transit_service.util.YtxSmsUtil;
@@ -60,6 +59,7 @@ public class AdministratorController {
 	 * @param request
 	 * @return
 	 */
+	@Transactional
 	@RequestMapping(value="/administratorInit",produces = "application/json;charset=utf-8",method = RequestMethod.POST)
 	public Map<String,Object> administratorInit(@RequestBody String jsonString){
 		Map<String,Object> map = new HashMap<>();
@@ -156,6 +156,7 @@ public class AdministratorController {
 	 * @param userId
 	 * @return
 	 */
+	@Transactional
 	@RequestMapping(value="/adminAuthCode",produces = "application/json;charset=utf-8",method = RequestMethod.POST)
 	public Map<String,Object> administratorAuthCode(@RequestBody String jsonString){
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -219,6 +220,7 @@ public class AdministratorController {
 	 * @param request
 	 * @return
 	 */
+	@Transactional
 	@RequestMapping(value="/updateadministrator",produces = "application/json;charset=utf-8",method = RequestMethod.POST)
 	public Map<String,Object> updateadministrator(@RequestBody String jsonString,HttpServletRequest request){
 		Map<String,Object> map = new HashMap<>();

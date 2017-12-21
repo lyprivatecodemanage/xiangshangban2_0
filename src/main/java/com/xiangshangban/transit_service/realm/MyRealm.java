@@ -96,7 +96,7 @@ public class MyRealm extends AuthorizingRealm {
 		// 如果查询到返回认证信息AuthenticationInfo
 		SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(userCode, password,
 				this.getName());
-
+		
 		return simpleAuthenticationInfo;
 	}
 

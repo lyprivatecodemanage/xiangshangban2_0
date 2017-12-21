@@ -111,13 +111,14 @@ public class ServletFilter implements Filter {
 					}
 				}
 			}
+		}
 			if (redirect) {
 				req.getRequestDispatcher(redirectUrl).forward(req, res);
 			} else {
 				chain.doFilter(req, res);
 				System.err.println("过滤器结束");
 			}
-		}
+		
 	}
 
 	public void destroy() {

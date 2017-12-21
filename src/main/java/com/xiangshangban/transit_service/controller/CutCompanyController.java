@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +37,8 @@ import com.xiangshangban.transit_service.service.UusersRolesService;
 import com.xiangshangban.transit_service.service.UusersService;
 import com.xiangshangban.transit_service.util.FormatUtil;
 import com.xiangshangban.transit_service.util.PinYin2Abbreviation;
+import com.xiangshangban.transit_service.util.RedisUtil;
+import com.xiangshangban.transit_service.util.RedisUtil.Hash;
 
 @RestController
 @RequestMapping("/CutCompanyController")
@@ -392,6 +393,12 @@ public class CutCompanyController {
 		String token = request.getHeader("token");
 		
 		try {
+			
+			// 初始化redis
+			RedisUtil redis = RedisUtil.getInstance();
+			// 从redis取出短信验证码
+			String sphone = redis.new Hash().hget("shiro_redis_token:" + token, "shiro_redis_token");
+			
 			if(StringUtils.isEmpty(token)){
 				map.put("returnCode","3006");
 				map.put("message", "必传参数为空");
